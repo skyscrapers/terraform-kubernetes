@@ -49,6 +49,16 @@ resource "aws_iam_role_policy" "workers" {
     {
       "Effect": "Allow",
       "Action": [
+        "s3:List*",
+        "s3:Get*"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
         "ecr:GetAuthorizationToken",
         "ecr:BatchCheckLayerAvailability",
         "ecr:GetDownloadUrlForLayer",
