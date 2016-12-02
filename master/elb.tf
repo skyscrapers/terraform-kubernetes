@@ -4,11 +4,11 @@ module "master_elb" {
   subnets           = ["${var.subnets}"]
   project           = "${var.project}"
   environment       = "${var.environment}"
-  instance_port     = 443
+  instance_port     = 8080
   instance_protocol = "tcp"
-  lb_port           = 443
+  lb_port           = 8080
   lb_protocol       = "tcp"
-  health_target     = "http:8080/healthz"
+  health_target     = "HTTP:8080/healthz"
   internal          = true
   backend_sg        = ["${aws_security_group.masters.id}"]
 }
@@ -17,8 +17,4 @@ resource "aws_elb_attachment" "master-attach" {
   elb      = "${module.master_elb.elb_id}"
   count    = "${var.amount_masters}"
   instance = "${element(module.masters.instance_ids, count.index)}"
-
-  lifecycle {
-    ignore_changes = ["instance"]
-  }
 }
