@@ -9,8 +9,8 @@ data "aws_subnet" "subnet_info" {
 
 resource "aws_security_group_rule" "incoming_elb_api" {
   type                     = "ingress"
-  from_port                = 443
-  to_port                  = 443
+  from_port                = 8080
+  to_port                  = 8080
   protocol                 = "tcp"
   source_security_group_id = "${module.master_elb.sg_id}"
 
