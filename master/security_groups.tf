@@ -27,6 +27,16 @@ resource "aws_security_group_rule" "incoming_etcd_self" {
   security_group_id = "${aws_security_group.masters.id}"
 }
 
+resource "aws_security_group_rule" "incoming_etcd3_self" {
+  type      = "ingress"
+  from_port = 2389
+  to_port   = 2390
+  protocol  = "tcp"
+  self      = true
+
+  security_group_id = "${aws_security_group.masters.id}"
+}
+
 resource "aws_security_group_rule" "incoming_ssh_bastion" {
   type                     = "ingress"
   from_port                = 22
