@@ -14,13 +14,14 @@ module "masters" {
 }
 
 data "template_file" "user_data" {
-  template = "${file("${path.module}/../templates/master-cloud-config.tpl")}"
+  template = "${file("${path.module}/../templates/master/master-cloud-config.tpl")}"
   count    = "${var.amount_masters}"
 
   vars {
     master_num  = "${count.index +1}"
     project     = "${var.project}"
     environment = "${var.environment}"
+    k8s_version = "v1.4.6_coreos.0"
     endpoints   = "${join(",", formatlist("https://%s.master.k8s-%s-%s.internal:2379", var.endpoints_map[var.amount_masters], var.project, var.environment))}"
   }
 }
@@ -31,9 +32,7 @@ resource "aws_volume_attachment" "ebs_att_master" {
   volume_id   = "${element(aws_ebs_volume.masters.*.id, count.index)}"
   instance_id = "${element(module.masters.instance_ids, count.index)}"
 
-  lifecycle {
-    ignore_changes = ["instance"]
-  }
+  skip_destroy = true
 }
 
 resource "aws_ebs_volume" "masters" {
