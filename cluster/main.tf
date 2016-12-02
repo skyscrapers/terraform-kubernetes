@@ -30,7 +30,6 @@ variable "max_amount_workers" {}
 
 variable "amount_masters" {}
 
-variable "worker_user_data" {}
 
 module "workers" {
   source             = "../worker"
@@ -43,7 +42,7 @@ module "workers" {
   project            = "${var.project}"
   environment        = "${var.environment}"
   max_amount_workers = "${var.max_amount_workers}"
-  user_data          = "${var.worker_user_data}"
+  k8s_data_bucket = "${module.masters.k8s_data_bucket}"
 }
 
 module "masters" {
