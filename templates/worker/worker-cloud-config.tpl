@@ -5,7 +5,7 @@ coreos:
   units:
   - name: manifest-copy.service
     command: start
-    enabled: true
+    enable: true
     content: |
       [Unit]
       Description=AWS S3 Copy
@@ -28,7 +28,7 @@ coreos:
       RequiredBy=kubelet.service
   - name: kubelet.service
     command: start
-    enabled: true
+    enable: true
     content: |
       [Service]
       ExecStartPre=/usr/bin/mkdir -p /etc/kubernetes/manifests
