@@ -11,16 +11,22 @@ spec:
     command:
     - /hyperkube
     - proxy
-    - --master=http://${api_elb}:8080
-    - --kubeconfig=/etc/kubernetes/worker-kubeconfig.yaml
+    - --master=http://api.k8s-${project}-${environment}.internal:8080
+    - --kubeconfig=/etc/kubernetes/manifests/kubeconfig.yaml
     - --proxy-mode=iptables
     securityContext:
       privileged: true
     volumeMounts:
-      - mountPath: /etc/kubernetes/worker-kubeconfig.yaml
-        name: "kubeconfig"
-        readOnly: true
+    - mountPath: /etc/kubernetes/pki
+      name: pki-kubernetes
+      readOnly: true
+    - mountPath: /etc/kubernetes/manifests
+      name: manifests-kubernetes
+      readOnly: true
   volumes:
-    - name: "kubeconfig"
-      hostPath:
-        path: "/etc/kubernetes/worker-kubeconfig.yaml"
+  - hostPath:
+      path: /etc/kubernetes/pki
+    name: pki-kubernetes
+  - hostPath:
+      path: /etc/kubernetes/manifests
+    name: manifests-kubernetes

@@ -45,7 +45,7 @@ resource "aws_launch_configuration" "worker" {
   security_groups             = ["${aws_security_group.workers.id}"]
   iam_instance_profile        = "${aws_iam_instance_profile.workers.name}"
   associate_public_ip_address = false
-  user_data                   = "${var.user_data}"
+  user_data                   = "${data.template_file.user_data.rendered}"
 
   root_block_device {
     volume_type           = "gp2"
@@ -55,5 +55,16 @@ resource "aws_launch_configuration" "worker" {
 
   lifecycle {
     create_before_destroy = true
+  }
+}
+
+
+data "template_file" "user_data" {
+  template = "${file("${path.module}/../templates/worker/worker-cloud-config.tpl")}"
+
+  vars {
+    project     = "${var.project}"
+    environment = "${var.environment}"
+    k8s_version = "v1.4.6_coreos.0"
   }
 }
