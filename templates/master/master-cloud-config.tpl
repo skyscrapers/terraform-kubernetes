@@ -34,7 +34,7 @@ coreos:
     command: start
     content: |
       [Unit]
-      Before=etcd2.service
+      Before=etcd2.service etcd3.service
       Description = Mount for Etcd Storage
       [Install]
       RequiredBy=etcd2.service etcd3.service
@@ -83,16 +83,16 @@ coreos:
       Description=AWS S3 Copy
       After=docker.service
       Requires=docker.service
-
       [Service]
       TimeoutStartSec=0
-      Type=oneshot
+      Type=simple
+      Restart=always
+      RestartSec=10
       ExecStartPre=/usr/bin/docker pull mesosphere/aws-cli
-      ExecStartPre=/usr/bin/docker run --name aws-cli --rm -e "AWS_DEFAULT_REGION=eu-west-1" -v /etc/kubernetes:/project mesosphere/aws-cli \
+      ExecStartPre=/usr/bin/docker run --rm -e "AWS_DEFAULT_REGION=eu-west-1" -v /etc/kubernetes:/project mesosphere/aws-cli \
         s3 cp --recursive s3://${project}-${environment}-k8s-data/pki/kubernetes/ pki/
-      ExecStart=/usr/bin/docker run --name aws-cli --rm -e "AWS_DEFAULT_REGION=eu-west-1" -v /etc/kubernetes:/project mesosphere/aws-cli \
+      ExecStart=/usr/bin/docker run --rm -e "AWS_DEFAULT_REGION=eu-west-1" -v /etc/kubernetes:/project mesosphere/aws-cli \
         s3 cp --recursive s3://${project}-${environment}-k8s-data/manifests/master/${master_num}.master/ manifests/
-
       [Install]
       WantedBy=multi-user.target
       RequiredBy=kubelet.service
