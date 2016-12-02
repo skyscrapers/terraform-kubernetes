@@ -33,6 +33,15 @@ resource "aws_iam_role_policy" "masters" {
     {
       "Effect": "Allow",
       "Action": [
+        "s3:*"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
         "route53:*"
       ],
       "Resource": [
