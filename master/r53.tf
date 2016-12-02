@@ -27,9 +27,31 @@ resource "aws_route53_record" "api" {
   }
 }
 
+resource "aws_route53_record" "etcd3_server_srv" {
+  zone_id = "${aws_route53_zone.cluster.zone_id}"
+  name    = "_etcd-server._tcp.etcd3.${aws_route53_zone.cluster.name}"
+  type    = "SRV"
+  ttl     = "30"
+
+  records = [
+    "${formatlist("0 0 2390 %s", aws_route53_record.masters.*.fqdn)}",
+  ]
+}
+
+resource "aws_route53_record" "etcd3_client_srv" {
+  zone_id = "${aws_route53_zone.cluster.zone_id}"
+  name    = "_etcd-client._tcp.etcd3.${aws_route53_zone.cluster.name}"
+  type    = "SRV"
+  ttl     = "30"
+
+  records = [
+    "${formatlist("0 0 2389 %s", aws_route53_record.masters.*.fqdn)}",
+  ]
+}
+
 resource "aws_route53_record" "etcd2_server_ssl_srv" {
   zone_id = "${aws_route53_zone.cluster.zone_id}"
-  name    = "_etcd-server-ssl._tcp.${aws_route53_zone.cluster.name}"
+  name    = "_etcd-server-ssl._tcp.etcd2.${aws_route53_zone.cluster.name}"
   type    = "SRV"
   ttl     = "30"
 
@@ -40,7 +62,7 @@ resource "aws_route53_record" "etcd2_server_ssl_srv" {
 
 resource "aws_route53_record" "etcd2_client_ssl_srv" {
   zone_id = "${aws_route53_zone.cluster.zone_id}"
-  name    = "_etcd-client-ssl._tcp.${aws_route53_zone.cluster.name}"
+  name    = "_etcd-client-ssl._tcp.etcd2.${aws_route53_zone.cluster.name}"
   type    = "SRV"
   ttl     = "30"
 
