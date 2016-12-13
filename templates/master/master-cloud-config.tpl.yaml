@@ -137,3 +137,47 @@ coreos:
 
       [Install]
       WantedBy=sockets.target
+
+write_files:
+  - path: "/etc/etcd/ssl/ca.pem"
+    permissions: "0444"
+    owner: "etcd:etcd"
+    encoding: "base64"
+    content: |
+      ${content_ca_pem}
+  - path: "/etc/etcd/ssl/client.pem"
+    permissions: "0444"
+    owner: "etcd:etcd"
+    encoding: "base64"
+    content: |
+      ${content_client_pem}
+  - path: "/etc/etcd/ssl/client-key.pem"
+    permissions: "0400"
+    owner: "etcd:etcd"
+    encoding: "base64"
+    content: |
+      ${content_client_key_pem}
+  - path: "/etc/etcd/ssl/peer.pem"
+    permissions: "0444"
+    owner: "etcd:etcd"
+    encoding: "base64"
+    content: |
+      ${content_peer_pem}
+  - path: "/etc/etcd/ssl/peer-key.pem"
+    permissions: "0400"
+    owner: "etcd:etcd"
+    encoding: "base64"
+    content: |
+      ${content_peer_key_pem}
+  - path: "/etc/etcd/ssl/server.pem"
+    permissions: "0444"
+    owner: "etcd:etcd"
+    encoding: "base64"
+    content: |
+      ${content_server_pem}
+  - path: "/etc/etcd/ssl/server-key.pem"
+    permissions: "0400"
+    owner: "etcd:etcd"
+    encoding: "base64"
+    content: |
+      ${content_server_key_pem}

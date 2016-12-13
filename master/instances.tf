@@ -1,5 +1,5 @@
 module "masters" {
-  source         = "github.com/skyscrapers/terraform-instances//instance?ref=0988c9baab71ca9a20b851ea1c37ef6939fe5186"
+  source         = "github.com/skyscrapers/terraform-instances//instance?ref=16744c4d6e1ca7d346d6530ce8c83229b91c0390"
   project        = "${var.project}"
   environment    = "${var.environment}"
   name           = "k8s-master-"
@@ -14,7 +14,7 @@ module "masters" {
 }
 
 data "template_file" "user_data" {
-  template = "${file("${path.module}/../templates/master/master-cloud-config.tpl")}"
+  template = "${file("${path.module}/../templates/master/master-cloud-config.tpl.yaml")}"
   count    = "${var.amount_masters}"
 
   vars {
@@ -23,6 +23,13 @@ data "template_file" "user_data" {
     environment = "${var.environment}"
     k8s_version = "v1.4.6_coreos.0"
     endpoints   = "${join(",", formatlist("https://%s.master.k8s-%s-%s.internal:2379", var.endpoints_map[var.amount_masters], var.project, var.environment))}"
+    content_ca_pem = "${base64encode(file("${path.module}/../pki/kubernetes/ca/ca.pem"))}"
+    content_client_pem = "${base64encode(file("${path.module}/../pki/etcd2/etcd2-client-client.pem"))}"
+    content_client_key_pem = "${base64encode(file("${path.module}/../pki/etcd2/etcd2-client-client-key.pem"))}"
+    content_peer_pem = "${base64encode(file("${path.module}/../pki/etcd2/etcd2-peer-client.pem"))}"
+    content_peer_key_pem = "${base64encode(file("${path.module}/../pki/etcd2/etcd2-peer-client-key.pem"))}"
+    content_server_pem = "${base64encode(file("${path.module}/../pki/etcd2/etcd2-server-server.pem"))}"
+    content_server_key_pem = "${base64encode(file("${path.module}/../pki/etcd2/etcd2-server-server-key.pem"))}"
   }
 }
 
