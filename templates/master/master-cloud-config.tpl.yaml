@@ -15,7 +15,7 @@ coreos:
     advertise-client-urls: https://${master_num}.master.k8s-${project}-${environment}.internal:2379
     initial-advertise-peer-urls: https://${master_num}.master.k8s-${project}-${environment}.internal:2380
     initial-cluster-state: new
-    initial-cluster-token: int-test-k8s-master-token-1
+    initial-cluster-token: k8s-${project}-${environment}-master-token-1
     listen-client-urls: https://${master_num}.master.k8s-${project}-${environment}.internal:2379,https://127.0.0.1:2379
     listen-peer-urls: https://${master_num}.master.k8s-${project}-${environment}.internal:2380
     cert-file: /etc/etcd/ssl/server.pem
@@ -68,7 +68,7 @@ coreos:
       --initial-advertise-peer-urls http://${master_num}.master.k8s-${project}-${environment}.internal:2390 \
       --listen-client-urls http://0.0.0.0:2389 \
       --listen-peer-urls http://0.0.0.0:2390 \
-      --discovery-srv etcd3.k8s-int-test.internal \
+      --discovery-srv etcd3.k8s-${project}-${environment}.internal \
       --initial-cluster-state new \
       --initial-cluster-token etcd3-token-1
      Restart=always
