@@ -7,10 +7,10 @@
   },
   "names": [
     {
-        "C": "BE",
-        "L": "Antwerp",
-        "O": "Skyscrapers",
-        "ST": "Antwerp"
+      "C": "${country}",
+      "L": "${city}",
+      "O": "${organization}",
+      "ST": "${state}"
     }
   ]
 }

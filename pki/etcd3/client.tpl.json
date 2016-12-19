@@ -7,9 +7,10 @@
     },
     "names": [
         {
-            "C": "BE",
-            "L": "Antwerp",
-            "ST": "Antwerp"
+            "C": "${country}",
+            "L": "${city}",
+            "O": "${organization}",
+            "ST": "${state}"
         }
     ]
 }

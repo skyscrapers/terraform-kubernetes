@@ -1,0 +1,20 @@
+{
+  "CN": "api.k8s-${project}-${environment}.internal",
+  "hosts": [
+    "127.0.0.1",
+    "*.master.k8s-${project}-${environment}.internal",
+    "api.k8s-${project}-${environment}.internal"
+  ],
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "${country}",
+      "L": "${city}",
+      "O": "${organization}",
+      "ST": "${state}"
+    }
+  ]
+}
