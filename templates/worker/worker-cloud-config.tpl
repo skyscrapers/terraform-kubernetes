@@ -25,7 +25,6 @@ coreos:
 
       [Install]
       WantedBy=multi-user.target
-      RequiredBy=kubelet.service
   - name: kubelet.service
     command: start
     enable: true
