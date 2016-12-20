@@ -138,7 +138,7 @@ resource "null_resource" "kubernetes_certificates" {
 
   provisioner "local-exec" {
     command = <<-EOC
-      tee pki/kubernetes/controller-manager/kube-contoller-manager-client-csr.json <<EOF
+      tee pki/kubernetes/controller-manager/kube-controller-manager-client-csr.json <<EOF
       ${data.template_file.controller-manager-csr.rendered}
       EOF
       EOC
@@ -157,6 +157,25 @@ resource "null_resource" "kubernetes_certificates" {
       tee pki/kubernetes/scheduler/kube-scheduler-client-csr.json <<EOF
       ${data.template_file.scheduler-csr.rendered}
       EOF
+      EOC
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOC
+      cd pki/kubernetes/ca
+      cfssl gencert -initca ca-csr.json | cfssljson -bare ca
+      cd ../api-server
+      cfssl gencert -ca=../ca/ca.pem -ca-key=../ca/ca-key.pem -config=../ca/ca-config.json -profile=server kube-apiserver-server-csr.json | cfssljson -bare kube-apiserver-server
+      cd ../kubelet
+      cfssl gencert -ca=../ca/ca.pem -ca-key=../ca/ca-key.pem -config=../ca/ca-config.json -profile=client kubelet-client-csr.json | cfssljson -bare kubelet-client
+      cd ../proxy
+      cfssl gencert -ca=../ca/ca.pem -ca-key=../ca/ca-key.pem -config=../ca/ca-config.json -profile=client kube-proxy-client-csr.json | cfssljson -bare kube-proxy-client
+      cd ../controller-manager
+      cfssl gencert -ca=../ca/ca.pem -ca-key=../ca/ca-key.pem -config=../ca/ca-config.json -profile=client kube-controller-manager-client-csr.json | cfssljson -bare kube-controller-manager-client
+      cd ../scheduler
+      cfssl gencert -ca=../ca/ca.pem -ca-key=../ca/ca-key.pem -config=../ca/ca-config.json -profile=client kube-scheduler-client-csr.json | cfssljson -bare kube-scheduler-client
+      cd ../admin
+      cfssl gencert -ca=../ca/ca.pem -ca-key=../ca/ca-key.pem -config=../ca/ca-config.json -profile=client kubernetes-admin-user-csr.json | cfssljson -bare kubernetes-admin-user
       EOC
   }
 
@@ -203,6 +222,8 @@ data template_file "etcd2-server" {
 
 resource "null_resource" "etcd2_certificates" {
 
+  depends_on = ["null_resource.kubernetes_certificates"]
+
   provisioner "local-exec" {
     command = <<-EOC
       mkdir -p pki/etcd2
@@ -233,4 +254,19 @@ resource "null_resource" "etcd2_certificates" {
       EOC
   }
 
+  provisioner "local-exec" {
+    command = <<-EOC
+      cd pki/etcd2
+      cfssl gencert -ca=../kubernetes/ca/ca.pem -ca-key=../kubernetes/ca/ca-key.pem -config=../kubernetes/ca/ca-config.json -profile=server server.json | cfssljson -bare etcd2-server-server
+      cfssl gencert -ca=../kubernetes/ca/ca.pem -ca-key=../kubernetes/ca/ca-key.pem -config=../kubernetes/ca/ca-config.json -profile=client peer.json | cfssljson -bare etcd2-peer-client
+      cfssl gencert -ca=../kubernetes/ca/ca.pem -ca-key=../kubernetes/ca/ca-key.pem -config=../kubernetes/ca/ca-config.json -profile=client client.json | cfssljson -bare etcd2-client-client
+      EOC
+  }
+
 }
+
+resource "aws_s3_bucket" "k8s_data" {
+  bucket = "${var.project}-${var.environment}-k8s-data"
+  acl    = "private"
+}
+
