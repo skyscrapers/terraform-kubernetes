@@ -270,3 +270,143 @@ resource "aws_s3_bucket" "k8s_data" {
   acl    = "private"
 }
 
+resource "aws_s3_bucket_object" "ca_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/kubernetes/ca/ca.pem"
+  source = "${path.cwd}/pki/kubernetes/ca/ca.pem"
+}
+
+resource "aws_s3_bucket_object" "ca_key_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/kubernetes/ca/ca-key.pem"
+  source = "${path.cwd}/pki/kubernetes/ca/ca-key.pem"
+}
+
+resource "aws_s3_bucket_object" "kubernetes_admin_user_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/kubernetes/admin/kubernetes-admin-user.pem"
+  source = "${path.cwd}/pki/kubernetes/admin/kubernetes-admin-user.pem"
+}
+
+resource "aws_s3_bucket_object" "kubernetes_admin_user_key_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/kubernetes/admin/kubernetes-admin-user-key.pem"
+  source = "${path.cwd}/pki/kubernetes/admin/kubernetes-admin-user-key.pem"
+}
+
+resource "aws_s3_bucket_object" "kube_apiserver_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/kubernetes/api-server/kube-apiserver-server.pem"
+  source = "${path.cwd}/pki/kubernetes/api-server/kube-apiserver-server.pem"
+}
+
+resource "aws_s3_bucket_object" "kube_apiserver_key_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/kubernetes/api-server/kube-apiserver-server-key.pem"
+  source = "${path.cwd}/pki/kubernetes/api-server/kube-apiserver-server-key.pem"
+}
+
+resource "aws_s3_bucket_object" "kube_controller_manager_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/kubernetes/controller-manager/kube-controller-manager-client.pem"
+  source = "${path.cwd}/pki/kubernetes/controller-manager/kube-controller-manager-client.pem"
+}
+
+resource "aws_s3_bucket_object" "kube_controller_manager_key_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/kubernetes/controller-manager/kube-controller-manager-client-key.pem"
+  source = "${path.cwd}/pki/kubernetes/controller-manager/kube-controller-manager-client-key.pem"
+}
+
+resource "aws_s3_bucket_object" "kubelet_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/kubernetes/kubelet/kubelet-client.pem"
+  source = "${path.cwd}/pki/kubernetes/kubelet/kubelet-client.pem"
+}
+
+resource "aws_s3_bucket_object" "kubelet_key_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/kubernetes/kubelet/kubelet-client-key.pem"
+  source = "${path.cwd}/pki/kubernetes/kubelet/kubelet-client-key.pem"
+}
+
+resource "aws_s3_bucket_object" "proxy_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/kubernetes/proxy/kube-proxy-client.pem"
+  source = "${path.cwd}/pki/kubernetes/proxy/kube-proxy-client.pem"
+}
+
+resource "aws_s3_bucket_object" "proxy_key_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/kubernetes/proxy/kube-proxy-client-key.pem"
+  source = "${path.cwd}/pki/kubernetes/proxy/kube-proxy-client-key.pem"
+}
+
+resource "aws_s3_bucket_object" "scheduler_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/kubernetes/scheduler/kube-scheduler-client.pem"
+  source = "${path.cwd}/pki/kubernetes/scheduler/kube-scheduler-client.pem"
+}
+
+resource "aws_s3_bucket_object" "scheduler_key_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/kubernetes/scheduler/kube-scheduler-client-key.pem"
+  source = "${path.cwd}/pki/kubernetes/scheduler/kube-scheduler-client-key.pem"
+}
+
+resource "aws_s3_bucket_object" "etcd2_client_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/etcd2/etcd2-client-client.pem"
+  source = "${path.cwd}/pki/etcd2/etcd2-client-client.pem"
+}
+
+resource "aws_s3_bucket_object" "etcd2_client_key_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/etcd2/etcd2-client-client-key.pem"
+  source = "${path.cwd}/pki/etcd2/etcd2-client-client-key.pem"
+}
+
+resource "aws_s3_bucket_object" "etcd2_peer_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/etcd2/etcd2-peer-client.pem"
+  source = "${path.cwd}/pki/etcd2/etcd2-peer-client.pem"
+}
+
+resource "aws_s3_bucket_object" "etcd2_peer_key_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/etcd2/etcd2-peer-client-key.pem"
+  source = "${path.cwd}/pki/etcd2/etcd2-peer-client-key.pem"
+}
+
+resource "aws_s3_bucket_object" "etcd2_server_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/etcd2/etcd2-server-server.pem"
+  source = "${path.cwd}/pki/etcd2/etcd2-server-server.pem"
+}
+
+resource "aws_s3_bucket_object" "etcd2_server_key_pem" {
+  depends_on = ["null_resource.kubernetes_certificates"]
+  bucket = "${aws_s3_bucket.k8s_data.id}"
+  key = "/pki/etcd2/etcd2-server-server-key.pem"
+  source = "${path.cwd}/pki/etcd2/etcd2-server-server-key.pem"
+}
+
