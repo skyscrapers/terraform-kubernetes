@@ -1,8 +1,3 @@
-resource "aws_s3_bucket" "k8s_data" {
-  bucket = "${var.project}-${var.environment}-k8s-data"
-  acl    = "private"
-}
-
 ### KUBE-APISERVER
 
 data "template_file" "kube_apiserver" {
@@ -21,7 +16,7 @@ data "template_file" "kube_apiserver" {
 
 resource "aws_s3_bucket_object" "kube_apiserver" {
   key     = "manifests/master/${count.index + 1}.master/kube-apiserver.yaml"
-  bucket  = "${aws_s3_bucket.k8s_data.bucket}"
+  bucket  = "${var.k8s_data_bucket}"
   content = "${element(data.template_file.kube_apiserver.*.rendered, count.index)}"
   count   = "${var.amount_masters}"
 }
@@ -44,7 +39,7 @@ data "template_file" "kube_controller_manager" {
 
 resource "aws_s3_bucket_object" "kube_controller_manager" {
   key     = "manifests/master/${count.index + 1}.master/kube-controller-manager.yaml"
-  bucket  = "${aws_s3_bucket.k8s_data.bucket}"
+  bucket  = "${var.k8s_data_bucket}"
   content = "${element(data.template_file.kube_controller_manager.*.rendered, count.index)}"
   count   = "${var.amount_masters}"
 }
@@ -69,7 +64,7 @@ data "template_file" "kube_proxy" {
 
 resource "aws_s3_bucket_object" "kube_proxy" {
   key     = "manifests/master/${count.index + 1}.master/kube-proxy.yaml"
-  bucket  = "${aws_s3_bucket.k8s_data.bucket}"
+  bucket  = "${var.k8s_data_bucket}"
   content = "${element(data.template_file.kube_proxy.*.rendered, count.index)}"
   count   = "${var.amount_masters}"
 }
@@ -94,21 +89,21 @@ data "template_file" "kube_scheduler" {
 
 resource "aws_s3_bucket_object" "kube_scheduler" {
   key     = "manifests/master/${count.index + 1}.master/kube-scheduler.yaml"
-  bucket  = "${aws_s3_bucket.k8s_data.bucket}"
+  bucket  = "${var.k8s_data_bucket}"
   content = "${element(data.template_file.kube_scheduler.*.rendered, count.index)}"
   count   = "${var.amount_masters}"
 }
 
 resource "aws_s3_bucket_object" "kube_api_policy" {
   key     = "manifests/master/${count.index + 1}.master/policy.jsonl"
-  bucket  = "${aws_s3_bucket.k8s_data.bucket}"
+  bucket  = "${var.k8s_data_bucket}"
   content = "${file("${path.module}/../templates/master/policy.jsonl")}"
   count   = "${var.amount_masters}"
 }
 
 resource "aws_s3_bucket_object" "kube_config" {
   key     = "manifests/master/${count.index + 1}.master/kubeconfig.yaml"
-  bucket  = "${aws_s3_bucket.k8s_data.bucket}"
+  bucket  = "${var.k8s_data_bucket}"
   content = "${file("${path.module}/../templates/master/kube-kubeconfig.yaml.tpl")}"
   count   = "${var.amount_masters}"
 }

@@ -1,36 +1,3 @@
-variable "worker_ami" {}
-
-variable "master_ami" {}
-
-variable "key_name" {}
-
-variable "worker_instance_type" {
-  default = "t2.medium"
-}
-
-variable "master_instance_type" {
-  default = "t2.medium"
-}
-
-variable "bastion_sg" {}
-
-variable "worker_subnets" {
-  type = "list"
-}
-
-variable "master_subnets" {
-  type = "list"
-}
-
-variable "project" {}
-
-variable "environment" {}
-
-variable "max_amount_workers" {}
-
-variable "amount_masters" {}
-
-
 module "workers" {
   source             = "../worker"
   ami                = "${var.worker_ami}"
@@ -42,7 +9,7 @@ module "workers" {
   project            = "${var.project}"
   environment        = "${var.environment}"
   max_amount_workers = "${var.max_amount_workers}"
-  k8s_data_bucket = "${module.masters.k8s_data_bucket}"
+  k8s_data_bucket    = "${var.k8s_data_bucket}"
 }
 
 module "masters" {
@@ -55,4 +22,5 @@ module "masters" {
   project        = "${var.project}"
   environment    = "${var.environment}"
   amount_masters = "${var.amount_masters}"
+  k8s_data_bucket = "${var.k8s_data_bucket}"
 }

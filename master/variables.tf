@@ -8,6 +8,8 @@ variable "master_security_groups" {
   default = ""
 }
 
+variable "k8s_data_bucket" {}
+
 variable "bastion_sg" {}
 
 variable "subnets" {

@@ -13,6 +13,41 @@ module "masters" {
   public_ip      = false
 }
 
+data "aws_s3_bucket_object" "ca_pem" {
+  bucket = "${var.k8s_data_bucket}"
+  key = "/pki/kubernetes/ca/ca.pem"
+}
+
+data "aws_s3_bucket_object" "etcd2_client_pem" {
+  bucket = "${var.k8s_data_bucket}"
+  key = "/pki/etcd2/etcd2-client-client.pem"
+}
+
+data "aws_s3_bucket_object" "etcd2_client_key_pem" {
+  bucket = "${var.k8s_data_bucket}"
+  key = "/pki/etcd2/etcd2-client-client-key.pem"
+}
+
+data "aws_s3_bucket_object" "etcd2_peer_pem" {
+  bucket = "${var.k8s_data_bucket}"
+  key = "/pki/etcd2/etcd2-peer-client.pem"
+}
+
+data "aws_s3_bucket_object" "etcd2_peer_key_pem" {
+  bucket = "${var.k8s_data_bucket}"
+  key = "/pki/etcd2/etcd2-peer-client-key.pem"
+}
+
+data "aws_s3_bucket_object" "etcd2_server_pem" {
+  bucket = "${var.k8s_data_bucket}"
+  key = "/pki/etcd2/etcd2-server-server.pem"
+}
+
+data "aws_s3_bucket_object" "etcd2_server_key_pem" {
+  bucket = "${var.k8s_data_bucket}"
+  key = "/pki/etcd2/etcd2-server-server-key.pem"
+}
+
 data "template_file" "user_data" {
   template = "${file("${path.module}/../templates/master/master-cloud-config.tpl.yaml")}"
   count    = "${var.amount_masters}"
@@ -23,13 +58,13 @@ data "template_file" "user_data" {
     environment = "${var.environment}"
     k8s_version = "v1.4.6_coreos.0"
     endpoints   = "${join(",", formatlist("https://%s.master.k8s-%s-%s.internal:2379", var.endpoints_map[var.amount_masters], var.project, var.environment))}"
-    content_ca_pem = "${base64encode(file("${path.cwd}/pki/kubernetes/ca/ca.pem"))}"
-    content_client_pem = "${base64encode(file("${path.cwd}/pki/etcd2/etcd2-client-client.pem"))}"
-    content_client_key_pem = "${base64encode(file("${path.cwd}/pki/etcd2/etcd2-client-client-key.pem"))}"
-    content_peer_pem = "${base64encode(file("${path.cwd}/pki/etcd2/etcd2-peer-client.pem"))}"
-    content_peer_key_pem = "${base64encode(file("${path.cwd}/pki/etcd2/etcd2-peer-client-key.pem"))}"
-    content_server_pem = "${base64encode(file("${path.cwd}/pki/etcd2/etcd2-server-server.pem"))}"
-    content_server_key_pem = "${base64encode(file("${path.cwd}/pki/etcd2/etcd2-server-server-key.pem"))}"
+    content_ca_pem = "${base64encode("${data.aws_s3_bucket_object.ca_pem.body}")}"
+    content_client_pem = "${base64encode("${data.aws_s3_bucket_object.etcd2_client_pem.body}")}"
+    content_client_key_pem = "${base64encode("${data.aws_s3_bucket_object.etcd2_client_key_pem.body}")}"
+    content_peer_pem = "${base64encode("${data.aws_s3_bucket_object.etcd2_peer_pem.body}")}"
+    content_peer_key_pem = "${base64encode("${data.aws_s3_bucket_object.etcd2_peer_key_pem.body}")}"
+    content_server_pem = "${base64encode("${data.aws_s3_bucket_object.etcd2_server_pem.body}")}"
+    content_server_key_pem = "${base64encode("${data.aws_s3_bucket_object.etcd2_server_key_pem.body}")}"
   }
 }
 
