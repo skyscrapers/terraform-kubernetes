@@ -40,11 +40,14 @@ coreos:
       Environment="RKT_OPTS=--volume var-log,kind=host,source=/var/log \
         --mount volume=var-log,target=/var/log \
         --volume dns,kind=host,source=/etc/resolv.conf \
-        --mount volume=dns,target=/etc/resolv.conf"
+        --mount volume=dns,target=/etc/resolv.conf" \
+        --volume=usr-sbin,kind=host,source=/usr/sbin \
+        --mount=volume=usr-sbin,target=/usr/sbin"
 
       ExecStart=/usr/lib/coreos/kubelet-wrapper \
         --network-plugin-dir=/etc/kubernetes/cni/net.d \
         --network-plugin= \
+        -—configure-cbr0=true \
         --register-node=true \
         --allow-privileged=true \
         --config=/etc/kubernetes/manifests \
@@ -69,3 +72,9 @@ coreos:
 
       [Install]
       WantedBy=sockets.target
+  - name: docker.service
+    drop-ins:
+    - name: 10-docker0.conf
+      content: |
+        [Service]
+        Environment="DOCKER_OPTS=-b=cbr0"
