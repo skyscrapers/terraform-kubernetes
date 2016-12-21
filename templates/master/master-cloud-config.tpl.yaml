@@ -8,28 +8,17 @@ coreos:
   update:
     reboot-strategy: etcd-lock
   locksmith:
-    etcd_cafile: /etc/etcd/ssl/ca.pem
-    etcd_certfile: /etc/etcd/ssl/client.pem
-    etcd_keyfile: /etc/etcd/ssl/client-key.pem
     endpoint: ${endpoints}
   etcd2:
     data-dir: /media/etcd/etcd2
     election-timeout: 1200
-    advertise-client-urls: https://${master_num}.master.k8s-${project}-${environment}.internal:2379
-    initial-advertise-peer-urls: https://${master_num}.master.k8s-${project}-${environment}.internal:2380
+    advertise-client-urls: http://${master_num}.master.k8s-${project}-${environment}.internal:2379
+    initial-advertise-peer-urls: http://${master_num}.master.k8s-${project}-${environment}.internal:2380
     initial-cluster-state: new
     initial-cluster-token: k8s-${project}-${environment}-master-token-1
-    listen-client-urls: https://${master_num}.master.k8s-${project}-${environment}.internal:2379,https://127.0.0.1:2379
-    listen-peer-urls: https://${master_num}.master.k8s-${project}-${environment}.internal:2380
-    cert-file: /etc/etcd/ssl/server.pem
-    client-cert-auth: true
-    peer-client-cert-auth: true
+    listen-client-urls: http://${master_num}.master.k8s-${project}-${environment}.internal:2379,http://127.0.0.1:2379
+    listen-peer-urls: http://${master_num}.master.k8s-${project}-${environment}.internal:2380
     discovery-srv: etcd2.k8s-${project}-${environment}.internal
-    key-file: /etc/etcd/ssl/server-key.pem
-    peer-cert-file: /etc/etcd/ssl/peer.pem
-    peer-key-file: /etc/etcd/ssl/peer-key.pem
-    peer-trusted-ca-file: /etc/etcd/ssl/ca.pem
-    trusted-ca-file: /etc/etcd/ssl/ca.pem
 
   units:
   - name: media-etcd.mount
@@ -121,8 +110,6 @@ coreos:
       --allow-privileged=true \
       --config=/etc/kubernetes/manifests \
       --cluster-dns=10.100.0.2 \
-      --tls-cert-file=/etc/kubernetes/pki/kubelet/kubelet-client.pem \
-      --tls-private-key-file=/etc/kubernetes/pki/kubelet/kubelet-client-key.pem
       Restart=always
       RestartSec=10
       [Install]
@@ -141,47 +128,3 @@ coreos:
 
       [Install]
       WantedBy=sockets.target
-
-write_files:
-  - path: "/etc/etcd/ssl/ca.pem"
-    permissions: "0444"
-    owner: "etcd:etcd"
-    encoding: "base64"
-    content: |
-      ${content_ca_pem}
-  - path: "/etc/etcd/ssl/client.pem"
-    permissions: "0444"
-    owner: "etcd:etcd"
-    encoding: "base64"
-    content: |
-      ${content_client_pem}
-  - path: "/etc/etcd/ssl/client-key.pem"
-    permissions: "0400"
-    owner: "etcd:etcd"
-    encoding: "base64"
-    content: |
-      ${content_client_key_pem}
-  - path: "/etc/etcd/ssl/peer.pem"
-    permissions: "0444"
-    owner: "etcd:etcd"
-    encoding: "base64"
-    content: |
-      ${content_peer_pem}
-  - path: "/etc/etcd/ssl/peer-key.pem"
-    permissions: "0400"
-    owner: "etcd:etcd"
-    encoding: "base64"
-    content: |
-      ${content_peer_key_pem}
-  - path: "/etc/etcd/ssl/server.pem"
-    permissions: "0444"
-    owner: "etcd:etcd"
-    encoding: "base64"
-    content: |
-      ${content_server_pem}
-  - path: "/etc/etcd/ssl/server-key.pem"
-    permissions: "0400"
-    owner: "etcd:etcd"
-    encoding: "base64"
-    content: |
-      ${content_server_key_pem}

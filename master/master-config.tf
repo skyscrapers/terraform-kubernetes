@@ -1,7 +1,7 @@
 ### KUBE-APISERVER
 
 data "template_file" "kube_apiserver" {
-  template = "${file("${path.module}/../templates/master/kube-apiserver.yaml.tpl")}"
+  template = "${file("${path.module}/../templates/master/kube-apiserver.tpl.yaml")}"
   count    = "${var.amount_masters}"
 
   vars {
@@ -24,7 +24,7 @@ resource "aws_s3_bucket_object" "kube_apiserver" {
 ### KUBE-CONTROLLER-MANAGER
 
 data "template_file" "kube_controller_manager" {
-  template = "${file("${path.module}/../templates/master/kube-controller-manager.yaml.tpl")}"
+  template = "${file("${path.module}/../templates/master/kube-controller-manager.tpl.yaml")}"
   count    = "${var.amount_masters}"
 
   vars {
@@ -47,10 +47,13 @@ resource "aws_s3_bucket_object" "kube_controller_manager" {
 ### KUBE-PROXY
 
 data "template_file" "kube_proxy" {
-  template = "${file("${path.module}/../templates/master/kube-proxy.yaml.tpl")}"
+  template = "${file("${path.module}/../templates/master/kube-proxy.tpl.yaml")}"
   count    = "${var.amount_masters}"
 
   vars {
+    project = "${var.project}"
+    environment = "${var.environment}"
+
     #service_ip_range = "10.0.0.0/16"
     k8s_version = "v1.4.6_coreos.0"
 
@@ -72,7 +75,7 @@ resource "aws_s3_bucket_object" "kube_proxy" {
 ### KUBE-SCHEDULER
 
 data "template_file" "kube_scheduler" {
-  template = "${file("${path.module}/../templates/master/kube-scheduler.yaml.tpl")}"
+  template = "${file("${path.module}/../templates/master/kube-scheduler.tpl.yaml")}"
   count    = "${var.amount_masters}"
 
   vars {
@@ -104,6 +107,6 @@ resource "aws_s3_bucket_object" "kube_api_policy" {
 resource "aws_s3_bucket_object" "kube_config" {
   key     = "manifests/master/${count.index + 1}.master/kubeconfig.yaml"
   bucket  = "${var.k8s_data_bucket}"
-  content = "${file("${path.module}/../templates/master/kube-kubeconfig.yaml.tpl")}"
+  content = "${file("${path.module}/../templates/master/kube-kubeconfig.tpl.yaml")}"
   count   = "${var.amount_masters}"
 }

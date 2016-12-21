@@ -1,7 +1,7 @@
 ### KUBE-PROXY
 
 data "template_file" "kube_proxy" {
-  template = "${file("${path.module}/../templates/worker/kube-proxy.yaml.tpl")}"
+  template = "${file("${path.module}/../templates/worker/kube-proxy.tpl.yaml")}"
 
   vars {
     project     = "${var.project}"
@@ -19,7 +19,7 @@ resource "aws_s3_bucket_object" "kube_proxy" {
 ### KUBECONFIG
 
 data "template_file" "kube_config" {
-  template = "${file("${path.module}/../templates/worker/kubeconfig.yaml.tpl")}"
+  template = "${file("${path.module}/../templates/worker/kubeconfig.tpl.yaml")}"
 
   vars {
     project     = "${var.project}"

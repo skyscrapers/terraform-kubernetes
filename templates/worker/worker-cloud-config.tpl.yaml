@@ -51,8 +51,6 @@ coreos:
         --cluster-dns=10.100.0.2 \
         --kubeconfig=/etc/kubernetes/manifests/kubeconfig.yaml \
         --require-kubeconfig
-        --tls-cert-file=/etc/kubernetes/pki/kubelet/kubelet-client.pem \
-        --tls-private-key-file=/etc/kubernetes/pki/kubelet/kubelet-client-key.pem
       Restart=always
       RestartSec=10
       [Install]
