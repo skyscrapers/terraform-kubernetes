@@ -1,6 +1,9 @@
 #cloud-config
 
 ---
+ssh-authorized-keys:
+- ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD2oK1fDJSbzEP92gyafd/tUkxKwXemVy3SOUkYrpbqASeyRu23RdMMa3z28rIWAYcqovnMyoVR2Q+9QwRp0ERseWAHsKa+hJDYokuUfZ23vyLKydgzElV4ZRHiJhg/cfdvUjoVCeFtL4EhGnLLU7dU4NpTg2m8TqVvOIzD7ck0lOIGalDe9iv1oFAqbbaZtk8DFcAW/8PsryOVmF+CH79RH9VvZM0Nw6lkeEj4rtX3THMiWe6IPqKfCEU66REXYBdAySOSy4BJPZRBa2YSnOybNdf1/j9geCKhr7eS4ysKn9jvdu7OKQELPIq0/xGR5ZhOhXeNtS9XhEwxEyY4IY/T sam@sambook
+- ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCp8H06znzYeBpg3Fbbe9whHxgQK7ysqYVj/0AL1HDy+ALmNSNMTj1IRPuU0xpIN7q6WU75o4VMOO6gw0U3D2MvuRJPDvq4f3n+cfoff58eXUplD9X6ayP4tbU5uUKSErJKhdTjpYea8zFUzduTYOLcj8egSKrUoRwIX0hhr9tSzoAqfEAWq0+MueHcoLToej2bfrZAq0lhGOTUXmjDVoSZzdQpgpM/X6pzym2Oqrj38t5yF31T5IQNiuHSTjKr09yE+k6w4pVRdPL6sP6EkKRRmX5jqWETSqU4cGssKBmuFtedjnaSAgLeZZyRgzJ+MEGUumMrpk59dsvEMUN4hN8FidSDuTAduHyvF3KbVda2SRJIBB/JCKyXU/1B78sCD8Vjl4dKwZz/zQ2qqw2R9w+4Z3njTCHP1uZr2XXvPosibDvUuBjuJvleOow7q22j1CBHmvtiH/gVYnIukk1R5okg6+PmsvWcYjltJ9M0ARRl+z3Eku2X+57xyyAV54NQ1ImeW6eOrCMrUm1NOvRJ6SL3X6j27ibZGa2w8T+zzCT7H7GbtHbvZZXuu7D7n6s1eu4eFFdClBgvbLpacV4AFB6AdCWnsFA5zQZUbYKlq1NLX4gk9FOEoZPXp9PdMTzPjsuw63buPPe2tUh1R4iR/pGQ110+F4amSO0BfHv6a/7YiQ== ringo@skyscrapers.eu
 coreos:
   units:
   - name: manifest-copy.service
@@ -40,16 +43,16 @@ coreos:
         --mount volume=dns,target=/etc/resolv.conf"
 
       ExecStart=/usr/lib/coreos/kubelet-wrapper \
-        --api-servers=http://api.k8s-${project}-${environment}:8080 \
         --network-plugin-dir=/etc/kubernetes/cni/net.d \
         --network-plugin= \
         --register-node=true \
         --allow-privileged=true \
         --config=/etc/kubernetes/manifests \
         --cluster-dns=10.100.0.2 \
-        --cluster-domain=k8s-${project}-${environment} \
         --kubeconfig=/etc/kubernetes/manifests/kubeconfig.yaml \
         --require-kubeconfig
+        --tls-cert-file=/etc/kubernetes/pki/kubelet/kubelet-client.pem \
+        --tls-private-key-file=/etc/kubernetes/pki/kubelet/kubelet-client-key.pem
       Restart=always
       RestartSec=10
       [Install]

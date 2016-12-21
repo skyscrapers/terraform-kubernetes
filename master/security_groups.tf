@@ -17,6 +17,16 @@ resource "aws_security_group_rule" "incoming_elb_api" {
   security_group_id = "${aws_security_group.masters.id}"
 }
 
+resource "aws_security_group_rule" "incoming_elb_api_https" {
+  type                     = "ingress"
+  from_port                = 6443
+  to_port                  = 6443
+  protocol                 = "tcp"
+  source_security_group_id = "${module.master_elb.sg_id}"
+
+  security_group_id = "${aws_security_group.masters.id}"
+}
+
 resource "aws_security_group_rule" "incoming_etcd_self" {
   type      = "ingress"
   from_port = 2379

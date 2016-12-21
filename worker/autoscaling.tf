@@ -60,7 +60,7 @@ resource "aws_launch_configuration" "worker" {
 
 
 data "template_file" "user_data" {
-  template = "${file("${path.module}/../templates/worker/worker-cloud-config.tpl")}"
+  template = "${file("${path.module}/../templates/worker/worker-cloud-config.tpl.yaml")}"
 
   vars {
     project     = "${var.project}"

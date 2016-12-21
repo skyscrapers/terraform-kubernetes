@@ -167,9 +167,9 @@ resource "null_resource" "kubernetes_certificates" {
       cd ../api-server
       cfssl gencert -ca=../ca/ca.pem -ca-key=../ca/ca-key.pem -config=../ca/ca-config.json -profile=server kube-apiserver-server-csr.json | cfssljson -bare kube-apiserver-server
       cd ../kubelet
-      cfssl gencert -ca=../ca/ca.pem -ca-key=../ca/ca-key.pem -config=../ca/ca-config.json -profile=client kubelet-client-csr.json | cfssljson -bare kubelet-client
+      cfssl gencert -ca=../ca/ca.pem -ca-key=../ca/ca-key.pem -config=../ca/ca-config.json -profile=peer kubelet-client-csr.json | cfssljson -bare kubelet-client
       cd ../proxy
-      cfssl gencert -ca=../ca/ca.pem -ca-key=../ca/ca-key.pem -config=../ca/ca-config.json -profile=client kube-proxy-client-csr.json | cfssljson -bare kube-proxy-client
+      cfssl gencert -ca=../ca/ca.pem -ca-key=../ca/ca-key.pem -config=../ca/ca-config.json -profile=peer kube-proxy-client-csr.json | cfssljson -bare kube-proxy-client
       cd ../controller-manager
       cfssl gencert -ca=../ca/ca.pem -ca-key=../ca/ca-key.pem -config=../ca/ca-config.json -profile=client kube-controller-manager-client-csr.json | cfssljson -bare kube-controller-manager-client
       cd ../scheduler

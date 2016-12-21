@@ -2,7 +2,8 @@
     "CN": "*.master.k8s-${project}-${environment}.internal",
     "hosts": [
         "*.master.k8s-${project}-${environment}.internal",
-        "127.0.0.1"
+        "127.0.0.1",
+        "*.eu-west-1.compute.internal"
     ],
     "key": {
         "algo": "ecdsa",

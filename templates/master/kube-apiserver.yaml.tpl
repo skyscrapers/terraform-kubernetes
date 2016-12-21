@@ -29,8 +29,8 @@ spec:
     - --tls-cert-file=/etc/kubernetes/pki/api-server/kube-apiserver-server.pem
     - --tls-private-key-file=/etc/kubernetes/pki/api-server/kube-apiserver-server-key.pem
     - --kubelet-certificate-authority=/etc/kubernetes/pki/ca/ca.pem
-    - --kubelet-client-certificate=/etc/kubernetes/pki/api-server/kube-apiserver-server.pem
-    - --kubelet-client-key=/etc/kubernetes/pki/api-server/kube-apiserver-server-key.pem
+    - --kubelet-client-certificate=/etc/kubernetes/pki/kubelet/kubelet-client.pem
+    - --kubelet-client-key=/etc/kubernetes/pki/kubelet/kubelet-client-key.pem
 
     ports:
     - containerPort: 6443

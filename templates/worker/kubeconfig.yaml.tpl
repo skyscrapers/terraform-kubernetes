@@ -3,7 +3,7 @@ kind: Config
 clusters:
   - cluster:
       certificate-authority: /etc/kubernetes/pki/ca/ca.pem
-      server: http://api.k8s-${project}-${environment}.internal:8080
+      server: https://api.k8s-${project}-${environment}.internal:6443
     name: kubernetes
 contexts:
   - context:

@@ -11,7 +11,7 @@ spec:
     command:
     - /hyperkube
     - proxy
-    - --master=http://api.k8s-${project}-${environment}.internal:8080
+    - --master=https://api.k8s-${project}-${environment}.internal:6443
     - --kubeconfig=/etc/kubernetes/manifests/kubeconfig.yaml
     - --proxy-mode=iptables
     securityContext:

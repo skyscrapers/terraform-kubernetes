@@ -1,6 +1,6 @@
 {
     "CN": "client",
-    "hosts": [""],
+    "hosts": ["*.eu-west-1.compute.internal"],
     "key": {
         "algo": "ecdsa",
         "size": 256

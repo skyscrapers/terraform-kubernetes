@@ -1,6 +1,6 @@
 {
   "CN": "kubelet",
-  "hosts": [""],
+  "hosts": ["*.eu-west-1.compute.internal"],
   "key": {
     "algo": "rsa",
     "size": 2048

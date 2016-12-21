@@ -4,9 +4,9 @@ module "master_elb" {
   subnets           = ["${var.subnets}"]
   project           = "${var.project}"
   environment       = "${var.environment}"
-  instance_port     = 8080
+  instance_port     = 6443
   instance_protocol = "tcp"
-  lb_port           = 8080
+  lb_port           = 6443
   lb_protocol       = "tcp"
   health_target     = "HTTP:8080/healthz"
   internal          = true
