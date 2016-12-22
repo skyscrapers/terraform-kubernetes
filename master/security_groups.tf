@@ -76,3 +76,13 @@ resource "aws_security_group_rule" "allow_all_outgoing" {
 
   security_group_id = "${aws_security_group.masters.id}"
 }
+
+resource "aws_security_group_rule" "allow_k8s_admin_to_masters" {
+  type        = "egress"
+  from_port   = 8080
+  to_port     = 8080
+  protocol    = "tcp"
+  security_group_id = "${var.bastion_sg}"
+  source_security_group_id = "${module.master_elb.sg_id}"
+}
+
