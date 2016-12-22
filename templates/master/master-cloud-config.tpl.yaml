@@ -108,7 +108,6 @@ coreos:
       --api-servers=http://127.0.0.1:8080 \
       --network-plugin-dir=/etc/kubernetes/cni/net.d \
       --network-plugin= \
-      -—configure-cbr0=true \
       --register-schedulable=false \
       --allow-privileged=true \
       --config=/etc/kubernetes/manifests \
@@ -131,9 +130,3 @@ coreos:
 
       [Install]
       WantedBy=sockets.target
-  - name: docker.service
-    drop-ins:
-    - name: 10-docker0.conf
-      content: |
-        [Service]
-        Environment="DOCKER_OPTS=-b=cbr0"
