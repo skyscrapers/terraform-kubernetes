@@ -1,6 +1,6 @@
 module "master_elb" {
   source            = "github.com/skyscrapers/terraform-loadbalancers//elb_no_ssl_no_s3logs?ref=be1e9c0f5b030a8a46609954b701a0882551e93d"
-  name              = "k8s-master"
+  name              = "k8s-mas"
   subnets           = ["${var.subnets}"]
   project           = "${var.project}"
   environment       = "${var.environment}"
