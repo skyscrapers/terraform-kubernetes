@@ -47,7 +47,7 @@ coreos:
       ExecStart=/usr/lib/coreos/kubelet-wrapper \
         --network-plugin-dir=/etc/kubernetes/cni/net.d \
         --network-plugin= \
-        -—configure-cbr0=true \
+        --configure-cbr0=true \
         --register-node=true \
         --allow-privileged=true \
         --config=/etc/kubernetes/manifests \
