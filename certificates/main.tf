@@ -276,6 +276,9 @@ resource "aws_s3_bucket_object" "ca_pem" {
   key = "/pki/kubernetes/ca/ca.pem"
   source = "${path.cwd}/pki/kubernetes/ca/ca.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
 
 resource "aws_s3_bucket_object" "ca_key_pem" {
@@ -284,6 +287,9 @@ resource "aws_s3_bucket_object" "ca_key_pem" {
   key = "/pki/kubernetes/ca/ca-key.pem"
   source = "${path.cwd}/pki/kubernetes/ca/ca-key.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
 
 resource "aws_s3_bucket_object" "kubernetes_admin_user_pem" {
@@ -292,6 +298,9 @@ resource "aws_s3_bucket_object" "kubernetes_admin_user_pem" {
   key = "/pki/kubernetes/admin/kubernetes-admin-user.pem"
   source = "${path.cwd}/pki/kubernetes/admin/kubernetes-admin-user.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
 
 resource "aws_s3_bucket_object" "kubernetes_admin_user_key_pem" {
@@ -300,6 +309,9 @@ resource "aws_s3_bucket_object" "kubernetes_admin_user_key_pem" {
   key = "/pki/kubernetes/admin/kubernetes-admin-user-key.pem"
   source = "${path.cwd}/pki/kubernetes/admin/kubernetes-admin-user-key.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
 
 resource "aws_s3_bucket_object" "kube_apiserver_pem" {
@@ -308,6 +320,9 @@ resource "aws_s3_bucket_object" "kube_apiserver_pem" {
   key = "/pki/kubernetes/api-server/kube-apiserver-server.pem"
   source = "${path.cwd}/pki/kubernetes/api-server/kube-apiserver-server.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
 
 resource "aws_s3_bucket_object" "kube_apiserver_key_pem" {
@@ -316,6 +331,9 @@ resource "aws_s3_bucket_object" "kube_apiserver_key_pem" {
   key = "/pki/kubernetes/api-server/kube-apiserver-server-key.pem"
   source = "${path.cwd}/pki/kubernetes/api-server/kube-apiserver-server-key.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
 
 resource "aws_s3_bucket_object" "kube_controller_manager_pem" {
@@ -324,6 +342,9 @@ resource "aws_s3_bucket_object" "kube_controller_manager_pem" {
   key = "/pki/kubernetes/controller-manager/kube-controller-manager-client.pem"
   source = "${path.cwd}/pki/kubernetes/controller-manager/kube-controller-manager-client.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
 
 resource "aws_s3_bucket_object" "kube_controller_manager_key_pem" {
@@ -332,6 +353,9 @@ resource "aws_s3_bucket_object" "kube_controller_manager_key_pem" {
   key = "/pki/kubernetes/controller-manager/kube-controller-manager-client-key.pem"
   source = "${path.cwd}/pki/kubernetes/controller-manager/kube-controller-manager-client-key.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
 
 resource "aws_s3_bucket_object" "kubelet_pem" {
@@ -340,6 +364,9 @@ resource "aws_s3_bucket_object" "kubelet_pem" {
   key = "/pki/kubernetes/kubelet/kubelet-client.pem"
   source = "${path.cwd}/pki/kubernetes/kubelet/kubelet-client.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
 
 resource "aws_s3_bucket_object" "kubelet_key_pem" {
@@ -348,6 +375,9 @@ resource "aws_s3_bucket_object" "kubelet_key_pem" {
   key = "/pki/kubernetes/kubelet/kubelet-client-key.pem"
   source = "${path.cwd}/pki/kubernetes/kubelet/kubelet-client-key.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
 
 resource "aws_s3_bucket_object" "proxy_pem" {
@@ -356,6 +386,9 @@ resource "aws_s3_bucket_object" "proxy_pem" {
   key = "/pki/kubernetes/proxy/kube-proxy-client.pem"
   source = "${path.cwd}/pki/kubernetes/proxy/kube-proxy-client.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
 
 resource "aws_s3_bucket_object" "proxy_key_pem" {
@@ -364,6 +397,9 @@ resource "aws_s3_bucket_object" "proxy_key_pem" {
   key = "/pki/kubernetes/proxy/kube-proxy-client-key.pem"
   source = "${path.cwd}/pki/kubernetes/proxy/kube-proxy-client-key.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
 
 resource "aws_s3_bucket_object" "scheduler_pem" {
@@ -372,6 +408,9 @@ resource "aws_s3_bucket_object" "scheduler_pem" {
   key = "/pki/kubernetes/scheduler/kube-scheduler-client.pem"
   source = "${path.cwd}/pki/kubernetes/scheduler/kube-scheduler-client.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
 
 resource "aws_s3_bucket_object" "scheduler_key_pem" {
@@ -380,6 +419,9 @@ resource "aws_s3_bucket_object" "scheduler_key_pem" {
   key = "/pki/kubernetes/scheduler/kube-scheduler-client-key.pem"
   source = "${path.cwd}/pki/kubernetes/scheduler/kube-scheduler-client-key.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
 
 resource "aws_s3_bucket_object" "etcd2_client_pem" {
@@ -388,6 +430,9 @@ resource "aws_s3_bucket_object" "etcd2_client_pem" {
   key = "/pki/etcd2/etcd2-client-client.pem"
   source = "${path.cwd}/pki/etcd2/etcd2-client-client.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
 
 resource "aws_s3_bucket_object" "etcd2_client_key_pem" {
@@ -396,6 +441,9 @@ resource "aws_s3_bucket_object" "etcd2_client_key_pem" {
   key = "/pki/etcd2/etcd2-client-client-key.pem"
   source = "${path.cwd}/pki/etcd2/etcd2-client-client-key.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
 
 resource "aws_s3_bucket_object" "etcd2_peer_pem" {
@@ -404,6 +452,9 @@ resource "aws_s3_bucket_object" "etcd2_peer_pem" {
   key = "/pki/etcd2/etcd2-peer-client.pem"
   source = "${path.cwd}/pki/etcd2/etcd2-peer-client.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
 
 resource "aws_s3_bucket_object" "etcd2_peer_key_pem" {
@@ -412,6 +463,9 @@ resource "aws_s3_bucket_object" "etcd2_peer_key_pem" {
   key = "/pki/etcd2/etcd2-peer-client-key.pem"
   source = "${path.cwd}/pki/etcd2/etcd2-peer-client-key.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
 
 resource "aws_s3_bucket_object" "etcd2_server_pem" {
@@ -420,6 +474,9 @@ resource "aws_s3_bucket_object" "etcd2_server_pem" {
   key = "/pki/etcd2/etcd2-server-server.pem"
   source = "${path.cwd}/pki/etcd2/etcd2-server-server.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
 
 resource "aws_s3_bucket_object" "etcd2_server_key_pem" {
@@ -428,4 +485,7 @@ resource "aws_s3_bucket_object" "etcd2_server_key_pem" {
   key = "/pki/etcd2/etcd2-server-server-key.pem"
   source = "${path.cwd}/pki/etcd2/etcd2-server-server-key.pem"
   content_type = "text/plain"
+  lifecycle {
+    ignore_changes = ["source"]
+  }
 }
