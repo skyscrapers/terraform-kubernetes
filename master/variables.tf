@@ -33,3 +33,9 @@ variable "endpoints_map" {
     "9" = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
   }
 }
+
+variable "cluster_cidr" {}
+
+variable "k8s_version" {}
+
+variable "service_ip_range" {}

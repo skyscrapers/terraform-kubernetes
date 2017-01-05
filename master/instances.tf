@@ -56,7 +56,8 @@ data "template_file" "user_data" {
     master_num  = "${count.index +1}"
     project     = "${var.project}"
     environment = "${var.environment}"
-    k8s_version = "v1.4.6_coreos.0"
+    k8s_version = "${var.k8s_version}"
+    cluster_dns = "${cidrhost(data.aws_vpc.vpc_info.cidr_block, 2) }"
     endpoints   = "${join(",", formatlist("https://%s.master.k8s-%s-%s.internal:2379", var.endpoints_map[var.amount_masters], var.project, var.environment))}"
     content_ca_pem = "${base64encode("${data.aws_s3_bucket_object.ca_pem.body}")}"
     content_client_pem = "${base64encode("${data.aws_s3_bucket_object.etcd2_client_pem.body}")}"
@@ -86,4 +87,8 @@ resource "aws_ebs_volume" "masters" {
 
 data "aws_availability_zones" "available" {
   state = "available"
+}
+
+data "aws_vpc" "vpc_info" {
+ id = "${data.aws_subnet.subnet_info.vpc_id}"
 }

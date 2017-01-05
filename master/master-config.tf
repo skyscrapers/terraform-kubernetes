@@ -5,12 +5,10 @@ data "template_file" "kube_apiserver" {
   count    = "${var.amount_masters}"
 
   vars {
-    service_ip_range = "10.100.0.0/16"
-    k8s_version      = "v1.4.6_coreos.0"
+    service_ip_range = "${var.service_ip_range}"
+    k8s_version      = "${var.k8s_version}"
     etcd_servers     = "${join(",", formatlist("http://%s.master.k8s-%s-%s.internal:2389", var.endpoints_map[var.amount_masters], var.project, var.environment))}"
     private_ip       = "${element(module.masters.instance_private_ip, count.index)}"
-
-    #cluster_cidr     = "10.200.0.0/16"
   }
 }
 
@@ -28,12 +26,12 @@ data "template_file" "kube_controller_manager" {
   count    = "${var.amount_masters}"
 
   vars {
-    service_ip_range = "10.100.0.0/16"
-    k8s_version      = "v1.4.6_coreos.0"
+    service_ip_range = "${var.service_ip_range}"
+    k8s_version      = "${var.k8s_version}"
 
     #etcd_servers     = "${join(",", formatlist("http://%s.master.k8s-%s-%s.internal:2389", var.endpoints_map[var.amount_masters], var.project, var.environment))}"
     #private_ip       = "${element(module.masters.instance_private_ip, count.index)}"
-    cluster_cidr = "10.200.0.0/16"
+    cluster_cidr = "${var.cluster_cidr}"
   }
 }
 
@@ -55,13 +53,11 @@ data "template_file" "kube_proxy" {
     environment = "${var.environment}"
 
     #service_ip_range = "10.0.0.0/16"
-    k8s_version = "v1.4.6_coreos.0"
+    k8s_version = "${var.k8s_version}"
 
     #etcd_servers     = "${join(",", formatlist("http://%s.master.k8s-%s-%s.internal:2389", var.endpoints_map[var.amount_masters], var.project, var.environment))}"
 
     #private_ip       = "${element(module.masters.instance_private_ip, count.index)}"
-
-    #cluster_cidr     = "10.200.0.0/16"
   }
 }
 
@@ -80,13 +76,12 @@ data "template_file" "kube_scheduler" {
 
   vars {
     #service_ip_range = "10.0.0.0/16"
-    k8s_version = "v1.4.6_coreos.0"
+    k8s_version = "${var.k8s_version}"
 
     #etcd_servers     = "${join(",", formatlist("http://%s.master.k8s-%s-%s.internal:2389", var.endpoints_map[var.amount_masters], var.project, var.environment))}"
 
     #private_ip       = "${element(module.masters.instance_private_ip, count.index)}"
 
-    #cluster_cidr     = "10.200.0.0/16"
   }
 }
 

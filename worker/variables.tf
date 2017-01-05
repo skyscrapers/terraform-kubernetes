@@ -18,3 +18,7 @@ variable "bastion_sg" {}
 variable "instance_type" {}
 
 variable "k8s_data_bucket" {}
+
+variable "cluster_cidr" {}
+
+variable "k8s_version" {}

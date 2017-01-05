@@ -6,7 +6,7 @@ data "template_file" "kube_proxy" {
   vars {
     project     = "${var.project}"
     environment = "${var.environment}"
-    k8s_version = "v1.4.6_coreos.0"
+    k8s_version = "${var.k8s_version}"
   }
 }
 
@@ -24,7 +24,7 @@ data "template_file" "kube_config" {
   vars {
     project     = "${var.project}"
     environment = "${var.environment}"
-    k8s_version = "v1.4.6_coreos.0"
+    k8s_version = "${var.k8s_version}"
   }
 }
 

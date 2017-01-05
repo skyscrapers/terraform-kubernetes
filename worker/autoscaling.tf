@@ -65,6 +65,12 @@ data "template_file" "user_data" {
   vars {
     project     = "${var.project}"
     environment = "${var.environment}"
-    k8s_version = "v1.4.6_coreos.0"
+    k8s_version = "${var.k8s_version}"
+    cluster_cidr = "${var.cluster_cidr}"
+    cluster_dns = "${cidrhost(data.aws_vpc.vpc_info.cidr_block, 2) }"
   }
+}
+
+data "aws_vpc" "vpc_info" {
+ id = "${data.aws_subnet.subnet_info.vpc_id}"
 }

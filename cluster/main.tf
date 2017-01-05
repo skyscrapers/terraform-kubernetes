@@ -10,6 +10,8 @@ module "workers" {
   environment        = "${var.environment}"
   max_amount_workers = "${var.max_amount_workers}"
   k8s_data_bucket    = "${var.k8s_data_bucket}"
+  cluster_cidr       = "${var.cluster_cidr}"
+  k8s_version        = "${var.k8s_version}"
 }
 
 module "masters" {
@@ -23,4 +25,7 @@ module "masters" {
   environment    = "${var.environment}"
   amount_masters = "${var.amount_masters}"
   k8s_data_bucket = "${var.k8s_data_bucket}"
+  cluster_cidr       = "${var.cluster_cidr}"
+  k8s_version        = "${var.k8s_version}"
+  service_ip_range   = "${var.service_ip_range}"
 }

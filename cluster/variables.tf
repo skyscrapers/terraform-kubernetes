@@ -31,3 +31,9 @@ variable "environment" {}
 variable "max_amount_workers" {}
 
 variable "amount_masters" {}
+
+variable "cluster_cidr" {}
+
+variable "k8s_version" {}
+
+variable "service_ip_range" {}
