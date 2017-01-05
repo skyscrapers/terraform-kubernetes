@@ -100,9 +100,7 @@ coreos:
       Environment="RKT_OPTS=--volume var-log,kind=host,source=/var/log \
       --mount volume=var-log,target=/var/log \
       --volume dns,kind=host,source=/etc/resolv.conf \
-      --mount volume=dns,target=/etc/resolv.conf" \
-      --volume=usr-sbin,kind=host,source=/usr/sbin \
-      --mount=volume=usr-sbin,target=/usr/sbin"
+      --mount volume=dns,target=/etc/resolv.conf"
 
       ExecStart=/usr/lib/coreos/kubelet-wrapper \
       --api-servers=http://127.0.0.1:8080 \
@@ -111,7 +109,7 @@ coreos:
       --register-schedulable=false \
       --allow-privileged=true \
       --config=/etc/kubernetes/manifests \
-      --cluster-dns=10.100.0.2 \
+      --cluster-dns=${cluster_dns} \
       Restart=always
       RestartSec=10
       [Install]
