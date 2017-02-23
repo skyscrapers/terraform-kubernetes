@@ -1,0 +1,84 @@
+---
+apiVersion: kops/v1alpha2
+kind: Cluster
+metadata:
+  name: ${name}
+spec:
+  api:
+    loadBalancer:
+      type: Public
+      idleTimeoutSeconds: 300
+  channel: stable
+  cloudProvider: aws
+  configBase: s3://kops-skyscrape-rs-state/kops.k8s-int-kops.skyscrape.rs
+  etcdClusters:
+  - etcdMembers:
+    - instanceGroup: master-eu-west-1a
+      name: a
+    - instanceGroup: master-eu-west-1b
+      name: b
+    - instanceGroup: master-eu-west-1c
+      name: c
+    name: main
+  - etcdMembers:
+    - instanceGroup: master-eu-west-1a
+      name: a
+    - instanceGroup: master-eu-west-1b
+      name: b
+    - instanceGroup: master-eu-west-1c
+      name: c
+    name: events
+  kubernetesApiAccess:
+  - 0.0.0.0/0
+  kubernetesVersion: 1.5.2
+  masterInternalName: api.internal.kops.k8s-int-kops.skyscrape.rs
+  masterPublicName: api.kops.k8s-int-kops.skyscrape.rs
+  networkCIDR: 10.14.0.0/16
+  networkID: vpc-f03f3a94
+  networking:
+    cni: {}
+  nonMasqueradeCIDR: 100.65.0.0/10
+  sshAccess:
+  - 0.0.0.0/0
+  subnets:
+  - cidr: 10.14.203.0/24
+    name: management-a
+    type: Private
+    zone: eu-west-1a
+  - cidr: 10.14.204.0/24
+    name: management-b
+    type: Private
+    zone: eu-west-1b
+  - cidr: 10.14.205.0/24
+    name: management-c
+    type: Private
+    zone: eu-west-1c
+  # - cidr: 10.14.23.0/24
+  #   name: nodes-a
+  #   type: Private
+  #   zone: eu-west-1a
+  # - cidr: 10.14.24.0/24
+  #   name: nodes-b
+  #   type: Private
+  #   zone: eu-west-1b
+  # - cidr: 10.14.25.0/24
+  #   name: nodes-c
+  #   type: Private
+  #   zone: eu-west-1c
+  - cidr: 10.14.13.0/24
+    name: public-a
+    type: Utility
+    zone: eu-west-1a
+  - cidr: 10.14.14.0/24
+    name: public-b
+    type: Utility
+    zone: eu-west-1b
+  - cidr: 10.14.15.0/24
+    name: public-c
+    type: Utility
+    zone: eu-west-1c
+  topology:
+    dns:
+      type: Public
+    masters: private
+    nodes: private

@@ -1,0 +1,21 @@
+---
+apiVersion: kops/v1alpha2
+kind: InstanceGroup
+metadata:
+  labels:
+    kops.k8s.io/cluster: ${name}
+  name: nodes
+spec:
+  image: kope.io/k8s-1.5-debian-jessie-amd64-hvm-ebs-2017-01-09
+  machineType: t2.medium
+  maxSize: 6
+  minSize: 3
+  role: Node
+  subnets:
+  - management-a
+  - management-b
+  - maangement-c
+  cloudLabels:
+    role: node
+    subnet: app
+    access: private
