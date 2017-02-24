@@ -99,16 +99,16 @@ data template_file "cluster-spec" {
   template = "${file("${path.module}/../templates/kops-cluster.tpl.yaml")}"
 
   vars {
-    project = "${var.project}"
-    environment = "${var.environment}"
-    name = "${var.name}"
-    k8s_version = "${var.k8s_version}"
-    vpc_id = "${data.aws_vpc.vpc_for_k8s.id}"
-    vpc_cidr = "${data.aws_vpc.vpc_for_k8s.cidr_block}"
-    k8s_data_bucket = "${var.k8s_data_bucket}"
-    master_subnets = "${join("\n",data.template_file.master-subnet-spec.*.rendered)}"
-    #node_subnets = "${join("\n",data.template_file.node-subnet-spec.*.rendered)}"
-    utility_subnets = "${join("\n",data.template_file.utility-subnet-spec.*.rendered)}"
+    name                  = "${var.name}"
+    k8s_version           = "${var.k8s_version}"
+    vpc_id                = "${data.aws_vpc.vpc_for_k8s.id}"
+    vpc_cidr              = "${data.aws_vpc.vpc_for_k8s.cidr_block}"
+    k8s_data_bucket       = "${var.k8s_data_bucket}"
+    master_subnets        = "${join("\n",data.template_file.master-subnet-spec.*.rendered)}"
+    #node_subnets          = "${join("\n",data.template_file.node-subnet-spec.*.rendered)}"
+    utility_subnets       = "${join("\n",data.template_file.utility-subnet-spec.*.rendered)}"
+    master_instance_group = "${join("\n",data.template_file.master-instancegroup-spec.*.rendered)}"
+    nodes_instance_group  = "${data.template_file.nodes-instancegroup-spec.rendered}"
   }
 }
 
@@ -119,10 +119,6 @@ resource "null_resource" "kops_full_cluster-spec_file" {
     command = <<-EOC
       tee kops-cluster.yaml <<EOF
       ${data.template_file.cluster-spec.rendered}
-      ${data.template_file.master-instancegroup-spec.0.rendered}
-      ${data.template_file.master-instancegroup-spec.1.rendered}
-      ${data.template_file.master-instancegroup-spec.2.rendered}
-      ${data.template_file.nodes-instancegroup-spec.rendered}
       EOF
       EOC
   }
