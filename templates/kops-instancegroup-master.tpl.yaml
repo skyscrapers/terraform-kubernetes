@@ -3,8 +3,8 @@ apiVersion: kops/v1alpha2
 kind: InstanceGroup
 metadata:
   labels:
-    kops.k8s.io/cluster: ${name}
-  name: master-eu-west-1a
+    kops.k8s.io/cluster: ${cluster-name}
+  name: ${name}
 spec:
   image: kope.io/k8s-1.5-debian-jessie-amd64-hvm-ebs-2017-01-09
   machineType: t2.medium
@@ -12,7 +12,7 @@ spec:
   minSize: 1
   role: Master
   subnets:
-  - management-${index}
+${subnets}
   cloudLabels:
     role: master
     subnet: management

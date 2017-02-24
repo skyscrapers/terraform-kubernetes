@@ -7,6 +7,8 @@ terraform {
 #  * Use separate management and node subnets once the fix for this is released:
 #      https://github.com/kubernetes/kops/issues/1980
 #
+### NOTE: Do not change the layout of the template files or your will get unnecessary empty lines
+###       in the generated output.
 
 data "aws_vpc" "vpc_for_k8s" {
   id = "${var.vpc_id}"
@@ -16,16 +18,16 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
-### NOTE: Do not change the layout of the template files or your will get unnecessary empty lines
-###       in the generated output.
+#########################################################
+# Subnets
+#########################################################
 
-# Private subnets to host the Kubernetes master nodes
 data template_file "master-subnet-spec" {
   count = "3"
   template = "${file("${path.module}/../templates/kops-cluster-subnet.tpl.yaml")}"
 
   vars {
-    name = "management-${count.index}"
+    name = "${element(formatlist("master-%s", data.aws_availability_zones.available.names),count.index)}"
     type = "Private"
     zone = "${element(data.aws_availability_zones.available.names, count.index)}"
     id   = ""
@@ -40,7 +42,7 @@ data template_file "master-subnet-spec" {
 #   template = "${file("${path.module}/../templates/kops-cluster-subnet.tpl.yaml")}"
 
 #   vars {
-#     name = "node-${count.index}"
+#     name = "element(formatlist("node-%s", data.aws_availability_zones.available.names)"
 #     type = "Private"
 #     zone = "${element(data.aws_availability_zones.available.names, count.index)}"
 #     id   = ""
@@ -54,13 +56,44 @@ data template_file "utility-subnet-spec" {
   template = "${file("${path.module}/../templates/kops-cluster-subnet.tpl.yaml")}"
 
   vars {
-    name = "utility-${count.index}"
+    name = "${element(formatlist("utility-%s", data.aws_availability_zones.available.names),count.index)}"
     type = "Utility"
     zone = "${element(data.aws_availability_zones.available.names, count.index)}"
     id   = ""
     cidr = "${cidrsubnet(data.aws_vpc.vpc_for_k8s.cidr_block,8,var.utility_net_number+count.index)}"
   }
 }
+
+#########################################################
+# Instance Groups
+#########################################################
+
+data template_file "master-instancegroup-spec" {
+  count = 3
+  template = "${file("${path.module}/../templates/kops-instancegroup-master.tpl.yaml")}"
+
+  vars {
+    name         = "${element(formatlist("master-%s", data.aws_availability_zones.available.names),count.index)}"
+    cluster-name = "${var.name}"
+    subnets      = "${element(formatlist("  - master-%s", data.aws_availability_zones.available.names),count.index)}"
+  }
+}
+
+data template_file "nodes-instancegroup-spec" {
+  template = "${file("${path.module}/../templates/kops-instancegroup-nodes.tpl.yaml")}"
+
+  vars {
+    name         = "nodes"
+    cluster-name = "${var.name}"
+    # TODO Using the master subnets for now. Switch to `node-%s` when the bug mentioned in the notes at the top is fixed.
+    subnets      = "${join("\n", formatlist("  - master-%s", data.aws_availability_zones.available.names))}"
+  }
+
+}
+
+#########################################################
+# Full Cluster
+#########################################################
 
 data template_file "cluster-spec" {
   template = "${file("${path.module}/../templates/kops-cluster.tpl.yaml")}"
@@ -79,28 +112,6 @@ data template_file "cluster-spec" {
   }
 }
 
-data template_file "master-instancegroup-spec" {
-  count = 3
-  template = "${file("${path.module}/../templates/kops-instancegroup-master.tpl.yaml")}"
-
-  vars {
-    project = "${var.project}"
-    environment = "${var.environment}"
-    name = "${var.name}"
-    index = "${count.index}"
-  }
-}
-
-data template_file "nodes-instancegroup-spec" {
-  template = "${file("${path.module}/../templates/kops-instancegroup-nodes.tpl.yaml")}"
-
-  vars {
-    project = "${var.project}"
-    environment = "${var.environment}"
-    name = "${var.name}"
-  }
-
-}
 
 resource "null_resource" "kops_full_cluster-spec_file" {
 
