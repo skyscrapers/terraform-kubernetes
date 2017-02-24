@@ -26,7 +26,7 @@ ${etcd_members_events}
   networkCIDR: ${vpc_cidr}
   networkID: ${vpc_id}
   networking:
-    cni: {}
+    calico: {}
   nonMasqueradeCIDR: 100.65.0.0/10
   sshAccess:
   - 0.0.0.0/0
