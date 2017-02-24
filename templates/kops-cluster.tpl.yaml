@@ -39,4 +39,4 @@ ${utility_subnets}
     masters: private
     nodes: private
 ${master_instance_group}
-${nodes_instance_group}
+${worker_instance_group}

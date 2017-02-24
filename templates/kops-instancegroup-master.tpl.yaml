@@ -7,7 +7,7 @@ metadata:
   name: ${name}
 spec:
   image: kope.io/k8s-1.5-debian-jessie-amd64-hvm-ebs-2017-01-09
-  machineType: t2.medium
+  machineType: ${instance_type}
   maxSize: 1
   minSize: 1
   role: Master
