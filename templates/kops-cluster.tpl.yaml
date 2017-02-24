@@ -13,26 +13,16 @@ spec:
   configBase: s3://${k8s_data_bucket}/${name}
   etcdClusters:
   - etcdMembers:
-    - instanceGroup: master-eu-west-1a
-      name: a
-    - instanceGroup: master-eu-west-1b
-      name: b
-    - instanceGroup: master-eu-west-1c
-      name: c
+${etcd_members_main}
     name: main
   - etcdMembers:
-    - instanceGroup: master-eu-west-1a
-      name: a
-    - instanceGroup: master-eu-west-1b
-      name: b
-    - instanceGroup: master-eu-west-1c
-      name: c
+${etcd_members_events}
     name: events
   kubernetesApiAccess:
   - 0.0.0.0/0
   kubernetesVersion: ${k8s_version}
-  masterInternalName: api.internal.kops.k8s-int-kops.skyscrape.rs
-  masterPublicName: api.kops.k8s-int-kops.skyscrape.rs
+  masterInternalName: api.internal.${name}
+  masterPublicName: api.${name}
   networkCIDR: ${vpc_cidr}
   networkID: ${vpc_id}
   networking:

@@ -95,6 +95,16 @@ data template_file "nodes-instancegroup-spec" {
 # Full Cluster
 #########################################################
 
+data template_file "cluster-etcd-member-spec" {
+  template = "${file("${path.module}/../templates/kops-cluster-etcd-member.tpl.yaml")}"
+  count = "3"
+
+  vars {
+    name    = "${element(formatlist("master-%s", data.aws_availability_zones.available.names),count.index)}"
+    ig-name = "${element(formatlist("master-%s", data.aws_availability_zones.available.names),count.index)}"
+  }
+}
+
 data template_file "cluster-spec" {
   template = "${file("${path.module}/../templates/kops-cluster.tpl.yaml")}"
 
@@ -104,6 +114,8 @@ data template_file "cluster-spec" {
     vpc_id                = "${data.aws_vpc.vpc_for_k8s.id}"
     vpc_cidr              = "${data.aws_vpc.vpc_for_k8s.cidr_block}"
     k8s_data_bucket       = "${var.k8s_data_bucket}"
+    etcd_members_main     = "${join("\n",data.template_file.cluster-etcd-member-spec.*.rendered)}" 
+    etcd_members_events   = "${join("\n",data.template_file.cluster-etcd-member-spec.*.rendered)}" 
     master_subnets        = "${join("\n",data.template_file.master-subnet-spec.*.rendered)}"
     #node_subnets          = "${join("\n",data.template_file.node-subnet-spec.*.rendered)}"
     utility_subnets       = "${join("\n",data.template_file.utility-subnet-spec.*.rendered)}"
