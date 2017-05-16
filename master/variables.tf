@@ -1,6 +1,9 @@
-variable "ami" {}
+variable "blue_ami" {}
+variable "green_ami" {}
 
-variable "instance_type" {}
+variable "instance_type" {
+  default = "t2.small"
+}
 
 variable "key_name" {}
 
@@ -20,7 +23,8 @@ variable "project" {}
 
 variable "environment" {}
 
-variable "amount_masters" {}
+variable "amount_blue_masters" {}
+variable "amount_green_masters" {}
 
 variable "endpoints_map" {
   type = "map"
@@ -36,6 +40,7 @@ variable "endpoints_map" {
 
 variable "cluster_cidr" {}
 
-variable "k8s_version" {}
+variable "k8s_blue_version" {}
+variable "k8s_green_version" {}
 
 variable "service_ip_range" {}
