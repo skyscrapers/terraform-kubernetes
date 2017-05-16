@@ -181,8 +181,8 @@ resource "null_resource" "kubernetes_certificates" {
 
 }
 
-data template_file "etcd2-client" {
-  template = "${file("${path.module}/templates/etcd2/client.tpl.json")}"
+data template_file "etcd3-client" {
+  template = "${file("${path.module}/templates/etcd3/client.tpl.json")}"
 
   vars {
     project = "${var.project}"
@@ -194,8 +194,8 @@ data template_file "etcd2-client" {
   }
 }
 
-data template_file "etcd2-peer" {
-  template = "${file("${path.module}/templates/etcd2/peer.tpl.json")}"
+data template_file "etcd3-peer" {
+  template = "${file("${path.module}/templates/etcd3/peer.tpl.json")}"
 
   vars {
     project = "${var.project}"
@@ -207,8 +207,8 @@ data template_file "etcd2-peer" {
   }
 }
 
-data template_file "etcd2-server" {
-  template = "${file("${path.module}/templates/etcd2/server.tpl.json")}"
+data template_file "etcd3-server" {
+  template = "${file("${path.module}/templates/etcd3/server.tpl.json")}"
 
   vars {
     project = "${var.project}"
@@ -220,46 +220,46 @@ data template_file "etcd2-server" {
   }
 }
 
-resource "null_resource" "etcd2_certificates" {
+resource "null_resource" "etcd3_certificates" {
 
   depends_on = ["null_resource.kubernetes_certificates"]
 
   provisioner "local-exec" {
     command = <<-EOC
-      mkdir -p pki/etcd2
+      mkdir -p pki/etcd3
       EOC
   }
 
   provisioner "local-exec" {
     command = <<-EOC
-      tee pki/etcd2/client.json <<EOF
-      ${data.template_file.etcd2-client.rendered}
+      tee pki/etcd3/client.json <<EOF
+      ${data.template_file.etcd3-client.rendered}
       EOF
       EOC
   }
 
   provisioner "local-exec" {
     command = <<-EOC
-      tee pki/etcd2/peer.json <<EOF
-      ${data.template_file.etcd2-peer.rendered}
+      tee pki/etcd3/peer.json <<EOF
+      ${data.template_file.etcd3-peer.rendered}
       EOF
       EOC
   }
 
   provisioner "local-exec" {
     command = <<-EOC
-      tee pki/etcd2/server.json <<EOF
-      ${data.template_file.etcd2-server.rendered}
+      tee pki/etcd3/server.json <<EOF
+      ${data.template_file.etcd3-server.rendered}
       EOF
       EOC
   }
 
   provisioner "local-exec" {
     command = <<-EOC
-      cd pki/etcd2
-      cfssl gencert -ca=../kubernetes/ca/ca.pem -ca-key=../kubernetes/ca/ca-key.pem -config=../kubernetes/ca/ca-config.json -profile=server server.json | cfssljson -bare etcd2-server-server
-      cfssl gencert -ca=../kubernetes/ca/ca.pem -ca-key=../kubernetes/ca/ca-key.pem -config=../kubernetes/ca/ca-config.json -profile=client peer.json | cfssljson -bare etcd2-peer-client
-      cfssl gencert -ca=../kubernetes/ca/ca.pem -ca-key=../kubernetes/ca/ca-key.pem -config=../kubernetes/ca/ca-config.json -profile=client client.json | cfssljson -bare etcd2-client-client
+      cd pki/etcd3
+      cfssl gencert -ca=../kubernetes/ca/ca.pem -ca-key=../kubernetes/ca/ca-key.pem -config=../kubernetes/ca/ca-config.json -profile=server server.json | cfssljson -bare etcd3-server-server
+      cfssl gencert -ca=../kubernetes/ca/ca.pem -ca-key=../kubernetes/ca/ca-key.pem -config=../kubernetes/ca/ca-config.json -profile=client peer.json | cfssljson -bare etcd3-peer-client
+      cfssl gencert -ca=../kubernetes/ca/ca.pem -ca-key=../kubernetes/ca/ca-key.pem -config=../kubernetes/ca/ca-config.json -profile=client client.json | cfssljson -bare etcd3-client-client
       EOC
   }
 
@@ -424,66 +424,66 @@ resource "aws_s3_bucket_object" "scheduler_key_pem" {
   }
 }
 
-resource "aws_s3_bucket_object" "etcd2_client_pem" {
+resource "aws_s3_bucket_object" "etcd3_client_pem" {
   depends_on = ["null_resource.kubernetes_certificates"]
   bucket = "${aws_s3_bucket.k8s_data.id}"
-  key = "/pki/etcd2/etcd2-client-client.pem"
-  source = "${path.cwd}/pki/etcd2/etcd2-client-client.pem"
+  key = "/pki/etcd3/etcd3-client-client.pem"
+  source = "${path.cwd}/pki/etcd3/etcd3-client-client.pem"
   content_type = "text/plain"
   lifecycle {
     ignore_changes = ["source"]
   }
 }
 
-resource "aws_s3_bucket_object" "etcd2_client_key_pem" {
+resource "aws_s3_bucket_object" "etcd3_client_key_pem" {
   depends_on = ["null_resource.kubernetes_certificates"]
   bucket = "${aws_s3_bucket.k8s_data.id}"
-  key = "/pki/etcd2/etcd2-client-client-key.pem"
-  source = "${path.cwd}/pki/etcd2/etcd2-client-client-key.pem"
+  key = "/pki/etcd3/etcd3-client-client-key.pem"
+  source = "${path.cwd}/pki/etcd3/etcd3-client-client-key.pem"
   content_type = "text/plain"
   lifecycle {
     ignore_changes = ["source"]
   }
 }
 
-resource "aws_s3_bucket_object" "etcd2_peer_pem" {
+resource "aws_s3_bucket_object" "etcd3_peer_pem" {
   depends_on = ["null_resource.kubernetes_certificates"]
   bucket = "${aws_s3_bucket.k8s_data.id}"
-  key = "/pki/etcd2/etcd2-peer-client.pem"
-  source = "${path.cwd}/pki/etcd2/etcd2-peer-client.pem"
+  key = "/pki/etcd3/etcd3-peer-client.pem"
+  source = "${path.cwd}/pki/etcd3/etcd3-peer-client.pem"
   content_type = "text/plain"
   lifecycle {
     ignore_changes = ["source"]
   }
 }
 
-resource "aws_s3_bucket_object" "etcd2_peer_key_pem" {
+resource "aws_s3_bucket_object" "etcd3_peer_key_pem" {
   depends_on = ["null_resource.kubernetes_certificates"]
   bucket = "${aws_s3_bucket.k8s_data.id}"
-  key = "/pki/etcd2/etcd2-peer-client-key.pem"
-  source = "${path.cwd}/pki/etcd2/etcd2-peer-client-key.pem"
+  key = "/pki/etcd3/etcd3-peer-client-key.pem"
+  source = "${path.cwd}/pki/etcd3/etcd3-peer-client-key.pem"
   content_type = "text/plain"
   lifecycle {
     ignore_changes = ["source"]
   }
 }
 
-resource "aws_s3_bucket_object" "etcd2_server_pem" {
+resource "aws_s3_bucket_object" "etcd3_server_pem" {
   depends_on = ["null_resource.kubernetes_certificates"]
   bucket = "${aws_s3_bucket.k8s_data.id}"
-  key = "/pki/etcd2/etcd2-server-server.pem"
-  source = "${path.cwd}/pki/etcd2/etcd2-server-server.pem"
+  key = "/pki/etcd3/etcd3-server-server.pem"
+  source = "${path.cwd}/pki/etcd3/etcd3-server-server.pem"
   content_type = "text/plain"
   lifecycle {
     ignore_changes = ["source"]
   }
 }
 
-resource "aws_s3_bucket_object" "etcd2_server_key_pem" {
+resource "aws_s3_bucket_object" "etcd3_server_key_pem" {
   depends_on = ["null_resource.kubernetes_certificates"]
   bucket = "${aws_s3_bucket.k8s_data.id}"
-  key = "/pki/etcd2/etcd2-server-server-key.pem"
-  source = "${path.cwd}/pki/etcd2/etcd2-server-server-key.pem"
+  key = "/pki/etcd3/etcd3-server-server-key.pem"
+  source = "${path.cwd}/pki/etcd3/etcd3-server-server-key.pem"
   content_type = "text/plain"
   lifecycle {
     ignore_changes = ["source"]
