@@ -38,3 +38,7 @@ variable "utility_net_number" {
 variable "k8s_version" {
 	description = "Kubernetes Version to deploy"
 }
+
+variable "oidc_issuer_url" {
+	description = "URL for the OIDC issuer (https://kubernetes.io/docs/admin/authentication/#authenticating-proxy)"
+}

@@ -20,6 +20,9 @@ ${etcd_members_events}
     name: events
   kubernetesApiAccess:
   - 0.0.0.0/0
+  kubeAPIServer:
+    oidcIssuerURL: ${oidc_issuer_url}
+    oidcClientID: kubernetes
   kubernetesVersion: ${k8s_version}
   masterInternalName: api.internal.${name}
   masterPublicName: api.${name}
