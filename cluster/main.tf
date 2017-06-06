@@ -116,6 +116,7 @@ data template_file "cluster-spec" {
     k8s_version           = "${var.k8s_version}"
     vpc_id                = "${data.aws_vpc.vpc_for_k8s.id}"
     vpc_cidr              = "${data.aws_vpc.vpc_for_k8s.cidr_block}"
+    elb_type              = "${var.elb_type}"
     k8s_data_bucket       = "${var.k8s_data_bucket}"
     oidc_issuer_url       = "${var.oidc_issuer_url}"
     etcd_members_main     = "${join("\n",data.template_file.cluster-etcd-member-spec.*.rendered)}"

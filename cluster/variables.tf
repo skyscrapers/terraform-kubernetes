@@ -10,6 +10,11 @@ variable "vpc_id" {
 	description = "Deploy the Kubernetes cluster in this VPC"
 }
 
+variable "elb_type" {
+	description = "Whether to use an Internal or Public ELB in front of the master nodes"
+	default = "Public"
+}
+
 variable "worker_instance_type" {
   default = "t2.medium"
 }
