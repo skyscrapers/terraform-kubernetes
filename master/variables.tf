@@ -7,13 +7,13 @@ variable "instance_type" {
 
 variable "key_name" {}
 
-variable "master_security_groups" {
-  default = ""
-}
+//variable "master_security_groups" {
+//  default = ""
+//}
 
 variable "k8s_data_bucket" {}
 
-variable "bastion_sg" {}
+//variable "bastion_sg" {}
 
 variable "subnets" {
   type = "list"
@@ -38,9 +38,9 @@ variable "endpoints_map" {
   }
 }
 
-variable "cluster_cidr" {}
+//variable "cluster_cidr" {}
 
 variable "k8s_blue_version" {}
 variable "k8s_green_version" {}
 
-variable "service_ip_range" {}
+//variable "service_ip_range" {}

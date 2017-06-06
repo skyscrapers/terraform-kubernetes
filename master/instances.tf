@@ -82,26 +82,18 @@ data "template_file" "user_data" {
   }
 }
 
-resource "aws_volume_attachment" "ebs_att_master" {
-  device_name = "/dev/sdh"
-  count       = "${var.amount_masters}"
-  volume_id   = "${element(aws_ebs_volume.masters.*.id, count.index)}"
-  instance_id = "${element(module.masters.instance_ids, count.index)}"
-
-  skip_destroy = true
-}
-
-resource "aws_ebs_volume" "masters" {
-  count             = "${var.amount_masters}"
-  availability_zone = "${element(data.aws_availability_zones.available.names, count.index)}"
-  size              = 20
-  type              = "gp2"
-}
-
-data "aws_availability_zones" "available" {
-  state = "available"
-}
-
-data "aws_vpc" "vpc_info" {
- id = "${data.aws_subnet.subnet_info.vpc_id}"
-}
+//resource "aws_volume_attachment" "ebs_att_master" {
+//  device_name = "/dev/sdh"
+//  count       = "${var.amount_masters}"
+//  volume_id   = "${element(aws_ebs_volume.masters.*.id, count.index)}"
+//  instance_id = "${element(module.masters.instance_ids, count.index)}"
+//
+//  skip_destroy = true
+//}
+//
+//resource "aws_ebs_volume" "masters" {
+//  count             = "${var.amount_masters}"
+//  availability_zone = "${element(data.aws_availability_zones.available.names, count.index)}"
+//  size              = 20
+//  type              = "gp2"
+//}
