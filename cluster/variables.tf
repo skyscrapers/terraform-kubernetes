@@ -40,5 +40,5 @@ variable "k8s_version" {
 }
 
 variable "oidc_issuer_url" {
-	description = "URL for the OIDC issuer (https://kubernetes.io/docs/admin/authentication/#authenticating-proxy)"
+	description = "URL for the OIDC issuer (https://kubernetes.io/docs/admin/authentication/#openid-connect-tokens)"
 }
