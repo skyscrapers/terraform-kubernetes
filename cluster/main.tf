@@ -2,11 +2,6 @@ terraform {
 	required_version = "> 0.8.0"
 }
 
-# TODO list:
-#  * Allow configuring the API ELB type: Public or Internal
-#  * Use separate management and node subnets once the fix for this is released:
-#      https://github.com/kubernetes/kops/issues/1980
-#
 ### NOTE: Do not change the layout of the template files or your will get unnecessary empty lines
 ###       in the generated output.
 
@@ -17,6 +12,15 @@ data "aws_vpc" "vpc_for_k8s" {
 data "aws_availability_zones" "available" {
   state = "available"
 }
+
+data "aws_ami" "kubernetes_ami" {
+  most_recent = true
+  executable_users = ["self"]
+  # k8s-1.6-debian-jessie-amd64-hvm-ebs-2017-05-02
+  name_regex = "^k8s-${split(".",${var.k8s_version})[0]}.${split(".",${var.k8s_version})[1]}-debian-jessie-amd64-hvm-ebs.*"
+  owners = ["383156758163"]
+}
+
 
 #########################################################
 # Subnets
@@ -73,10 +77,11 @@ data template_file "master-instancegroup-spec" {
   template = "${file("${path.module}/../templates/kops-instancegroup-master.tpl.yaml")}"
 
   vars {
-    name          = "${element(formatlist("master-%s", data.aws_availability_zones.available.names),count.index)}"
-    cluster-name  = "${var.name}"
-    subnets       = "${element(formatlist("  - master-%s", data.aws_availability_zones.available.names),count.index)}"
-    instance_type = "${var.master_instance_type}"
+    name           = "${element(formatlist("master-%s", data.aws_availability_zones.available.names),count.index)}"
+    cluster-name   = "${var.name}"
+    kubernetes_ami = "${data.aws_ami.kubernetes_ami.name}"
+    subnets        = "${element(formatlist("  - master-%s", data.aws_availability_zones.available.names),count.index)}"
+    instance_type  = "${var.master_instance_type}"
   }
 }
 
@@ -86,6 +91,7 @@ data template_file "worker-instancegroup-spec" {
   vars {
     name          = "workers"
     cluster-name  = "${var.name}"
+    kubernetes_ami = "${data.aws_ami.kubernetes_ami.name}"
     subnets       = "${join("\n", formatlist("  - worker-%s", data.aws_availability_zones.available.names))}"
     instance_type = "${var.worker_instance_type}"
     min           = "${length(data.aws_availability_zones.available.names)}"
