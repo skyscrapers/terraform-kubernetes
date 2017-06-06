@@ -15,9 +15,8 @@ data "aws_availability_zones" "available" {
 
 data "aws_ami" "kubernetes_ami" {
   most_recent = true
-  executable_users = ["self"]
   # k8s-1.6-debian-jessie-amd64-hvm-ebs-2017-05-02
-  name_regex = "^k8s-${split(".",${var.k8s_version})[0]}.${split(".",${var.k8s_version})[1]}-debian-jessie-amd64-hvm-ebs.*"
+  name_regex = "^k8s-${element(split(".",var.k8s_version),0)}.${element(split(".",var.k8s_version),1)}-debian-jessie-amd64-hvm-ebs.*"
   owners = ["383156758163"]
 }
 

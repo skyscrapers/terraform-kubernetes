@@ -35,6 +35,7 @@ ${etcd_members_events}
   - 0.0.0.0/0
   subnets:
 ${master_subnets}
+${worker_subnets}
 ${utility_subnets}
   topology:
     dns:
