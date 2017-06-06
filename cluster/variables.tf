@@ -18,10 +18,9 @@ variable "max_amount_workers" {
 	description = "Maximum amount of workers, minimum will be the amount of AZ"
 }
 
-# Currently disabled due to https://github.com/kubernetes/kops/issues/1980
-# variable "worker_net_number" {
-# 	description = "The network number to start with for worker subnet cidr calculation"
-# }
+variable "worker_net_number" {
+	description = "The network number to start with for worker subnet cidr calculation"
+}
 
 variable "master_instance_type" {
   default = "t2.medium"

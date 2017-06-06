@@ -22,6 +22,7 @@ data "aws_availability_zones" "available" {
 # Subnets
 #########################################################
 
+# Private subnets to host the Kubernetes master nodes
 data template_file "master-subnet-spec" {
   count = "3"
   template = "${file("${path.module}/../templates/kops-cluster-subnet.tpl.yaml")}"
@@ -36,19 +37,18 @@ data template_file "master-subnet-spec" {
 }
 
 # Private subnets to host the Kubernetes worker nodes
-# Currently disabled due to https://github.com/kubernetes/kops/issues/1980
-# data template_file "worker-subnet-spec" {
-#   count = "3"
-#   template = "${file("${path.module}/../templates/kops-cluster-subnet.tpl.yaml")}"
+data template_file "worker-subnet-spec" {
+  count = "3"
+  template = "${file("${path.module}/../templates/kops-cluster-subnet.tpl.yaml")}"
 
-#   vars {
-#     name = "element(formatlist("worker-%s", data.aws_availability_zones.available.names)"
-#     type = "Private"
-#     zone = "${element(data.aws_availability_zones.available.names, count.index)}"
-#     id   = ""
-#     cidr = "${cidrsubnet(data.aws_vpc.vpc_for_k8s.cidr_block,8,var.worker_net_number+count.index)}"
-#   }
-# }
+  vars {
+    name = "${element(formatlist("worker-%s", data.aws_availability_zones.available.names), count.index)}"
+    type = "Private"
+    zone = "${element(data.aws_availability_zones.available.names, count.index)}"
+    id   = ""
+    cidr = "${cidrsubnet(data.aws_vpc.vpc_for_k8s.cidr_block,8,var.worker_net_number+count.index)}"
+  }
+}
 
 # Utility subnets are public for ELB creation.
 data template_file "utility-subnet-spec" {
@@ -86,8 +86,7 @@ data template_file "worker-instancegroup-spec" {
   vars {
     name          = "workers"
     cluster-name  = "${var.name}"
-    # TODO Using the master subnets for now. Switch to `worker-%s` when the bug mentioned in the notes at the top is fixed.
-    subnets       = "${join("\n", formatlist("  - master-%s", data.aws_availability_zones.available.names))}"
+    subnets       = "${join("\n", formatlist("  - worker-%s", data.aws_availability_zones.available.names))}"
     instance_type = "${var.worker_instance_type}"
     min           = "${length(data.aws_availability_zones.available.names)}"
     max           = "${var.max_amount_workers}"
@@ -122,10 +121,10 @@ data template_file "cluster-spec" {
     etcd_members_main     = "${join("\n",data.template_file.cluster-etcd-member-spec.*.rendered)}"
     etcd_members_events   = "${join("\n",data.template_file.cluster-etcd-member-spec.*.rendered)}"
     master_subnets        = "${join("\n",data.template_file.master-subnet-spec.*.rendered)}"
-    #worker_subnets          = "${join("\n",data.template_file.worker-subnet-spec.*.rendered)}"
+    worker_subnets        = "${join("\n",data.template_file.worker-subnet-spec.*.rendered)}"
     utility_subnets       = "${join("\n",data.template_file.utility-subnet-spec.*.rendered)}"
     master_instance_group = "${join("\n",data.template_file.master-instancegroup-spec.*.rendered)}"
-    worker_instance_group  = "${data.template_file.worker-instancegroup-spec.rendered}"
+    worker_instance_group = "${data.template_file.worker-instancegroup-spec.rendered}"
   }
 }
 
