@@ -1,11 +1,11 @@
 # terraform-kubernetes
 
-Terraform module to bootstrap a Kubernetes cluster on AWS using 
+Terraform module to bootstrap a Kubernetes cluster on AWS using
 [`kops`](https://github.com/kubernetes/kops).
 
 ## cluster
 Creates a full `kops` cluster specification yaml, including the required
-instance groups 
+instance groups
 
 ### Available variables:
  * [`name`]: String(required): base domain name of the cluster. This domain name will be used to lookup a hosted zone on Route53 and as the base for additional DNS records, e.g. for the API ELB.
@@ -113,9 +113,13 @@ kops update cluster kops.internal.skyscrape.rs --yes
 If there are changes to an ASG, old existing nodes are not replaced automatically. To force this, you can view and execute which items it will upgrade in a rolling manner:
 
 ```
-kops rolling-upgrade cluster kops.internal.skyscrape.rs
-kops rolling-upgrade cluster kops.internal.skyscrape.rs --yes
+kops rolling-update cluster kops.internal.skyscrape.rs
+kops rolling-updatecluster kops.internal.skyscrape.rs --yes
 ```
 
-Note that the `rolling-upgrade` command also connects to the Kuberenetes API to monitor the liveliness of the complete system while the rolling upgrade is taking place.
+Note that the `rolling-update` command also connects to the Kuberenetes API to monitor the liveliness of the complete system while the rolling upgrade is taking place.
 
+If you made changes to one of the settings of your core Kuberenetes components (eg API), you will need to force the rolling update, you can use the following command.
+```
+kops rolling-update cluster kops.internal.skyscrape.rs --instance-group <instance-group-name> --force --yes
+```
