@@ -22,7 +22,8 @@ ${etcd_members_events}
   - 0.0.0.0/0
   kubeAPIServer:
     oidcIssuerURL: ${oidc_issuer_url}
-    oidcClientID: kubernetes
+    oidcClientID: kubesignin
+    oidcUsernameClaim: email
   kubernetesVersion: ${k8s_version}
   masterInternalName: api.internal.${name}
   masterPublicName: api.${name}
