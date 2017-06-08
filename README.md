@@ -13,10 +13,12 @@ instance groups
  * [`k8s_version`]: String(required): The Kubernetes version to deploy.
  * [`vpc_id`]: String(required): The VPC in which the Kubernetes cluster must be deployed
  * [`max_amount_workers`]: String(required): the amount of worker machines which can be deployed.
+ * [`oidc_issuer_url`]: String(required): URL for the [OIDC issuer](https://kubernetes.io/docs/admin/authentication/#openid-connect-tokens).
  * [`worker_instance_type`]: String(optional): The EC2 instance type to use for the worker nodes. Defaults to `t2.medium`.
  * [`master_instance_type`]: String(optional): The EC2 instance type to use for the master nodes. Defaults to `t2.medium`.
  * [`master_net_number`]: String(required): First number of subnet to start of (ex I want a 10.1,10.2,10.3 subnet I specify 1) for the master subnets.
  * [`utility_net_number`]: String(required): First number of subnet to start of (ex I want a 10.1,10.2,10.3 subnet I specify 1) for utility subnets, e.g for load balancers. These are always public subnets.
+ * [`elb_type`]: String(optional): Whether to use an Internal or Public ELB in front of the master nodes. Choices are `Public` or `Internal`. Defaults to `Public`.
 
 ### Output
  * None
@@ -24,9 +26,9 @@ instance groups
 ### Example
 ```
 module "kops-aws" {
-  source            = "github.com/skyscrapers/terraform-kubernetes//cluster?ref=937b2c9103dad47a4f292313cf04549217a43bc4"
+  source               = "github.com/skyscrapers/terraform-kubernetes//cluster?ref=937b2c9103dad47a4f292313cf04549217a43bc4"
   name                 = "kops.internal.skyscrape.rs"
-  k8s_version          = "1.5.2"
+  k8s_version          = "1.6.4"
   vpc_id               = "${module.customer_vpc.vpc_id}"
   k8s_data_bucket      = "kops-skyscrape-rs-state"
   master_instance_type = "m3.large"
@@ -34,6 +36,7 @@ module "kops-aws" {
   worker_instance_type = "c3.large"
   max_amount_workers   = "6"
   utility_net_number   = "13"
+  oidc_issuer_url      = "https://signing.example.com/dex"
 }
 ```
 
