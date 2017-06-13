@@ -8,6 +8,8 @@ spec:
     loadBalancer:
       type: ${elb_type}
       idleTimeoutSeconds: 300
+  authorization:
+    rbac: {}
   channel: stable
   cloudProvider: aws
   configBase: s3://${k8s_data_bucket}/${name}
@@ -24,6 +26,7 @@ ${etcd_members_events}
     oidcIssuerURL: ${oidc_issuer_url}
     oidcClientID: kubesignin
     oidcUsernameClaim: email
+    oidcGroupsClaim: groups
   kubernetesVersion: ${k8s_version}
   masterInternalName: api.internal.${name}
   masterPublicName: api.${name}
