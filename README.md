@@ -96,7 +96,7 @@ The cluster is configured for Container Network Integration (CNI). After the clu
 
 ### Evolve your cluster
 
-If you want to tweak the setup of your cluster, it is quite easy. Note however that while the process is easy, some of the changes you can could break your cluster.
+If you want to tweak the setup of your cluster, it is quite easy. Note however that while the process is easy, some of the changes could potentially break your cluster.
 
 First, update the parameters you want to change in your Terraform setup. Mark the `null_resource` as dirty (see above) and rerun `terraform apply`
 
@@ -117,7 +117,7 @@ If there are changes to an ASG, old existing nodes are not replaced automaticall
 
 ```
 kops rolling-update cluster kops.internal.skyscrape.rs
-kops rolling-updatecluster kops.internal.skyscrape.rs --yes
+kops rolling-update cluster kops.internal.skyscrape.rs --yes
 ```
 
 Note that the `rolling-update` command also connects to the Kuberenetes API to monitor the liveliness of the complete system while the rolling upgrade is taking place.
