@@ -15,7 +15,7 @@ resource "aws_iam_role" "external_dns_role" {
     {
       "Action": "sts:AssumeRole",
       "Principal": {
-        "AWS": "${data.terraform_remote_state.k8s-cluster.k8s_nodes_iam_role_arn}"
+        "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.cluster_nodes_iam_role_name}"
       },
       "Effect": "Allow"
     }
