@@ -69,14 +69,14 @@ data "template_file" "helm_values" {
 
   vars {
     nginx_controller_image_version = "${var.nginx_controller_image_version}"
-    lego_email = "${var.lego_email}"
-    lego_url = "${var.lego_url}"
-    dex_github_client_id = "${var.dex_github_client_id}"
-    dex_github_client_secret = "${var.dex_github_client_secret}"
-    dex_github_org = "${var.dex_github_org}"
-    kubesignin_client_secret = "${var.kubesignin_client_secret}"
-    kubesignin_domain_name = "kubesignin.${var.name}"
-    external_dns_role_arn = "${aws_iam_role.external_dns_role.arn}"
+    lego_email                     = "${var.lego_email}"
+    lego_url                       = "${var.lego_url}"
+    dex_github_client_id           = "${var.dex_github_client_id}"
+    dex_github_client_secret       = "${var.dex_github_client_secret}"
+    dex_github_org                 = "${var.dex_github_org}"
+    kubesignin_client_secret       = "${var.kubesignin_client_secret}"
+    kubesignin_domain_name         = "kubesignin.${var.name}"
+    external_dns_role_arn          = "${aws_iam_role.external_dns_role.arn}"
   }
 }
 
