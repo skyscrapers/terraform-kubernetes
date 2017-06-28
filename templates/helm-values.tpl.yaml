@@ -1,0 +1,37 @@
+# Nginx-ingress
+controller:
+  image:
+    tag: "${nginx_controller_image_version}"
+  publishService:
+    enabled: true
+  rbac:
+    enabled: true
+  stats:
+    enabled: true
+
+# Kube-lego
+config:
+  LEGO_EMAIL: ${lego_email}
+  LEGO_URL: ${lego_url}
+
+# Kube2iam
+host:
+  iptables: true
+  interface: cali+
+
+Dex:
+  Issuer: https://${kubesignin_domain_name}/dex
+  Connector:
+    GitHub:
+      Name: GitHub
+      ClientId: ${dex_github_client_id}
+      ClientSecret: ${dex_github_client_secret}
+      Org: ${dex_github_org}
+
+Kubesignin:
+  ClientSecret: "${kubesignin_client_secret}"
+  RedirectUri: https://${kubesignin_domain_name}/callback
+  DomainName: ${kubesignin_domain_name}
+
+ExternalDNS:
+  IAMRoleARN: ${external_dns_role_arn}
