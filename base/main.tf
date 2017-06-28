@@ -81,9 +81,13 @@ data "template_file" "helm_values" {
 }
 
 resource "null_resource" "helm_values_file" {
+  triggers {
+    content = "${data.template_file.helm_values.rendered}"
+  }
+
   provisioner "local-exec" {
     command = <<-EOC
-      tee helm_values.yaml <<EOF
+      tee ${path.cwd}/helm_values.yaml <<EOF
       ${data.template_file.helm_values.rendered}
       EOF
       EOC

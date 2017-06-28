@@ -1,5 +1,5 @@
 terraform {
-	required_version = "> 0.8.0"
+  required_version = "> 0.8.0"
 }
 
 ### NOTE: Do not change the layout of the template files or your will get unnecessary empty lines
@@ -134,15 +134,16 @@ data template_file "cluster-spec" {
   }
 }
 
-
 resource "null_resource" "kops_full_cluster-spec_file" {
+  triggers {
+    content = "${data.template_file.cluster-spec.rendered}"
+  }
 
   provisioner "local-exec" {
     command = <<-EOC
-      tee kops-cluster.yaml <<EOF
+      tee ${path.cwd}/kops-cluster.yaml <<EOF
       ${data.template_file.cluster-spec.rendered}
       EOF
       EOC
   }
-
 }
