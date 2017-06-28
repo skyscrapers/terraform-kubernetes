@@ -45,7 +45,7 @@ Generates a `helm-values.yaml` file to be used to install all the needed helm pa
 
 This terraform module will add an IAM policy to the k8s cluster nodes roles to allow them to assume other roles in the same AWS account on the path `/kube2iam/`. So if you create a role for a specific deployment in the cluster, make sure you create it on the `/kube2iam/` path.
 
-**Note** that this module must be run **after** there's a running Kubernetes cluster created with the [cluster module](#cluster).
+**Note** that this module must be applied **after** there's a running Kubernetes cluster created with the [cluster module](#cluster), preferably on a different terraform stack.
 
 ### Available variables:
 
