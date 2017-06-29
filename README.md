@@ -128,12 +128,6 @@ Kops creates all the required AWS resources and eventually, your cluster should 
 
 To test if your cluster came up correctly, run the command `kubectl get nodes` and you should see your master and worker nodes listed.
 
-### Deploy initial tooling
-
-The cluster is configured for Container Network Integration (CNI). After the cluster comes up, we first must install a CNI plugin for all the network.
-
-< @luca, can you add the correct instructions for the network setup here? >
-
 ### Deploy base module
 
 Then, in a different terraform stack, deploy the [base module](#base). This will also generate a `helm-values.yaml` file to deploy all the needed helm packages for a base setup.
