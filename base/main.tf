@@ -87,7 +87,7 @@ resource "null_resource" "helm_values_file" {
 
   provisioner "local-exec" {
     command = <<-EOC
-      tee ${path.cwd}/helm_values.yaml <<EOF
+      tee ${path.cwd}/helm-values.yaml <<EOF
       ${data.template_file.helm_values.rendered}
       EOF
       EOC
