@@ -162,6 +162,20 @@ helm install skyscrapers/external-dns --values helm-values.yaml
 helm install skyscrapers/kubesignin --values helm-values.yaml
 ```
 
+### Deploy dashboard
+
+We deploy the dashboard with kubectl as the install through helm gives it a random name and we can't access the dashboard through the proxy
+```
+kubectl create -f https://git.io/kube-dashboard
+```
+
+After this you can access the dashboard through the proxy
+```
+kubectl proxy
+```
+
+Now you can visit `http://127.0.0.1:8001/ui`
+
 ### Evolve your cluster
 
 If you want to tweak the setup of your cluster, it is quite easy. Note however that while the process is easy, some of the changes could potentially break your cluster.
