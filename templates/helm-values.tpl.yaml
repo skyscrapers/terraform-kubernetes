@@ -21,9 +21,9 @@ host:
 
 Dex:
   Issuer: https://${kubesignin_domain_name}/dex
-  Connector:
+  Connectors:
     GitHub:
-      Name: GitHub
+    - Name: GitHub
       ClientId: ${dex_github_client_id}
       ClientSecret: ${dex_github_client_secret}
       Org: ${dex_github_org}
