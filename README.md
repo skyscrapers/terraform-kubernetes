@@ -111,7 +111,7 @@ export AWS_PROFILE=MyProfile
 
 ### Create the cluster
 
-*In the following examples, replace <cluster-name> with the correct cluster name that you're deploying. Normally that'll be `kops.environment.customer.com`.*
+*In the following examples, replace <cluster-name> with the correct cluster name that you're deploying. This is the name you set as `name` in the `cluster` module.*
 
 Now create the cluster with its initial state on the S3 bucket:
 
