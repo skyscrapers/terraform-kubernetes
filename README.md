@@ -98,8 +98,10 @@ Also install `kops`. See the section [Installing](https://github.com/kubernetes/
 `kops` stores it's state in an S3 bucket. Point to the same S3 bucket as given in the Terraform setup:
 
 ```
-$ export KOPS_STATE_STORE=s3://kops-skyscrape-rs-state
+$ export KOPS_STATE_STORE=s3://<s3-bucket-name>
 ```
+
+*Replace `<s3-bucket-name>` with the name of the S3 bucket created with the `cluster` module*
 
 To authenticate kops to AWS, you'll need to either set the credentials as environment variables, or use a profile name in your AWS config file with:
 
@@ -108,6 +110,8 @@ export AWS_PROFILE=MyProfile
 ```
 
 ### Create the cluster
+
+*In the following examples, replace <cluster-name> with the correct cluster name that you're deploying. Normally that'll be `kops.environment.customer.com`.*
 
 Now create the cluster with its initial state on the S3 bucket:
 
@@ -118,8 +122,8 @@ $ kops create -f kops-cluster.yaml
 Generate a new SSH key and register it in kops to use for the nodes admin user:
 
 ```
-$ ssh-keygen -t rsa -b 4096 -C "kops.internal.skyscrape.rs" -N "" -f kops.internal.skyscrape.rs_key
-$ kops create secret --name kops.internal.skyscrape.rs sshpublickey admin -i ./kops.internal.skyscrape.rs_key.pub
+$ ssh-keygen -t rsa -b 4096 -C "<cluster-name>" -N "" -f <cluster-name>_key
+$ kops create secret --name <cluster-name> sshpublickey admin -i ./<cluster-name>_key.pub
 ```
 
 The name argument must match the cluster name you passed to the Terraform setup. Take a peek in the `kops-cluster.yaml` file if your forgot the name.
@@ -127,8 +131,8 @@ The name argument must match the cluster name you passed to the Terraform setup.
 Kops calculates all the tasks it needs to execute. You can just see the output it *wants* to do by running the first command and you really execute it with the second command:
 
 ```
-kops update cluster kops.internal.skyscrape.rs
-kops update cluster kops.internal.skyscrape.rs --yes
+kops update cluster <cluster-name>
+kops update cluster <cluster-name> --yes
 ```
 
 Kops creates all the required AWS resources and eventually, your cluster should become available. If you ran `kops`, it will have saved the config to the API endpoint in the file `~/.kube/config`, ready to use for the Kubernetes CLI `kubectl`.
