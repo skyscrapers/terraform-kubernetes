@@ -119,7 +119,7 @@ Now create the cluster with its initial state on the S3 bucket:
 $ kops create -f kops-cluster.yaml
 ```
 
-Generate a new SSH key and register it in kops to use for the nodes admin user:
+Generate a new SSH key and register it in kops to use for the nodes admin user (remember to add the key to 1password so everyone can use it):
 
 ```
 $ ssh-keygen -t rsa -b 4096 -C "<cluster-name>" -N "" -f <cluster-name>_key
@@ -142,6 +142,14 @@ To test if your cluster came up correctly, run the command `kubectl get nodes` a
 ### Deploy base module
 
 Then, in a different terraform stack, deploy the [base module](#base). This will also generate a `helm-values.yaml` file to deploy all the needed helm packages for a base setup.
+
+If your TF setup was not correct and you need to regenerate the helm values file and Terraform hints that all resources are up to date, just taint the null resource that generates the file:
+
+```console
+$ terraform taint -module=k8s-base null_resource.helm_values_file
+```
+
+And then rerun `terraform apply`.
 
 ### Deploy all helm packages
 
