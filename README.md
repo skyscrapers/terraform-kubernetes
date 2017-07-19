@@ -83,7 +83,7 @@ module "k8s-base" {
 
 ### Bootstrap
 
-First include the generation of the cluster specification to an existing Terraform setup as in the example above. Run Terraform and you will get a file `kops-cluster.yaml` in your current working folder.
+First include the `cluster` module in an existing or new Terraform setup ([example](#example-1)). Run Terraform and you will get a file `kops-cluster.yaml` in your current working folder.
 
 If your TF setup was not correct and you need to regenerate the cluster spec and Terraform hints that all resources are up to date, just mark the cluster spec file resource as dirty:
 
