@@ -83,7 +83,7 @@ module "k8s-base" {
 
 ### Bootstrap
 
-First include the `cluster` module in an existing or new Terraform setup ([example](#example)). Run Terraform and you will get a file `kops-cluster.yaml` in your current working folder.
+First include the `cluster` module in an existing or new Terraform stack ([example](#example)). Run Terraform and you will get a file `kops-cluster.yaml` in your current working folder.
 
 If your TF setup was not correct and you need to regenerate the cluster spec and Terraform hints that all resources are up to date, just mark the cluster spec file resource as dirty:
 
@@ -101,6 +101,12 @@ Also install `kops`. See the section [Installing](https://github.com/kubernetes/
 $ export KOPS_STATE_STORE=s3://kops-skyscrape-rs-state
 ```
 
+To authenticate kops to AWS, you'll need to either set the credentials as environment variables, or use a profile name in your AWS config file with:
+
+```
+export AWS_PROFILE=MyProfile
+```
+
 ### Create the cluster
 
 Now create the cluster with its initial state on the S3 bucket:
@@ -109,10 +115,11 @@ Now create the cluster with its initial state on the S3 bucket:
 $ kops create -f kops-cluster.yaml
 ```
 
-and register the SSH key to use for the nodes admin user:
+Generate a new SSH key and register it in kops to use for the nodes admin user:
 
 ```
-$ kops create secret --name kops.internal.skyscrape.rs sshpublickey admin -i ~/.ssh/skyscrapers.pub
+$ ssh-keygen -t rsa -b 4096 -C "kops.internal.skyscrape.rs" -N "" -f kops.internal.skyscrape.rs_key
+$ kops create secret --name kops.internal.skyscrape.rs sshpublickey admin -i ./kops.internal.skyscrape.rs_key.pub
 ```
 
 The name argument must match the cluster name you passed to the Terraform setup. Take a peek in the `kops-cluster.yaml` file if your forgot the name.
