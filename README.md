@@ -57,7 +57,7 @@ This terraform module will add an IAM policy to the k8s cluster nodes roles to a
 * [`dex_github_client_id`]: String(required): Client id of the GitHub application for the dex authentication. Must be base64 encoded
 * [`dex_github_client_secret`]: String(required): Client secret of the GitHub application for the kubesignin/dex authentication. Must be base64 encoded
 * [`dex_github_org`]: String(required): GitHub organization for the kubesignin/dex authentication
-* [`kubesignin_client_secret`]: String(required): Secret string for the kubesignin/dex authentication
+* [`kubesignin_client_secret`]: String(required): Secret string for the kubesignin/dex authentication. Beware that some characters might give problems in some cases, so we recommend only using alphanumeric characters.
 
 ### Output
 
@@ -149,7 +149,7 @@ Before doing this, you'll need to create a [Github OAuth application](https://gi
 
 Then set the application client id and client secret to the corresponding variables in the `base` module (beware that they need to be base64 encoded).
 
-Also before applying terraform, you'll also need to generate a new random string for the `kubesignin_client_secret` variable.
+Also before applying terraform, you'll also need to generate a new random string for the `kubesignin_client_secret` variable (beware that some characters might give problems in some cases, so we recommend only using alphanumeric characters).
 
 Now you can already apply terraform. This will generate a `helm-values.yaml` file to deploy all the needed helm packages for a base setup.
 
