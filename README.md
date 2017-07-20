@@ -141,7 +141,17 @@ To test if your cluster came up correctly, run the command `kubectl get nodes` a
 
 ### Deploy base module
 
-Then, in a different terraform stack, deploy the [base module](#base). This will also generate a `helm-values.yaml` file to deploy all the needed helm packages for a base setup.
+Then, in a different terraform stack, deploy the [base module](#base).
+
+Before doing this, you'll need to create a [Github OAuth application](https://github.com/organizations/skyscrapers/settings/applications), which will be used to authenticate to the cluster. The main thing to consider when creating the Github application is the callback, which has to be as follows:
+
+`https://kubesignin.<cluster-name>/dex/callback`
+
+Then set the application client id and client secret to the corresponding variables in the `base` module (beware that they need to be base64 encoded).
+
+Also before applying terraform, you'll also need to generate a new random string for the `kubesignin_client_secret` variable.
+
+Now you can already apply terraform. This will generate a `helm-values.yaml` file to deploy all the needed helm packages for a base setup.
 
 If your TF setup was not correct and you need to regenerate the helm values file and Terraform hints that all resources are up to date, just taint the null resource that generates the file:
 
@@ -149,7 +159,7 @@ If your TF setup was not correct and you need to regenerate the helm values file
 $ terraform taint -module=k8s-base null_resource.helm_values_file
 ```
 
-And then rerun `terraform apply`.
+And then re-run `terraform apply`.
 
 ### Deploy all helm packages
 
