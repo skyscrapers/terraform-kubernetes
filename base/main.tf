@@ -77,6 +77,19 @@ data "template_file" "helm_values" {
     kubesignin_client_secret       = "${var.kubesignin_client_secret}"
     kubesignin_domain_name         = "kubesignin.${var.name}"
     external_dns_role_arn          = "${aws_iam_role.external_dns_role.arn}"
+    opsgenie_api_key               = "${var.opsgenie_api_key}"
+    bastion_cidr                   = "${var.bastion_cidr}"
+    alertmanager_domain_name       = "alertmanager.${var.name}"
+    alertmanager_volume_size       = "${var.alertmanager_volume_size}"
+    prometheus_domain_name         = "prometheus.${var.name}"
+    prometheus_volume_size         = "${var.prometheus_volume_size}"
+    prometheus_retention           = "${var.prometheus_retention}"
+    grafana_admin_user             = "${var.grafana_admin_user}"
+    grafana_admin_password         = "${var.grafana_admin_password}"
+    grafana_domain_name            = "grafana.${var.name}"
+    grafana_volume_size            = "${var.grafana_volume_size}"
+    environment                    = "${var.environment}"
+    customer                       = "${var.customer}"
   }
 }
 

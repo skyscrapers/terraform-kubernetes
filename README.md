@@ -8,6 +8,8 @@ Creates a full `kops` cluster specification yaml, including the required instanc
 
 ### Available variables:
  * [`name`]: String(required): base domain name of the cluster. This domain name will be used to lookup a hosted zone on Route53 and as the base for additional DNS records, e.g. for the API ELB.
+ * [`environment`]: String(required): Environment of the cluster
+ * [`customer`]: String(required): Customer name
  * [`k8s_data_bucket`]: String(required): The S3 bucket that `kops` will use to store it's configuration and state.
  * [`k8s_version`]: String(required): The Kubernetes version to deploy.
  * [`vpc_id`]: String(required): The VPC in which the Kubernetes cluster must be deployed
@@ -27,6 +29,8 @@ Creates a full `kops` cluster specification yaml, including the required instanc
 module "kops-aws" {
   source               = "github.com/skyscrapers/terraform-kubernetes//cluster?ref=0.4.0"
   name                 = "kops.internal.skyscrape.rs"
+  environment          = "production"
+  customer             = "customer"
   k8s_version          = "1.6.4"
   vpc_id               = "${module.customer_vpc.vpc_id}"
   k8s_data_bucket      = "kops-skyscrape-rs-state"
@@ -58,6 +62,14 @@ This terraform module will add an IAM policy to the k8s cluster nodes roles to a
 * [`dex_github_client_secret`]: String(required): Client secret of the GitHub application for the kubesignin/dex authentication. Must be base64 encoded
 * [`dex_github_org`]: String(required): GitHub organization for the kubesignin/dex authentication
 * [`kubesignin_client_secret`]: String(required): Secret string for the kubesignin/dex authentication. Beware that some characters might give problems in some cases, so we recommend only using alphanumeric characters.
+* [`opsgenie_api_key`]: String(required): Opsgenie API key from your [prometheus integration](https://docs.opsgenie.com/docs/integrations/prometheus-integration).
+* [`bastion_cidr`]: String(required): Bastion CIDR of your kubernetes cluster.
+* [`alertmanager_volume_size`]: String(optional, default: `20Gi`): Persistent volume size for the AlertManager.
+* [`prometheus_volume_size`]: String(optional, default: `100Gi`): Persistent volume size for Prometheus.
+* [`prometheus_retention`]: String(optional, default: `336h`): Data retention period for Prometheus (default: 2 weeks).
+* [`grafana_admin_user`]: String(optional, default: `admin`): Grafana admin user name.
+* [`grafana_admin_password`]: String(optional, default: `admin`): Grafana admin user password.
+* [`grafana_volume_size`]: String(optional, default: `10Gi`): Persistent volume size Grafana.
 
 ### Output
 
@@ -76,6 +88,8 @@ module "k8s-base" {
   dex_github_client_secret    = "Q2xpZW50U2VjcmV0Q2xpZW50U2VjcmV0Q2xpZW50U2VjcmV0Q2xpZW50U2VjcmV0Q2xpZW50U2VjcmV0"
   dex_github_org              = "skyscrapers"
   kubesignin_client_secret    = "something"
+  opsgenie_api_key            = "somesecretopsgeniekey"
+  bastion_cidr                = "1.2.3.4/32"
 }
 ```
 

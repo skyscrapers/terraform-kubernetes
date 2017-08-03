@@ -35,3 +35,49 @@ variable "dex_github_org" {
 variable "kubesignin_client_secret" {
   description = ""
 }
+
+variable "opsgenie_api_key" {
+  description = "Opsgenie API key from your prometheus integration"
+}
+
+variable "bastion_cidr" {
+  description = "Bastion IP of your kubernetes cluster"
+}
+
+variable "alertmanager_volume_size" {
+  description = "Persistent volume size for the AlertManager"
+  default     = "20Gi"
+}
+
+variable "prometheus_volume_size" {
+  description = "Persistent volume size for Prometheus"
+  default     = "100Gi"
+}
+
+variable "prometheus_retention" {
+  description = "Data retention period for Prometheus"
+  default     = "336h"
+}
+
+variable "grafana_admin_user" {
+  description = "Grafana admin user name"
+  default     = "admin"
+}
+
+variable "grafana_admin_password" {
+  description = "Grafana admin user password"
+  default     = "admin"
+}
+
+variable "grafana_volume_size" {
+  description = "Persistent volume size for Grafana"
+  default     = "10Gi"
+}
+
+variable "environment" {
+  description = "Environment of the cluster"
+}
+
+variable "customer" {
+  description = "Customer name"
+}
