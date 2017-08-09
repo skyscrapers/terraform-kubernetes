@@ -27,6 +27,8 @@ ${etcd_members_events}
     oidcClientID: kubesignin
     oidcUsernameClaim: email
     oidcGroupsClaim: groups
+    runtimeConfig:
+      "batch/v2alpha1": "true"
   kubernetesVersion: ${k8s_version}
   masterInternalName: api.internal.${name}
   masterPublicName: api.${name}
