@@ -44,7 +44,7 @@ prometheus-operator:
   sendAnalytics: false
 
 kube-prometheus:
-  alertmanager: 
+  alertmanager:
     image:
       tag: v0.8.0
     replicaCount: 3
@@ -60,7 +60,10 @@ kube-prometheus:
         routes:
         - match:
             alertname: DeadMansSwitch
-          receiver: 'opsgenie'
+          receiver: opsgenie
+          repeat_interval: 1m
+          group_interval: 0s
+          group_wait: 0s
       receivers:
         - name: opsgenie
           opsgenie_configs:
