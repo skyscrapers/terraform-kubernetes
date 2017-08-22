@@ -198,11 +198,11 @@ helm repo add skyscrapers https://skyscrapers.github.io/charts
 
 Install the base helm packages:
 ```
-helm install skyscrapers/kube2iam --values helm-values.yaml
-helm install skyscrapers/kube-lego --values helm-values.yaml
-helm install skyscrapers/nginx-ingress --values helm-values.yaml
-helm install skyscrapers/external-dns --values helm-values.yaml
-helm install skyscrapers/kubesignin --values helm-values.yaml
+helm upgrade --install kube2iam skyscrapers/kube2iam --values helm-values.yaml
+helm upgrade --install kube-lego skyscrapers/kube-lego --values helm-values.yaml
+helm upgrade --install nginx-ingress skyscrapers/nginx-ingress --values helm-values.yaml
+helm upgrade --install external-dns skyscrapers/external-dns --values helm-values.yaml
+helm upgrade --install kubesignin skyscrapers/kubesignin --values helm-values.yaml
 ```
 
 ### Deploy dashboard
