@@ -1,10 +1,12 @@
+# enables rbac in multiple charts
+# rbac.create is the standard way to enable rbac
+rbac.create: true
+
 # Nginx-ingress
 controller:
   image:
     tag: "${nginx_controller_image_version}"
   publishService:
-    enabled: true
-  rbac:
     enabled: true
   stats:
     enabled: true
@@ -32,10 +34,6 @@ Kubesignin:
   ClientSecret: "${kubesignin_client_secret}"
   RedirectUri: https://${kubesignin_domain_name}/callback
   DomainName: ${kubesignin_domain_name}
-
-ExternalDNS:
-  IAMRoleARN: ${external_dns_role_arn}
-
 
 # Prometheus
 prometheus-operator:

@@ -106,3 +106,26 @@ resource "null_resource" "helm_values_file" {
       EOC
   }
 }
+
+data "template_file" "helm_values_external_dns" {
+  template = "${file("${path.module}/../templates/helm-values-external-dns.tpl.yaml")}"
+
+  vars {
+    external_dns_role_arn = "${aws_iam_role.external_dns_role.arn}"
+    txt_owner_id = "${var.txt_owner_id}"
+  }
+}
+
+resource "null_resource" "helm_values_external_dns_file" {
+  triggers {
+    content = "${data.template_file.helm_values_external_dns.rendered}"
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOC
+      tee ${path.cwd}/helm-values-external-dns.yaml <<EOF
+      ${data.template_file.helm_values_external_dns.rendered}
+      EOF
+      EOC
+  }
+}

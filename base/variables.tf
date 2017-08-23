@@ -81,3 +81,7 @@ variable "environment" {
 variable "customer" {
   description = "Customer name"
 }
+
+variable "txt_owner_id" {
+  default = "external-dns-controller"
+}

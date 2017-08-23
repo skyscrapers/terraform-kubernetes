@@ -1,0 +1,5 @@
+podAnnotations:
+  iam.amazonaws.com/role: ${external_dns_role_arn}
+extraArgs:
+  registry: txt
+  txt-owner-id: ${txt_owner_id}
