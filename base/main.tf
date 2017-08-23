@@ -112,6 +112,7 @@ data "template_file" "helm_values_external_dns" {
 
   vars {
     external_dns_role_arn = "${aws_iam_role.external_dns_role.arn}"
+    txt_owner_id = "${var.txt_owner_id}"
   }
 }
 
