@@ -23,7 +23,7 @@ host:
   interface: cali+
 
 Dex:
-  ImageTag: $dex_image_tag}
+  ImageTag: ${dex_image_tag}
   Issuer: https://${kubesignin_domain_name}/dex
   Connectors:
     GitHub:
