@@ -179,31 +179,8 @@ And then re-run `terraform apply`.
 
 Now that we have the configuration for the different helm packages, we can start deploying them.
 
-First we initialize helm:
-```
-helm init
-```
-
-Then we setup the proper RBAC config for helm:
-```
-kubectl create serviceaccount --namespace kube-system tiller
-kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
-```
-
-Install the Skyscrapers helm repo:
-```
-helm repo add skyscrapers https://skyscrapers.github.io/charts
-```
-
-Install the base helm packages:
-```
-helm upgrade --install kube2iam skyscrapers/kube2iam --values helm-values.yaml
-helm upgrade --install kube-lego skyscrapers/kube-lego --values helm-values.yaml
-helm upgrade --install nginx-ingress skyscrapers/nginx-ingress --values helm-values.yaml
-helm upgrade --install external-dns skyscrapers/external-dns --values helm-values.yaml
-helm upgrade --install kubesignin skyscrapers/kubesignin --values helm-values.yaml
-```
+Setting up Helm and installing the required bootstrap helm packages is described in the 
+[`charts/README`](https://github.com/skyscrapers/charts/blob/master/README.md#bootstrap-base-charts) file.
 
 ### Deploy dashboard
 
