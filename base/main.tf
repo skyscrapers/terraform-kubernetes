@@ -71,6 +71,7 @@ data "template_file" "helm_values" {
     nginx_controller_image_version = "${var.nginx_controller_image_version}"
     lego_email                     = "${var.lego_email}"
     lego_url                       = "${var.lego_url}"
+    dex_image_tag                  = "${var.dex_image_tag}"
     dex_github_client_id           = "${var.dex_github_client_id}"
     dex_github_client_secret       = "${var.dex_github_client_secret}"
     dex_github_org                 = "${var.dex_github_org}"

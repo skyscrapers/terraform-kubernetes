@@ -20,6 +20,10 @@ variable "lego_url" {
   default     = "https://acme-v01.api.letsencrypt.org/directory"
 }
 
+variable "dex_image_tag" {
+  default = "v2.4.1"
+}
+
 variable "dex_github_client_id" {
   description = ""
 }
