@@ -1,6 +1,7 @@
 # enables rbac in multiple charts
 # rbac.create is the standard way to enable rbac
-rbac.create: true
+rbac:
+  create: true
 
 # Nginx-ingress
 controller:
