@@ -37,12 +37,6 @@ Kubesignin:
   RedirectUri: https://${kubesignin_domain_name}/callback
   DomainName: ${kubesignin_domain_name}
 
-# Prometheus
-prometheus-operator:
-  image:
-    tag: v0.11.1
-  sendAnalytics: false
-
 kube-prometheus:
   alertmanager:
     image:
