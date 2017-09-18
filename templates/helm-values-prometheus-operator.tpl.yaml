@@ -1,0 +1,6 @@
+# enables rbac in multiple charts
+# rbac.create is the standard way to enable rbac
+
+image:
+  tag: v0.11.1
+sendAnalytics: false

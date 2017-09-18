@@ -130,3 +130,21 @@ resource "null_resource" "helm_values_external_dns_file" {
       EOC
   }
 }
+
+data "template_file" "helm_values_prometheus_operator" {
+  template = "${file("${path.module}/../templates/helm-values-prometheus-operator.tpl.yaml")}"
+}
+
+resource "null_resource" "helm_values_prometheus_operator_file" {
+  triggers {
+    content = "${data.template_file.helm_values_prometheus_operator.rendered}"
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOC
+      tee ${path.cwd}/helm-values-prometheus-operator.yaml <<EOF
+      ${data.template_file.helm_values_prometheus_operator.rendered}
+      EOF
+      EOC
+  }
+}
