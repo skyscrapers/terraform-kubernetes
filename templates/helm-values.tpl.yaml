@@ -11,6 +11,12 @@ controller:
     enabled: true
   stats:
     enabled: true
+  config:
+    use-proxy-protocol: "true"
+  replicaCount: 3
+  service:
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
 
 # Kube-lego
 config:
