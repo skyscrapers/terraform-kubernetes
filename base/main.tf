@@ -148,3 +148,39 @@ resource "null_resource" "helm_values_prometheus_operator_file" {
       EOC
   }
 }
+
+data "template_file" "helm_values_kube2iam" {
+  template = "${file("${path.module}/../templates/helm-values-kube2iam.tpl.yaml")}"
+}
+
+resource "null_resource" "helm_values_kube2iam_file" {
+  triggers {
+    content = "${data.template_file.helm_values_kube2iam.rendered}"
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOC
+      tee ${path.cwd}/helm-values-kube2iam.yaml <<EOF
+      ${data.template_file.helm_values_kube2iam.rendered}
+      EOF
+      EOC
+  }
+}
+
+data "template_file" "helm_values_kube_lego" {
+  template = "${file("${path.module}/../templates/helm-values-kube-lego.tpl.yaml")}"
+}
+
+resource "null_resource" "helm_values_kube_lego_file" {
+  triggers {
+    content = "${data.template_file.helm_values_kube_lego.rendered}"
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOC
+      tee ${path.cwd}/helm-values-kube-lego.yaml <<EOF
+      ${data.template_file.helm_values_kube_lego.rendered}
+      EOF
+      EOC
+  }
+}

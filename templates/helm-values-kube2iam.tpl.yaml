@@ -1,0 +1,5 @@
+image:
+  tag: 0.8.1
+host:
+  iptables: true
+  interface: cali+

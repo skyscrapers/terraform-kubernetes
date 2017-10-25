@@ -23,11 +23,6 @@ config:
   LEGO_EMAIL: ${lego_email}
   LEGO_URL: ${lego_url}
 
-# Kube2iam
-host:
-  iptables: true
-  interface: cali+
-
 Dex:
   ImageTag: ${dex_image_tag}
   Issuer: https://${kubesignin_domain_name}/dex
