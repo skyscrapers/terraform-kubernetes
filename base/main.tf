@@ -69,8 +69,6 @@ data "template_file" "helm_values" {
 
   vars {
     nginx_controller_image_version = "${var.nginx_controller_image_version}"
-    lego_email                     = "${var.lego_email}"
-    lego_url                       = "${var.lego_url}"
     dex_image_tag                  = "${var.dex_image_tag}"
     dex_github_client_id           = "${var.dex_github_client_id}"
     dex_github_client_secret       = "${var.dex_github_client_secret}"
@@ -169,6 +167,10 @@ resource "null_resource" "helm_values_kube2iam_file" {
 
 data "template_file" "helm_values_kube_lego" {
   template = "${file("${path.module}/../templates/helm-values-kube-lego.tpl.yaml")}"
+  vars {
+    lego_email = "${var.lego_email}"
+    lego_url   = "${var.lego_url}"
+  }
 }
 
 resource "null_resource" "helm_values_kube_lego_file" {
