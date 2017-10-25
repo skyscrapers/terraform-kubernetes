@@ -18,11 +18,6 @@ controller:
     annotations:
       service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
 
-# Kube-lego
-config:
-  LEGO_EMAIL: ${lego_email}
-  LEGO_URL: ${lego_url}
-
 Dex:
   ImageTag: ${dex_image_tag}
   Issuer: https://${kubesignin_domain_name}/dex
