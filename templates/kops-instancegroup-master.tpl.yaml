@@ -17,3 +17,46 @@ ${subnets}
     role: master
     subnet: management
     access: private
+  hooks:
+  - name: etcd2-backup-environment.service
+    manifest: |
+      [Unit]
+      Description=etcd2 backup environemnt service
+
+      [Service]
+      Type=oneshot
+      ExecStart=-/bin/bash -c "echo DOCKER_CONTAINER=\`docker ps --filter label=io.kubernetes.container.name=etcd-container --filter volume=/var/etcd/data --format '{{.ID}}'\` > /tmp/etcd2_container"
+
+      [Install]
+      WantedBy=multi-user.target
+  - name: etcd2-backup.service
+    manifest: |
+      [Unit]
+      Description=etcd2 backup service
+
+      [Service]
+      Type=oneshot
+      ExecStartPre=-/bin/bash -c "echo DOCKER_CONTAINER=\`docker ps --filter label=io.kubernetes.container.name=etcd-container --filter volume=/var/etcd/data --format '{{.ID}}'\` > /tmp/etcd2_container"
+      EnvironmentFile=/tmp/etcd2_container
+      ExecStartPre=-/usr/bin/docker pull skyscrapers/etcd2-backup:latest
+      ExecStart=-/usr/bin/docker run \
+        --volumes-from \$${DOCKER_CONTAINER} \
+        --name etcd2-backup \
+        -e ETCD_NODE=${name} -e K8S_CLUSTER_NAME=${cluster-name} -e KOPS_STATE_BUCKET=${k8s_data_bucket} -e ETCD_DATA_DIR=/var/etcd/data\
+        skyscrapers/etcd2-backup:latest 
+      ExecStartPost=-/usr/bin/docker rm etcd2-backup
+      Requires=etcd2-backup-environment.service
+
+      [Install]
+      WantedBy=multi-user.target
+  - name: etcd2-backup.timer
+    manifest: |
+      [Unit]
+      Description=etcd2-backup service timer
+
+      [Timer]
+      OnBootSec=2min
+      OnUnitActiveSec=60min
+
+      [Install]
+      WantedBy=timers.target

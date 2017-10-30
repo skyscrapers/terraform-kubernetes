@@ -48,5 +48,3 @@ ${utility_subnets}
       type: Public
     masters: private
     nodes: private
-${master_instance_group}
-${worker_instance_group}
