@@ -49,11 +49,11 @@ kube-prometheus:
         receiver: 'opsgenie'
         routes:
         - match:
-            alertname: DeadMansSwitch
+          alertname: DeadMansSwitch
           receiver: opsgenie
-          repeat_interval: 3h
-          group_interval: 60s
-          group_wait: 30s
+          repeat_interval: 1s
+          group_interval: 1s
+          group_wait: 1s
       receivers:
         - name: opsgenie
           opsgenie_configs:
