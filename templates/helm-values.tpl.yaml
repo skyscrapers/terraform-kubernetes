@@ -54,8 +54,6 @@ kube-prometheus:
           repeat_interval: 3h
           group_interval: 60s
           group_wait: 30s
-
-  In general you probably want to stick somewhere around 5-60s for group_wait, 60s-5mins for group_interval, and 3-24h for repeat_interval.
       receivers:
         - name: opsgenie
           opsgenie_configs:
