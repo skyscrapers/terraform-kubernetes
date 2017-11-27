@@ -64,6 +64,11 @@ resource "aws_iam_role_policy" "kube2iam_assume_role_policy" {
 EOF
 }
 
+locals {
+  default_opsgenie_heartbeat_name = "${upper(substr(var.customer,0,1))}${substr(var.customer,1,-1)} ${upper(substr(var.environment,0,1))}${substr(var.environment,1,-1)} Cluster Deadmanswitch"
+  opsgenie_heartbeat_name         = "${var.opsgenie_heartbeat_name != "" ? var.opsgenie_heartbeat_name : local.default_opsgenie_heartbeat_name}"
+}
+
 data "template_file" "helm_values" {
   template = "${file("${path.module}/../templates/helm-values.tpl.yaml")}"
 
@@ -77,6 +82,7 @@ data "template_file" "helm_values" {
     kubesignin_domain_name         = "kubesignin.${var.name}"
     external_dns_role_arn          = "${aws_iam_role.external_dns_role.arn}"
     opsgenie_api_key               = "${var.opsgenie_api_key}"
+    opsgenie_heartbeat_name        = "${local.opsgenie_heartbeat_name}"
     bastion_cidr                   = "${var.bastion_cidr}"
     alertmanager_domain_name       = "alertmanager.${var.name}"
     alertmanager_volume_size       = "${var.alertmanager_volume_size}"

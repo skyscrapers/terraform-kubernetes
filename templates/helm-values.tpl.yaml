@@ -50,7 +50,7 @@ kube-prometheus:
         routes:
         - match:
             alertname: DeadMansSwitch
-          receiver: opsgenie
+          receiver: opsgenieproxy
           repeat_interval: 1s
           group_interval: 1s
           group_wait: 1s
@@ -59,6 +59,10 @@ kube-prometheus:
           opsgenie_configs:
             - api_key: '${opsgenie_api_key}'
               tags: sla_${environment},kubernetes,client_${customer}
+        - name: opsgenieproxy
+          webhook_configs:
+            - send_resolved: false
+              url: http://k8s-monitor-opsgenie-heartbeat-proxy/proxy
     ingress:
       enabled: true
       annotations:
@@ -222,3 +226,7 @@ grafana:
     resources:
       requests:
         storage: ${grafana_volume_size}
+
+opsgenieHeartbeatProxy:
+    opsgenie_api_key: ${opsgenie_api_key}
+    heartbeat_name: ${opsgenie_heartbeat_name}

@@ -44,6 +44,11 @@ variable "opsgenie_api_key" {
   description = "Opsgenie API key from your prometheus integration"
 }
 
+variable "opsgenie_heartbeat_name" {
+  description = "Opsgenie heartbeat name"
+  default = ""
+}
+
 variable "bastion_cidr" {
   description = "Bastion IP of your kubernetes cluster"
 }
