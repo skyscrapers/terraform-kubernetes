@@ -94,3 +94,7 @@ variable "customer" {
 variable "txt_owner_id" {
   default = "external-dns-controller"
 }
+
+variable "proxy_header_configmap" {
+  default = ""
+}

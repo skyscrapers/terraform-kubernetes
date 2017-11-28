@@ -71,6 +71,7 @@ This terraform module will add an IAM policy to the k8s cluster nodes roles to a
 * [`grafana_admin_user`]: String(optional, default: `admin`): Grafana admin user name.
 * [`grafana_admin_password`]: String(optional, default: `admin`): Grafana admin user password.
 * [`grafana_volume_size`]: String(optional, default: `10Gi`): Persistent volume size Grafana.
+* [`proxy_header_configmap`]: String(optional): The configmap name to use for the proxy headers. format: `namespace/configmapname`
 
 ### Output
 
@@ -180,7 +181,7 @@ And then re-run `terraform apply`.
 
 Now that we have the configuration for the different helm packages, we can start deploying them.
 
-Setting up Helm and installing the required bootstrap helm packages is described in the 
+Setting up Helm and installing the required bootstrap helm packages is described in the
 [`charts/README`](https://github.com/skyscrapers/charts/blob/master/README.md#bootstrap-base-charts) file.
 
 ### Deploy dashboard
