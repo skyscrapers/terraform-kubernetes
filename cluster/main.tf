@@ -126,6 +126,7 @@ data template_file "cluster-spec" {
     oidc_issuer_url     = "${var.oidc_issuer_url}"
     etcd_members_main   = "${join("\n",data.template_file.cluster-etcd-member-spec.*.rendered)}"
     etcd_members_events = "${join("\n",data.template_file.cluster-etcd-member-spec.*.rendered)}"
+    etcd_version        = "${var.etcd_version}"
     master_subnets      = "${join("\n",data.template_file.master-subnet-spec.*.rendered)}"
     worker_subnets      = "${join("\n",data.template_file.worker-subnet-spec.*.rendered)}"
     utility_subnets     = "${join("\n",data.template_file.utility-subnet-spec.*.rendered)}"

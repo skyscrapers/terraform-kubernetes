@@ -17,9 +17,11 @@ spec:
   - etcdMembers:
 ${etcd_members_main}
     name: main
+    ${etcd_version != "" ? "version: 3.0.17" : ""}
   - etcdMembers:
 ${etcd_members_events}
     name: events
+    ${etcd_version != "" ? "version: 3.0.17" : ""}
   kubernetesApiAccess:
   - 0.0.0.0/0
   kubeAPIServer:

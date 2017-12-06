@@ -20,6 +20,7 @@ Creates a full `kops` cluster specification yaml, including the required instanc
  * [`master_net_number`]: String(required): First number of subnet to start of (ex I want a 10.1,10.2,10.3 subnet I specify 1) for the master subnets.
  * [`utility_net_number`]: String(required): First number of subnet to start of (ex I want a 10.1,10.2,10.3 subnet I specify 1) for utility subnets, e.g for load balancers. These are always public subnets.
  * [`elb_type`]: String(optional): Whether to use an Internal or Public ELB in front of the master nodes. Choices are `Public` or `Internal`. Defaults to `Public`.
+ * [`etcd_version`]: String(optional): Which Etcd version do you want to run. Defaults to default version defined in Kops.
 
 ### Output
  * None

@@ -46,3 +46,8 @@ variable "k8s_version" {
 variable "oidc_issuer_url" {
 	description = "URL for the OIDC issuer (https://kubernetes.io/docs/admin/authentication/#openid-connect-tokens)"
 }
+
+variable "etcd_version" {
+	description = "Which version of etcd do you want?"
+	default     = ""
+}
