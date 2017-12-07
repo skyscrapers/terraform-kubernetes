@@ -42,6 +42,7 @@ kube-prometheus:
     config:
       global:
         resolve_timeout: 5m
+        slack_api_url: ${slack_webhook_url} 
       route:
         group_by: ['job']
         group_wait: 30s
@@ -49,6 +50,9 @@ kube-prometheus:
         repeat_interval: 12h
         receiver: 'opsgenie'
         routes:
+        - match:
+            severity: warning
+          receiver: slack
         - match:
             alertname: DeadMansSwitch
           receiver: opsgenieproxy
@@ -64,6 +68,11 @@ kube-prometheus:
           webhook_configs:
             - send_resolved: false
               url: http://k8s-monitor-opsgenie-heartbeat-proxy/proxy
+        - name: slack
+          slack_configs:
+            - send_resolved: true
+              username: ${customer}-${environment}
+                   
     ingress:
       enabled: true
       annotations:

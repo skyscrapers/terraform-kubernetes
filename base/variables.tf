@@ -98,3 +98,7 @@ variable "txt_owner_id" {
 variable "proxy_header_configmap" {
   default = ""
 }
+
+variable "slack_webhook_url" {
+  description = "Slack webhook API url as found in your webhook configuration"
+}

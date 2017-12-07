@@ -96,6 +96,7 @@ data "template_file" "helm_values" {
     grafana_volume_size            = "${var.grafana_volume_size}"
     environment                    = "${var.environment}"
     customer                       = "${var.customer}"
+    slack_webhook_url              = "${var.slack_webhook_url}"
   }
 }
 
