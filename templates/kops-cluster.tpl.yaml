@@ -37,7 +37,8 @@ ${etcd_members_events}
   networkCIDR: ${vpc_cidr}
   networkID: ${vpc_id}
   networking:
-    calico: {}
+    calico:
+      crossSubnet: true
   nonMasqueradeCIDR: 100.64.0.0/10
   sshAccess:
   - 0.0.0.0/0
