@@ -42,7 +42,7 @@ kube-prometheus:
     config:
       global:
         resolve_timeout: 5m
-        slack_api_url: ${slack_webhook_url} 
+        slack_api_url: ${slack_webhook_url}
       route:
         group_by: ['job']
         group_wait: 30s
@@ -72,7 +72,7 @@ kube-prometheus:
           slack_configs:
             - send_resolved: true
               username: ${customer}-${environment}
-                   
+
     ingress:
       enabled: true
       annotations:
@@ -145,6 +145,24 @@ kube-prometheus:
         endpoints:
           - port: http
             interval: 30s
+      - name: kubelet-cadvisor
+        serviceMonitorSelectorLabels:
+          prometheus: k8s-monitor
+        selector:
+          matchLabels:
+            k8s-app: kubelet
+        namespaceSelector:
+          matchNames:
+            - kube-system
+        jobLabel: kubelet-cadvisor
+        endpoints:
+          - port: https-metrics
+            interval: 15s
+            path: /metrics/cadvisor
+            scheme: https
+            tlsConfig:
+              caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+              insecureSkipVerify: true
     rules:
       value:
         general.rules: |+
