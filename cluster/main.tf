@@ -16,9 +16,10 @@ data "aws_availability_zones" "available" {
 data "aws_ami" "kubernetes_ami" {
   most_recent = true
 
-  # k8s-1.6-debian-jessie-amd64-hvm-ebs-2017-05-02
-  name_regex = "^k8s-${element(split(".",var.k8s_version),0)}.${element(split(".",var.k8s_version),1)}-debian-jessie-amd64-hvm-ebs.*"
-  owners     = ["383156758163"]
+  # ebs-kubernetes-baseimage-1.7-201712051032
+  # This is a pre build image base on https://github.com/skyscrapers/kubernetes-baseimage
+  name_regex = "^ebs-kubernetes-baseimage-${element(split(".",var.k8s_version),0)}.${element(split(".",var.k8s_version),1)}-*"
+  owners     = ["496014204152"]
 }
 
 #########################################################
@@ -76,12 +77,13 @@ data template_file "master-instancegroup-spec" {
   template = "${file("${path.module}/../templates/kops-instancegroup-master.tpl.yaml")}"
 
   vars {
-    name            = "${element(formatlist("master-%s", data.aws_availability_zones.available.names),count.index)}"
-    cluster-name    = "${var.name}"
-    k8s_data_bucket = "${var.k8s_data_bucket}"
-    kubernetes_ami  = "${data.aws_ami.kubernetes_ami.name}"
-    subnets         = "${element(formatlist("  - master-%s", data.aws_availability_zones.available.names),count.index)}"
-    instance_type   = "${var.master_instance_type}"
+    name               = "${element(formatlist("master-%s", data.aws_availability_zones.available.names),count.index)}"
+    cluster-name       = "${var.name}"
+    k8s_data_bucket    = "${var.k8s_data_bucket}"
+    kubernetes_ami     = "${data.aws_ami.kubernetes_ami.name}"
+    subnets            = "${element(formatlist("  - master-%s", data.aws_availability_zones.available.names),count.index)}"
+    instance_type      = "${var.master_instance_type}"
+    teleport_bootstrap = "${indent(6, module.teleport_bootstrap_script_master.teleport_bootstrap_script)}"
   }
 }
 
@@ -89,13 +91,14 @@ data template_file "worker-instancegroup-spec" {
   template = "${file("${path.module}/../templates/kops-instancegroup-worker.tpl.yaml")}"
 
   vars {
-    name           = "workers"
-    cluster-name   = "${var.name}"
-    kubernetes_ami = "${data.aws_ami.kubernetes_ami.name}"
-    subnets        = "${join("\n", formatlist("  - worker-%s", data.aws_availability_zones.available.names))}"
-    instance_type  = "${var.worker_instance_type}"
-    min            = "${length(data.aws_availability_zones.available.names)}"
-    max            = "${var.max_amount_workers}"
+    name               = "workers"
+    cluster-name       = "${var.name}"
+    kubernetes_ami     = "${data.aws_ami.kubernetes_ami.name}"
+    subnets            = "${join("\n", formatlist("  - worker-%s", data.aws_availability_zones.available.names))}"
+    instance_type      = "${var.worker_instance_type}"
+    min                = "${length(data.aws_availability_zones.available.names)}"
+    max                = "${var.max_amount_workers}"
+    teleport_bootstrap = "${indent(6, module.teleport_bootstrap_script_worker.teleport_bootstrap_script)}"
   }
 }
 
@@ -133,20 +136,44 @@ data template_file "cluster-spec" {
   }
 }
 
-resource "null_resource" "kops_full_cluster-spec_file" {
-  triggers {
+data template_file "kops_full_cluster-spec_file" {
+  template = "${file("${path.module}/../templates/kops-full.tpl.yaml")}"
+
+  vars {
     content_cluster      = "${data.template_file.cluster-spec.rendered}"
     content_master_group = "${join("\n",data.template_file.master-instancegroup-spec.*.rendered)}"
     content_worker_group = "${data.template_file.worker-instancegroup-spec.rendered}"
+  }
+}
+
+resource "null_resource" "kops_full_cluster-spec_file" {
+  triggers {
+    content = "${data.template_file.kops_full_cluster-spec_file.rendered}"
   }
 
   provisioner "local-exec" {
     command = <<-EOC
       tee ${path.cwd}/kops-cluster.yaml <<EOF
-      ${join("\n", concat(list(data.template_file.cluster-spec.rendered),
-                          data.template_file.master-instancegroup-spec.*.rendered,
-                          list(data.template_file.worker-instancegroup-spec.rendered)))}
+      ${data.template_file.kops_full_cluster-spec_file.rendered}
       EOF
       EOC
   }
+}
+
+module "teleport_bootstrap_script_worker" {
+  source      = "github.com/skyscrapers/terraform-teleport//teleport-bootstrap-script?ref=2.2.0"
+  auth_server = "${var.teleport_server}"
+  auth_token  = "${var.teleport_token}"
+  function    = "worker"
+  project     = "kubernetes"
+  environment = "${var.environment}"
+}
+
+module "teleport_bootstrap_script_master" {
+  source      = "github.com/skyscrapers/terraform-teleport//teleport-bootstrap-script?ref=2.2.0"
+  auth_server = "${var.teleport_server}"
+  auth_token  = "${var.teleport_token}"
+  function    = "master"
+  project     = "kubernetes"
+  environment = "${var.environment}"
 }

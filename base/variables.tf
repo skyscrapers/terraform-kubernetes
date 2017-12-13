@@ -46,7 +46,7 @@ variable "opsgenie_api_key" {
 
 variable "opsgenie_heartbeat_name" {
   description = "Opsgenie heartbeat name"
-  default = ""
+  default     = ""
 }
 
 variable "bastion_cidr" {

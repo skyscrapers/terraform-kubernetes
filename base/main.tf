@@ -119,7 +119,7 @@ data "template_file" "helm_values_external_dns" {
 
   vars {
     external_dns_role_arn = "${aws_iam_role.external_dns_role.arn}"
-    txt_owner_id = "${var.txt_owner_id}"
+    txt_owner_id          = "${var.txt_owner_id}"
   }
 }
 
@@ -175,6 +175,7 @@ resource "null_resource" "helm_values_kube2iam_file" {
 
 data "template_file" "helm_values_kube_lego" {
   template = "${file("${path.module}/../templates/helm-values-kube-lego.tpl.yaml")}"
+
   vars {
     lego_email = "${var.lego_email}"
     lego_url   = "${var.lego_url}"

@@ -15,6 +15,9 @@ Creates a full `kops` cluster specification yaml, including the required instanc
  * [`vpc_id`]: String(required): The VPC in which the Kubernetes cluster must be deployed
  * [`max_amount_workers`]: String(required): the amount of worker machines which can be deployed.
  * [`oidc_issuer_url`]: String(required): URL for the [OIDC issuer](https://kubernetes.io/docs/admin/authentication/#openid-connect-tokens).
+ * [`teleport_token`]: String(required): Teleport auth token that this node will present to the auth server
+ * [`teleport_server`]: String (Required): Teleport auth server that this node will connect to, including the port number
+ * [`environment`]: String (optional): Environment where this node belongs to, will be the third part of the node name. Defaults to ''
  * [`worker_instance_type`]: String(optional): The EC2 instance type to use for the worker nodes. Defaults to `t2.medium`.
  * [`master_instance_type`]: String(optional): The EC2 instance type to use for the master nodes. Defaults to `t2.medium`.
  * [`master_net_number`]: String(required): First number of subnet to start of (ex I want a 10.1,10.2,10.3 subnet I specify 1) for the master subnets.
@@ -41,6 +44,8 @@ module "kops-aws" {
   max_amount_workers   = "6"
   utility_net_number   = "13"
   oidc_issuer_url      = "https://signing.example.com/dex"
+  teleport_token       = "78dwgfhjwdk"
+  teleport_server      = "teleport.example.com:3025"
 }
 ```
 
