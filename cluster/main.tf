@@ -19,7 +19,8 @@ data "aws_ami" "kubernetes_ami" {
   # ebs-kubernetes-baseimage-1.7-201712051032
   # This is a pre build image base on https://github.com/skyscrapers/kubernetes-baseimage
   name_regex = "^ebs-kubernetes-baseimage-${element(split(".",var.k8s_version),0)}.${element(split(".",var.k8s_version),1)}-*"
-  owners     = ["496014204152"]
+
+  owners = ["496014204152"]
 }
 
 #########################################################
@@ -146,18 +147,9 @@ data template_file "kops_full_cluster-spec_file" {
   }
 }
 
-resource "null_resource" "kops_full_cluster-spec_file" {
-  triggers {
-    content = "${data.template_file.kops_full_cluster-spec_file.rendered}"
-  }
-
-  provisioner "local-exec" {
-    command = <<-EOC
-      tee ${path.cwd}/kops-cluster.yaml <<EOF
-      ${data.template_file.kops_full_cluster-spec_file.rendered}
-      EOF
-      EOC
-  }
+resource "local_file" "kops_full_cluster-spec_file" {
+  content  = "${data.template_file.kops_full_cluster-spec_file.rendered}"
+  filename = "${path.cwd}/kops-cluster.yaml"
 }
 
 module "teleport_bootstrap_script_worker" {
