@@ -85,6 +85,8 @@ data template_file "master-instancegroup-spec" {
     subnets            = "${element(formatlist("  - master-%s", data.aws_availability_zones.available.names),count.index)}"
     instance_type      = "${var.master_instance_type}"
     teleport_bootstrap = "${indent(6, module.teleport_bootstrap_script_master.teleport_bootstrap_script)}"
+    teleport_config    = "${indent(6, module.teleport_bootstrap_script_master.teleport_config_cloudinit)}"
+    teleport_service   = "${indent(6, module.teleport_bootstrap_script_master.teleport_service_cloudinit)}"
   }
 }
 
@@ -100,6 +102,8 @@ data template_file "worker-instancegroup-spec" {
     min                = "${length(data.aws_availability_zones.available.names)}"
     max                = "${var.max_amount_workers}"
     teleport_bootstrap = "${indent(6, module.teleport_bootstrap_script_worker.teleport_bootstrap_script)}"
+    teleport_config    = "${indent(6, module.teleport_bootstrap_script_worker.teleport_config_cloudinit)}"
+    teleport_service   = "${indent(6, module.teleport_bootstrap_script_worker.teleport_service_cloudinit)}"
   }
 }
 
@@ -153,7 +157,7 @@ resource "local_file" "kops_full_cluster-spec_file" {
 }
 
 module "teleport_bootstrap_script_worker" {
-  source      = "github.com/skyscrapers/terraform-teleport//teleport-bootstrap-script?ref=2.2.0"
+  source      = "github.com/skyscrapers/terraform-teleport//teleport-bootstrap-script?ref=2.2.1"
   auth_server = "${var.teleport_server}"
   auth_token  = "${var.teleport_token}"
   function    = "worker"
@@ -162,7 +166,7 @@ module "teleport_bootstrap_script_worker" {
 }
 
 module "teleport_bootstrap_script_master" {
-  source      = "github.com/skyscrapers/terraform-teleport//teleport-bootstrap-script?ref=2.2.0"
+  source      = "github.com/skyscrapers/terraform-teleport//teleport-bootstrap-script?ref=2.2.1"
   auth_server = "${var.teleport_server}"
   auth_token  = "${var.teleport_token}"
   function    = "master"

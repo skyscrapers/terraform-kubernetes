@@ -22,3 +22,9 @@ ${subnets}
     type: text/x-shellscript
     content: |
       ${teleport_bootstrap}
+  - name: teleport.txt
+    type: text/cloud-config
+    content: |
+      write_files:
+      ${teleport_config}
+      ${teleport_service}
