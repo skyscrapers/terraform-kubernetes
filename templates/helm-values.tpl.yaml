@@ -6,6 +6,7 @@ rbac:
 # Nginx-ingress
 controller:
   image:
+    repository: quay.io/kubernetes-ingress-controller/nginx-ingress-controller
     tag: "${nginx_controller_image_version}"
   publishService:
     enabled: true
