@@ -78,7 +78,7 @@ This terraform module will add an IAM policy to the k8s cluster nodes roles to a
 * [`grafana_admin_user`]: String(optional, default: `admin`): Grafana admin user name.
 * [`grafana_admin_password`]: String(optional, default: `admin`): Grafana admin user password.
 * [`grafana_volume_size`]: String(optional, default: `10Gi`): Persistent volume size Grafana.
-* [`proxy_header_configmap`]: String(optional): The configmap name to use for the proxy headers. format: `namespace/configmapname`
+* [`headers`]: Map(optional): The map name to use for the proxy headers. (default: `"X-Request-Start" = "t=${msec}"`)
 
 ### Output
 

@@ -14,7 +14,8 @@ controller:
     enabled: true
   config:
     use-proxy-protocol: "true"
-    ${proxy_set_headers}
+  headers:
+    ${headers}
   replicaCount: 3
   service:
     annotations:
