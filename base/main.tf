@@ -84,7 +84,7 @@ data "template_file" "helm_values" {
     external_dns_role_arn          = "${aws_iam_role.external_dns_role.arn}"
     opsgenie_api_key               = "${var.opsgenie_api_key}"
     opsgenie_heartbeat_name        = "${local.opsgenie_heartbeat_name}"
-    bastion_cidr                   = "${var.bastion_cidr}"
+    bastion_cidr                   = "188.166.18.33/32,176.58.117.229/32,${var.bastion_cidr}"
     alertmanager_domain_name       = "alertmanager.${var.name}"
     alertmanager_volume_size       = "${var.alertmanager_volume_size}"
     prometheus_domain_name         = "prometheus.${var.name}"
