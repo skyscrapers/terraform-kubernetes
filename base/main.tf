@@ -109,18 +109,9 @@ data "template_file" "kv_mapping" {
   }
 }
 
-resource "null_resource" "helm_values_file" {
-  triggers {
-    content = "${data.template_file.helm_values.rendered}"
-  }
-
-  provisioner "local-exec" {
-    command = <<-EOC
-      tee ${path.cwd}/helm-values.yaml <<EOF
-      ${data.template_file.helm_values.rendered}
-      EOF
-      EOC
-  }
+resource "local_file" "helm_values_file" {
+    content  = "${data.template_file.helm_values.rendered}"
+    filename = "${path.cwd}/helm-values.yaml"
 }
 
 data "template_file" "helm_values_external_dns" {
@@ -132,54 +123,27 @@ data "template_file" "helm_values_external_dns" {
   }
 }
 
-resource "null_resource" "helm_values_external_dns_file" {
-  triggers {
-    content = "${data.template_file.helm_values_external_dns.rendered}"
-  }
-
-  provisioner "local-exec" {
-    command = <<-EOC
-      tee ${path.cwd}/helm-values-external-dns.yaml <<EOF
-      ${data.template_file.helm_values_external_dns.rendered}
-      EOF
-      EOC
-  }
+resource "local_file" "helm_values_external_dns_file" {
+    content  = "${data.template_file.helm_values_external_dns.rendered}"
+    filename = "${path.cwd}/helm-values-external-dns.yaml"
 }
 
 data "template_file" "helm_values_prometheus_operator" {
   template = "${file("${path.module}/../templates/helm-values-prometheus-operator.tpl.yaml")}"
 }
 
-resource "null_resource" "helm_values_prometheus_operator_file" {
-  triggers {
-    content = "${data.template_file.helm_values_prometheus_operator.rendered}"
-  }
-
-  provisioner "local-exec" {
-    command = <<-EOC
-      tee ${path.cwd}/helm-values-prometheus-operator.yaml <<EOF
-      ${data.template_file.helm_values_prometheus_operator.rendered}
-      EOF
-      EOC
-  }
+resource "local_file" "helm_values_prometheus_operator_file" {
+    content  = "${data.template_file.helm_values_prometheus_operator.rendered}"
+    filename = "${path.cwd}/helm-values-prometheus-operator.yaml"
 }
 
 data "template_file" "helm_values_kube2iam" {
   template = "${file("${path.module}/../templates/helm-values-kube2iam.tpl.yaml")}"
 }
 
-resource "null_resource" "helm_values_kube2iam_file" {
-  triggers {
-    content = "${data.template_file.helm_values_kube2iam.rendered}"
-  }
-
-  provisioner "local-exec" {
-    command = <<-EOC
-      tee ${path.cwd}/helm-values-kube2iam.yaml <<EOF
-      ${data.template_file.helm_values_kube2iam.rendered}
-      EOF
-      EOC
-  }
+resource "local_file" "helm_values_kube2iam_file" {
+    content  = "${data.template_file.helm_values_kube2iam.rendered}"
+    filename = "${path.cwd}/helm-values-kube2iam.yaml"
 }
 
 data "template_file" "helm_values_kube_lego" {
@@ -191,16 +155,7 @@ data "template_file" "helm_values_kube_lego" {
   }
 }
 
-resource "null_resource" "helm_values_kube_lego_file" {
-  triggers {
-    content = "${data.template_file.helm_values_kube_lego.rendered}"
-  }
-
-  provisioner "local-exec" {
-    command = <<-EOC
-      tee ${path.cwd}/helm-values-kube-lego.yaml <<EOF
-      ${data.template_file.helm_values_kube_lego.rendered}
-      EOF
-      EOC
-  }
+resource "local_file" "helm_values_kube_lego_file" {
+    content  = "${data.template_file.helm_values_kube_lego.rendered}"
+    filename = "${path.cwd}/helm-values-kube-lego.yaml"
 }
