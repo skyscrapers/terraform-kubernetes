@@ -74,7 +74,7 @@ data "template_file" "helm_values" {
 
   vars {
     nginx_controller_image_version = "${var.nginx_controller_image_version}"
-    proxy_set_headers              = "${var.proxy_header_configmap != "" ? format("proxy-set-headers: %s", var.proxy_header_configmap) : ""}"
+    headers                        = "${indent(4, join("\n", data.template_file.kv_mapping.*.rendered))}"
     dex_image_tag                  = "${var.dex_image_tag}"
     dex_github_client_id           = "${var.dex_github_client_id}"
     dex_github_client_secret       = "${var.dex_github_client_secret}"
@@ -97,6 +97,15 @@ data "template_file" "helm_values" {
     environment                    = "${var.environment}"
     customer                       = "${var.customer}"
     slack_webhook_url              = "${var.slack_webhook_url}"
+  }
+}
+
+data "template_file" "kv_mapping" {
+  count = "${length(var.headers)}"
+  template = "$${key}: $${value}"
+  vars {
+    key = "${element(keys(var.headers), count.index)}"
+    value = "${element(values(var.headers), count.index)}"
   }
 }
 

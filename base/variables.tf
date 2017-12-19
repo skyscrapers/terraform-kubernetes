@@ -102,3 +102,9 @@ variable "proxy_header_configmap" {
 variable "slack_webhook_url" {
   description = "Slack webhook API url as found in your webhook configuration"
 }
+
+variable "headers" {
+  default = {
+    "X-Request-Start" = "t=${msec}"
+  }
+}
