@@ -24,6 +24,7 @@ Creates a full `kops` cluster specification yaml, including the required instanc
  * [`utility_net_number`]: String(required): First number of subnet to start of (ex I want a 10.1,10.2,10.3 subnet I specify 1) for utility subnets, e.g for load balancers. These are always public subnets.
  * [`elb_type`]: String(optional): Whether to use an Internal or Public ELB in front of the master nodes. Choices are `Public` or `Internal`. Defaults to `Public`.
  * [`etcd_version`]: String(optional): Which Etcd version do you want to run. Defaults to default version defined in Kops.
+ * [`helm_node`]: Boolean(optional): Due to a [bug](https://github.com/kubernetes/helm/issues/3121) in HELM/Kubelet, we want to run the tiller on a seperate node. When you want it set this to "true". The `"` around true are really important. Defaults to `"false"`.
 
 ### Output
  * None

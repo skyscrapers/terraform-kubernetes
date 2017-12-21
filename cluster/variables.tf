@@ -64,3 +64,8 @@ variable "environment" {
   description = "Environment where this node belongs to, will be the third part of the node name. Defaults to ''"
   default     = ""
 }
+
+variable "helm_node" {
+  description = "Do we want a seperate node to deploy helm"
+  default     = false
+}

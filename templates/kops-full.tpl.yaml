@@ -1,3 +1,4 @@
 ${content_cluster}
 ${content_master_group}
 ${content_worker_group}
+${content_helm_node}

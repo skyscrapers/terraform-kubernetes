@@ -104,6 +104,26 @@ data template_file "worker-instancegroup-spec" {
     teleport_bootstrap = "${indent(6, module.teleport_bootstrap_script_worker.teleport_bootstrap_script)}"
     teleport_config    = "${indent(6, module.teleport_bootstrap_script_worker.teleport_config_cloudinit)}"
     teleport_service   = "${indent(6, module.teleport_bootstrap_script_worker.teleport_service_cloudinit)}"
+    helm_node          = "${var.helm_node}"
+
+  }
+}
+
+data template_file "helm-instancegroup-spec" {
+  template = "${file("${path.module}/../templates/kops-instancegroup-worker.tpl.yaml")}"
+
+  vars {
+    name               = "helm"
+    cluster-name       = "${var.name}"
+    kubernetes_ami     = "${data.aws_ami.kubernetes_ami.name}"
+    subnets            = "${join("\n", formatlist("  - worker-%s", data.aws_availability_zones.available.names))}"
+    instance_type      = "t2.small"
+    min                = "1"
+    max                = "1"
+    teleport_bootstrap = "${indent(6, module.teleport_bootstrap_script_worker.teleport_bootstrap_script)}"
+    teleport_config    = "${indent(6, module.teleport_bootstrap_script_worker.teleport_config_cloudinit)}"
+    teleport_service   = "${indent(6, module.teleport_bootstrap_script_worker.teleport_service_cloudinit)}"
+    helm_node          = "${var.helm_node}"
   }
 }
 
@@ -148,6 +168,7 @@ data template_file "kops_full_cluster-spec_file" {
     content_cluster      = "${data.template_file.cluster-spec.rendered}"
     content_master_group = "${join("\n",data.template_file.master-instancegroup-spec.*.rendered)}"
     content_worker_group = "${data.template_file.worker-instancegroup-spec.rendered}"
+    content_helm_node    = "${var.helm_node == true ? data.template_file.helm-instancegroup-spec.rendered : ""}"
   }
 }
 
