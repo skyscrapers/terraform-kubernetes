@@ -104,7 +104,7 @@ data template_file "worker-instancegroup-spec" {
     teleport_bootstrap = "${indent(6, module.teleport_bootstrap_script_worker.teleport_bootstrap_script)}"
     teleport_config    = "${indent(6, module.teleport_bootstrap_script_worker.teleport_config_cloudinit)}"
     teleport_service   = "${indent(6, module.teleport_bootstrap_script_worker.teleport_service_cloudinit)}"
-    helm_node          = "${var.helm_node}"
+    helm_node          = "false"
 
   }
 }
