@@ -65,9 +65,7 @@ This terraform module will add an IAM policy to the k8s cluster nodes roles to a
 * [`nginx_controller_image_version`]: String(optional): The version of the nginx controller docker image
 * [`lego_email`]: String(required): Email address to use for registration with Let's Encrypt
 * [`lego_url`]: String(optional): Let's Encrypt API endpoint. Defaults to `https://acme-staging.api.letsencrypt.org/directory` (staging)
-* [`dex_github_client_id`]: String(required): Client id of the GitHub application for the dex authentication. Must be base64 encoded
-* [`dex_github_client_secret`]: String(required): Client secret of the GitHub application for the kubesignin/dex authentication. Must be base64 encoded
-* [`dex_github_org`]: String(required): GitHub organization for the kubesignin/dex authentication
+* [`dex_gh_connectors`]: Map(required): A map of the required github connectors used by dex. See example below.
 * [`kubesignin_client_secret`]: String(required): Secret string for the kubesignin/dex authentication. Beware that some characters might give problems in some cases, so we recommend only using alphanumeric characters.
 * [`opsgenie_api_key`]: String(required): Opsgenie API key from your [prometheus integration](https://docs.opsgenie.com/docs/integrations/prometheus-integration).
 * [`slack_webhook_url`]: String(required): Slack webhook url from you [webhook configuration](https://api.slack.com/incoming-webhooks)
@@ -100,6 +98,24 @@ module "k8s-base" {
   kubesignin_client_secret    = "something"
   opsgenie_api_key            = "somesecretopsgeniekey"
   bastion_cidr                = "1.2.3.4/32"
+}
+```
+
+example of the `dex_gh_connectors` map:
+```yaml
+dex_gh_connectors = {
+  github1 = {
+    clientId = "base64clientID"
+    clientSecret = "base64clientSecret"
+    orgName = "org1"
+    teamName = "team1"
+  }
+  github2 = {
+    clientId = "base64clientID"
+    clientSecret = "base64clientSecret"
+    orgName = "org2"
+    teamName = "team2"
+  }
 }
 ```
 
