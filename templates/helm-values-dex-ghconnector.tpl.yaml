@@ -1,0 +1,7 @@
+- Name: "${name}"
+  ClientId: "${clientId}"
+  ClientSecret: "${clientSecret}"
+  Orgs:
+  - name: ${orgName}
+    teams:
+    - ${teamName}

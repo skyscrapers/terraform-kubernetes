@@ -76,9 +76,7 @@ data "template_file" "helm_values" {
     nginx_controller_image_version = "${var.nginx_controller_image_version}"
     headers                        = "${indent(4, join("\n", data.template_file.kv_mapping.*.rendered))}"
     dex_image_tag                  = "${var.dex_image_tag}"
-    dex_github_client_id           = "${var.dex_github_client_id}"
-    dex_github_client_secret       = "${var.dex_github_client_secret}"
-    dex_github_org                 = "${var.dex_github_org}"
+    dex_gh_connectors              = "${indent(6, join("\n", data.template_file.gh_connectors.*.rendered))}"
     kubesignin_client_secret       = "${var.kubesignin_client_secret}"
     kubesignin_domain_name         = "kubesignin.${var.name}"
     external_dns_role_arn          = "${aws_iam_role.external_dns_role.arn}"
@@ -106,6 +104,18 @@ data "template_file" "kv_mapping" {
   vars {
     key = "${element(keys(var.headers), count.index)}"
     value = "${element(values(var.headers), count.index)}"
+  }
+}
+
+data "template_file" "gh_connectors" {
+  count = "${length(var.dex_gh_connectors)}"
+  template = "${file("${path.module}/../templates/helm-values-dex-ghconnector.tpl.yaml")}"
+  vars {
+    name = "${element(keys(var.dex_gh_connectors), count.index) }"
+    clientId = "${ lookup(var.dex_gh_connectors[element(keys(var.dex_gh_connectors), count.index)], "clientId")}"
+    clientSecret = "${ lookup(var.dex_gh_connectors[element(keys(var.dex_gh_connectors), count.index)], "clientSecret")}"
+    orgName = "${ lookup(var.dex_gh_connectors[element(keys(var.dex_gh_connectors), count.index)], "orgName")}"
+    teamName = "${ lookup(var.dex_gh_connectors[element(keys(var.dex_gh_connectors), count.index)], "teamName")}"
   }
 }
 
