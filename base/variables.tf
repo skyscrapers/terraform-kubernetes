@@ -24,18 +24,6 @@ variable "dex_image_tag" {
   default = "v2.4.1"
 }
 
-variable "dex_github_client_id" {
-  description = ""
-}
-
-variable "dex_github_client_secret" {
-  description = ""
-}
-
-variable "dex_github_org" {
-  description = ""
-}
-
 variable "kubesignin_client_secret" {
   description = ""
 }
