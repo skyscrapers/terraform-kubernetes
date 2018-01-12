@@ -35,7 +35,7 @@ ${subnets}
   - name: restart-kubelet.service
     manifest: |
       [Unit]
-      Description=etcd2 backup service
+      Description=restart-kubelet service
 
       [Service]
       Type=oneshot
@@ -44,10 +44,10 @@ ${subnets}
 
       [Install]
       WantedBy=multi-user.target
-  - name: etcd2-backup.timer
+  - name: restart-kubelet.timer
     manifest: |
       [Unit]
-      Description=etcd2-backup service timer
+      Description=restart-kubelet service timer
 
       [Timer]
       OnBootSec=2min
