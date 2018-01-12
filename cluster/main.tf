@@ -110,7 +110,7 @@ data template_file "worker-instancegroup-spec" {
 }
 
 data template_file "helm-instancegroup-spec" {
-  template = "${file("${path.module}/../templates/kops-instancegroup-worker.tpl.yaml")}"
+  template = "${file("${path.module}/../templates/kops-instancegroup-helm.tpl.yaml")}"
 
   vars {
     name               = "helm"
