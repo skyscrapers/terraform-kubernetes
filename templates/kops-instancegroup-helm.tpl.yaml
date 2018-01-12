@@ -1,0 +1,57 @@
+---
+apiVersion: kops/v1alpha2
+kind: InstanceGroup
+metadata:
+  labels:
+    kops.k8s.io/cluster: ${cluster-name}
+  name: ${name}
+spec:
+  image: 496014204152/${kubernetes_ami}
+  machineType: ${instance_type}
+  maxSize: ${max}
+  minSize: ${min}
+  role: Node
+  subnets:
+${subnets}
+  cloudLabels:
+    role: worker
+    subnet: app
+    access: private
+  ${helm_node == true ? "nodeLabels:\n    function: helm" : ""}
+  taints:
+  - function=helm:NoSchedule
+  additionalUserData:
+  - name: teleport.sh
+    type: text/x-shellscript
+    content: |
+      ${teleport_bootstrap}
+  - name: teleport.txt
+    type: text/cloud-config
+    content: |
+      write_files:
+      ${teleport_config}
+      ${teleport_service}
+  hooks:
+  - name: restart-kubelet.service
+    manifest: |
+      [Unit]
+      Description=etcd2 backup service
+
+      [Service]
+      Type=oneshot
+
+      ExecStart=-/bin/systemctl restart kubelet.service
+
+      [Install]
+      WantedBy=multi-user.target
+  - name: etcd2-backup.timer
+    manifest: |
+      [Unit]
+      Description=etcd2-backup service timer
+
+      [Timer]
+      OnBootSec=2min
+      OnUnitActiveSec=10min
+
+      [Install]
+      WantedBy=timers.target
