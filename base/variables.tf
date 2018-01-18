@@ -98,3 +98,13 @@ variable "headers" {
 variable "dex_gh_connectors" {
   type = "map"
 }
+
+variable "fluentd_loggroupname" {
+  description = "Cloudwatch loggroupname for fluentd-cloudwatch"
+  default     = "kubernetes"
+}
+
+variable "fluentd_aws_region" {
+  description = "AWS region where we want to store our logs we shipped from Fluentd to Cloudwatch"
+  default     = ""
+}

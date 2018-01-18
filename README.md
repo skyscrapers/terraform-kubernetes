@@ -78,6 +78,8 @@ This terraform module will add an IAM policy to the k8s cluster nodes roles to a
 * [`grafana_admin_password`]: String(optional, default: `admin`): Grafana admin user password.
 * [`grafana_volume_size`]: String(optional, default: `10Gi`): Persistent volume size Grafana.
 * [`headers`]: Map(optional): The map name to use for the proxy headers. (default: `"X-Request-Start" = "t=${msec}"`)
+* [`fluentd_loggroupname`]: String(optional): Cloudwatch loggroupname for fluentd-cloudwatch. (default: `kubernetes`)
+* [`fluentd_aws_region`]: String(optional): AWS region where we want to store our logs we shipped from Fluentd to Cloudwatch. (default: AWS region name of your Terraform AWS provider)
 
 ### Output
 

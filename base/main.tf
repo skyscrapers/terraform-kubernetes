@@ -44,6 +44,54 @@ resource "aws_iam_role_policy" "external_dns_role_policy" {
 EOF
 }
 
+data "aws_region" "fluentd_region" {
+  current = true
+}
+
+resource "aws_iam_role" "fluentd_role" {
+  name = "${var.name}_fluentd_role"
+  path = "/kube2iam/"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.cluster_nodes_iam_role_name}"
+      },
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "fluentd_role_policy" {
+  name = "${var.name}_fluentd_policy"
+  role = "${aws_iam_role.fluentd_role.id}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:*",
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:logs:${local.fluentd_aws_region}:*:*",
+        "arn:aws:s3:::*"
+      ]
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_iam_role_policy" "kube2iam_assume_role_policy" {
   name = "${var.name}_kube2iam_assume_role_policy"
   role = "${var.cluster_nodes_iam_role_name}"
@@ -67,6 +115,7 @@ EOF
 locals {
   default_opsgenie_heartbeat_name = "${upper(substr(var.customer,0,1))}${substr(var.customer,1,-1)} ${upper(substr(var.environment,0,1))}${substr(var.environment,1,-1)} Cluster Deadmanswitch"
   opsgenie_heartbeat_name         = "${var.opsgenie_heartbeat_name != "" ? var.opsgenie_heartbeat_name : local.default_opsgenie_heartbeat_name}"
+  fluentd_aws_region              = "${var.fluentd_aws_region != "" ? var.fluentd_aws_region : data.aws_region.fluentd_region.name}"
 }
 
 data "template_file" "helm_values" {
@@ -168,4 +217,19 @@ data "template_file" "helm_values_kube_lego" {
 resource "local_file" "helm_values_kube_lego_file" {
     content  = "${data.template_file.helm_values_kube_lego.rendered}"
     filename = "${path.cwd}/helm-values-kube-lego.yaml"
+}
+
+data "template_file" "helm_values_fluentd_cloudwatch" {
+  template = "${file("${path.module}/../templates/helm-values-fluentd-cloudwatch.tpl.yaml")}"
+
+  vars {
+    fluentd_role_arn      = "${aws_iam_role.fluentd_role.arn}"
+    fluentd_aws_region    = "${local.fluentd_aws_region}"
+    fluentd_loggroupname  = "${var.fluentd_loggroupname}"
+  }
+}
+
+resource "local_file" "helm_values_fluentd_cloudwatch_file" {
+    content  = "${data.template_file.helm_values_fluentd_cloudwatch.rendered}"
+    filename = "${path.cwd}/helm-values-fluentd-cloudwatch.yaml"
 }
