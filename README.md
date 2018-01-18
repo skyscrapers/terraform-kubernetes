@@ -80,6 +80,7 @@ This terraform module will add an IAM policy to the k8s cluster nodes roles to a
 * [`headers`]: Map(optional): The map name to use for the proxy headers. (default: `"X-Request-Start" = "t=${msec}"`)
 * [`fluentd_loggroupname`]: String(optional): Cloudwatch loggroupname for fluentd-cloudwatch. (default: `kubernetes`)
 * [`fluentd_aws_region`]: String(optional): AWS region where we want to store our logs we shipped from Fluentd to Cloudwatch. (default: AWS region name of your Terraform AWS provider)
+* [`fluentd_custom_config`]: String(optional): Extra Fluentd config you want to add to the standard Fluentd config. (default: "")
 
 ### Output
 
@@ -100,6 +101,22 @@ module "k8s-base" {
   kubesignin_client_secret    = "something"
   opsgenie_api_key            = "somesecretopsgeniekey"
   bastion_cidr                = "1.2.3.4/32"
+  fluentd_custom_config       = <<EOF
+<filter kubernetes.var.log.containers.busybox_**.log>
+  type parser
+  format /^.*\"(?<json>{.*})\"$/
+  key_name log
+  reserve_data yes
+</filter>
+
+<filter kubernetes.var.log.containers.busybox_**.log>
+  @type parser
+  format json
+  key_name json
+  reserve_data true
+  hash_value_field json
+</filter>
+EOF
 }
 ```
 

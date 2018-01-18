@@ -226,6 +226,7 @@ data "template_file" "helm_values_fluentd_cloudwatch" {
     fluentd_role_arn      = "${aws_iam_role.fluentd_role.arn}"
     fluentd_aws_region    = "${local.fluentd_aws_region}"
     fluentd_loggroupname  = "${var.fluentd_loggroupname}"
+    fluentd_custom_config = "${indent(2, var.fluentd_custom_config)}"
   }
 }
 

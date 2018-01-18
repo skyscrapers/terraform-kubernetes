@@ -149,6 +149,7 @@ fluentdConfig: |
     type kubernetes_metadata
   </filter>
 
+  ${fluentd_custom_config}
   <match **>
     type cloudwatch_logs
     log_group_name "#{ENV['LOG_GROUP_NAME']}"

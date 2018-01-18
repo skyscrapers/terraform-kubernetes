@@ -108,3 +108,8 @@ variable "fluentd_aws_region" {
   description = "AWS region where we want to store our logs we shipped from Fluentd to Cloudwatch"
   default     = ""
 }
+
+variable "fluentd_custom_config" {
+  description = "Add custom fluentd config"
+  default     = ""
+}
