@@ -144,6 +144,18 @@ kube-prometheus:
         endpoints:
           - port: http
             interval: 30s
+      - name: nginx-ingress
+        serviceMonitorSelectorLabels:
+          prometheus: k8s
+        selector:
+          matchLabels:
+            app: nginx-ingress
+        namespaceSelector:
+          matchNames:
+            - infrastructure
+        endpoints:
+          - port: metrics
+            interval: 30s
       - name: kubelet-cadvisor
         serviceMonitorSelectorLabels:
           prometheus: k8s-monitor
