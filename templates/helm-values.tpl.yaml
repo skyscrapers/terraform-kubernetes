@@ -156,24 +156,6 @@ kube-prometheus:
         endpoints:
           - port: metrics
             interval: 30s
-      - name: kubelet-cadvisor
-        serviceMonitorSelectorLabels:
-          prometheus: k8s-monitor
-        selector:
-          matchLabels:
-            k8s-app: kubelet
-        namespaceSelector:
-          matchNames:
-            - kube-system
-        jobLabel: kubelet-cadvisor
-        endpoints:
-          - port: https-metrics
-            interval: 15s
-            path: /metrics/cadvisor
-            scheme: https
-            tlsConfig:
-              caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-              insecureSkipVerify: true
 
   grafana:
     adminUser: "${grafana_admin_user}"
