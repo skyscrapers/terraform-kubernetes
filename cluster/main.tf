@@ -73,20 +73,26 @@ data template_file "utility-subnet-spec" {
 # Instance Groups
 #########################################################
 
+locals {
+  default_master_sg = "${length(var.extra_master_securitygroups) > 0 ? format("additionalSecurityGroups:\n %s",indent(1,join("\n",formatlist(" - %s",var.extra_master_securitygroups)))) : ""}"
+  default_worker_sg = "${length(var.extra_worker_securitygroups) > 0 ? format("additionalSecurityGroups:\n %s",indent(1,join("\n",formatlist(" - %s",var.extra_worker_securitygroups)))) : ""}"
+}
+
 data template_file "master-instancegroup-spec" {
   count    = 3
   template = "${file("${path.module}/../templates/kops-instancegroup-master.tpl.yaml")}"
 
   vars {
-    name               = "${element(formatlist("master-%s", data.aws_availability_zones.available.names),count.index)}"
-    cluster-name       = "${var.name}"
-    k8s_data_bucket    = "${var.k8s_data_bucket}"
-    kubernetes_ami     = "${data.aws_ami.kubernetes_ami.name}"
-    subnets            = "${element(formatlist("  - master-%s", data.aws_availability_zones.available.names),count.index)}"
-    instance_type      = "${var.master_instance_type}"
-    teleport_bootstrap = "${indent(6, module.teleport_bootstrap_script_master.teleport_bootstrap_script)}"
-    teleport_config    = "${indent(6, module.teleport_bootstrap_script_master.teleport_config_cloudinit)}"
-    teleport_service   = "${indent(6, module.teleport_bootstrap_script_master.teleport_service_cloudinit)}"
+    name                        = "${element(formatlist("master-%s", data.aws_availability_zones.available.names),count.index)}"
+    cluster-name                = "${var.name}"
+    k8s_data_bucket             = "${var.k8s_data_bucket}"
+    kubernetes_ami              = "${data.aws_ami.kubernetes_ami.name}"
+    subnets                     = "${element(formatlist("  - master-%s", data.aws_availability_zones.available.names),count.index)}"
+    instance_type               = "${var.master_instance_type}"
+    teleport_bootstrap          = "${indent(6, module.teleport_bootstrap_script_master.teleport_bootstrap_script)}"
+    teleport_config             = "${indent(6, module.teleport_bootstrap_script_master.teleport_config_cloudinit)}"
+    teleport_service            = "${indent(6, module.teleport_bootstrap_script_master.teleport_service_cloudinit)}"
+    extra_master_securitygroups = "${local.default_master_sg}"
   }
 }
 
@@ -94,18 +100,18 @@ data template_file "worker-instancegroup-spec" {
   template = "${file("${path.module}/../templates/kops-instancegroup-worker.tpl.yaml")}"
 
   vars {
-    name               = "workers"
-    cluster-name       = "${var.name}"
-    kubernetes_ami     = "${data.aws_ami.kubernetes_ami.name}"
-    subnets            = "${join("\n", formatlist("  - worker-%s", data.aws_availability_zones.available.names))}"
-    instance_type      = "${var.worker_instance_type}"
-    min                = "${length(data.aws_availability_zones.available.names)}"
-    max                = "${var.max_amount_workers}"
-    teleport_bootstrap = "${indent(6, module.teleport_bootstrap_script_worker.teleport_bootstrap_script)}"
-    teleport_config    = "${indent(6, module.teleport_bootstrap_script_worker.teleport_config_cloudinit)}"
-    teleport_service   = "${indent(6, module.teleport_bootstrap_script_worker.teleport_service_cloudinit)}"
-    helm_node          = "false"
-
+    name                        = "workers"
+    cluster-name                = "${var.name}"
+    kubernetes_ami              = "${data.aws_ami.kubernetes_ami.name}"
+    subnets                     = "${join("\n", formatlist("  - worker-%s", data.aws_availability_zones.available.names))}"
+    instance_type               = "${var.worker_instance_type}"
+    min                         = "${length(data.aws_availability_zones.available.names)}"
+    max                         = "${var.max_amount_workers}"
+    teleport_bootstrap          = "${indent(6, module.teleport_bootstrap_script_worker.teleport_bootstrap_script)}"
+    teleport_config             = "${indent(6, module.teleport_bootstrap_script_worker.teleport_config_cloudinit)}"
+    teleport_service            = "${indent(6, module.teleport_bootstrap_script_worker.teleport_service_cloudinit)}"
+    helm_node                   = "false"
+    extra_worker_securitygroups = "${local.default_worker_sg}"
   }
 }
 

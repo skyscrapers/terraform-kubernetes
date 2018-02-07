@@ -11,6 +11,7 @@ spec:
   maxSize: 1
   minSize: 1
   role: Master
+  ${extra_master_securitygroups}
   subnets:
 ${subnets}
   cloudLabels:

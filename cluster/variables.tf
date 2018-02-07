@@ -69,3 +69,15 @@ variable "helm_node" {
   description = "Do we want a seperate node to deploy helm"
   default     = false
 }
+
+variable "extra_worker_securitygroups" {
+  description = "List of extra securitygroups that you want to attach to the worker nodes"
+  type        = "list"
+  default     = []
+}
+
+variable "extra_master_securitygroups" {
+  description = "List of extra securitygroups that you want to attach to the master nodes"
+  type        = "list"
+  default     = []
+}
