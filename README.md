@@ -69,6 +69,8 @@ This terraform module will add an IAM policy to the k8s cluster nodes roles to a
 * [`lego_email`]: String(required): Email address to use for registration with Let's Encrypt
 * [`lego_url`]: String(optional): Let's Encrypt API endpoint. Defaults to `https://acme-staging.api.letsencrypt.org/directory` (staging)
 * [`dex_gh_connectors`]: Map(required): A map of the required github connectors used by dex. See example below.
+* [`dex_expiry_signingkeys`]: String(optional, default `6h`): The duration of time after which the Dex SigningKeys will be rotated.
+* [`dex_expiry_idtokens`]: : String(optional, default `1h`): The duration of time for which the Dex IdTokens will be valid. This value shouldn't be longer than `dex_expiry_signingkeys`.
 * [`kubesignin_client_secret`]: String(required): Secret string for the kubesignin/dex authentication. Beware that some characters might give problems in some cases, so we recommend only using alphanumeric characters.
 * [`opsgenie_api_key`]: String(required): Opsgenie API key from your [prometheus integration](https://docs.opsgenie.com/docs/integrations/prometheus-integration).
 * [`slack_webhook_url`]: String(required): Slack webhook url from you [webhook configuration](https://api.slack.com/incoming-webhooks)

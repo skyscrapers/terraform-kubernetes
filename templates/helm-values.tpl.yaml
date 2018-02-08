@@ -27,6 +27,9 @@ Dex:
   Connectors:
     GitHub:
       ${dex_gh_connectors}
+  Expiry:
+    SigningKeys: "${dex_expiry_signingkeys}"
+    IdTokens: "${dex_expiry_idtokens}"
 
 Kubesignin:
   ClientSecret: "${kubesignin_client_secret}"
