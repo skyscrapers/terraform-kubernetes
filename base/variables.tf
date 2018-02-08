@@ -24,6 +24,16 @@ variable "dex_image_tag" {
   default = "v2.4.1"
 }
 
+variable "dex_expiry_signingkeys" {
+  description = "The duration of time after which the Dex SigningKeys will be rotated (default: 6h)."
+  default     = "6h"
+}
+
+variable "dex_expiry_idtokens" {
+  description = "The duration of time for which the Dex IdTokens will be valid (default: 1h). This value shouldn't be longer than dex_expiry_signingkeys."
+  default     = "1h"
+}
+
 variable "kubesignin_client_secret" {
   description = ""
 }

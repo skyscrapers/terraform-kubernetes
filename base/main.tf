@@ -126,6 +126,8 @@ data "template_file" "helm_values" {
     headers                        = "${indent(4, join("\n", data.template_file.kv_mapping.*.rendered))}"
     dex_image_tag                  = "${var.dex_image_tag}"
     dex_gh_connectors              = "${indent(6, join("\n", data.template_file.gh_connectors.*.rendered))}"
+    dex_expiry_signingkeys         = "${var.dex_expiry_signingkeys}"
+    dex_expiry_idtokens            = "${var.dex_expiry_idtokens}"
     kubesignin_client_secret       = "${var.kubesignin_client_secret}"
     kubesignin_domain_name         = "kubesignin.${var.name}"
     external_dns_role_arn          = "${aws_iam_role.external_dns_role.arn}"
