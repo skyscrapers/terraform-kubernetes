@@ -5,3 +5,7 @@ output "external_dns_role_arn" {
 output "external_dns_role_name" {
   value = "${aws_iam_role.external_dns_role.name}"
 }
+
+output "fluentd_loggroupname" {
+  value = "${var.fluentd_loggroupname}"
+}
