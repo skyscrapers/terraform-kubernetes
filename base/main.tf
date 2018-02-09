@@ -150,29 +150,31 @@ data "template_file" "helm_values" {
 }
 
 data "template_file" "kv_mapping" {
-  count = "${length(var.headers)}"
+  count    = "${length(var.headers)}"
   template = "$${key}: $${value}"
+
   vars {
-    key = "${element(keys(var.headers), count.index)}"
+    key   = "${element(keys(var.headers), count.index)}"
     value = "${element(values(var.headers), count.index)}"
   }
 }
 
 data "template_file" "gh_connectors" {
-  count = "${length(var.dex_gh_connectors)}"
+  count    = "${length(var.dex_gh_connectors)}"
   template = "${file("${path.module}/../templates/helm-values-dex-ghconnector.tpl.yaml")}"
+
   vars {
-    name = "${element(keys(var.dex_gh_connectors), count.index) }"
-    clientId = "${ lookup(var.dex_gh_connectors[element(keys(var.dex_gh_connectors), count.index)], "clientId")}"
+    name         = "${element(keys(var.dex_gh_connectors), count.index) }"
+    clientId     = "${ lookup(var.dex_gh_connectors[element(keys(var.dex_gh_connectors), count.index)], "clientId")}"
     clientSecret = "${ lookup(var.dex_gh_connectors[element(keys(var.dex_gh_connectors), count.index)], "clientSecret")}"
-    orgName = "${ lookup(var.dex_gh_connectors[element(keys(var.dex_gh_connectors), count.index)], "orgName")}"
-    teamName = "${ lookup(var.dex_gh_connectors[element(keys(var.dex_gh_connectors), count.index)], "teamName")}"
+    orgName      = "${ lookup(var.dex_gh_connectors[element(keys(var.dex_gh_connectors), count.index)], "orgName")}"
+    teamName     = "${ lookup(var.dex_gh_connectors[element(keys(var.dex_gh_connectors), count.index)], "teamName")}"
   }
 }
 
 resource "local_file" "helm_values_file" {
-    content  = "${data.template_file.helm_values.rendered}"
-    filename = "${path.cwd}/helm-values.yaml"
+  content  = "${data.template_file.helm_values.rendered}"
+  filename = "${path.cwd}/helm-values.yaml"
 }
 
 data "template_file" "helm_values_external_dns" {
@@ -185,8 +187,8 @@ data "template_file" "helm_values_external_dns" {
 }
 
 resource "local_file" "helm_values_external_dns_file" {
-    content  = "${data.template_file.helm_values_external_dns.rendered}"
-    filename = "${path.cwd}/helm-values-external-dns.yaml"
+  content  = "${data.template_file.helm_values_external_dns.rendered}"
+  filename = "${path.cwd}/helm-values-external-dns.yaml"
 }
 
 data "template_file" "helm_values_prometheus_operator" {
@@ -194,8 +196,8 @@ data "template_file" "helm_values_prometheus_operator" {
 }
 
 resource "local_file" "helm_values_prometheus_operator_file" {
-    content  = "${data.template_file.helm_values_prometheus_operator.rendered}"
-    filename = "${path.cwd}/helm-values-prometheus-operator.yaml"
+  content  = "${data.template_file.helm_values_prometheus_operator.rendered}"
+  filename = "${path.cwd}/helm-values-prometheus-operator.yaml"
 }
 
 data "template_file" "helm_values_kube2iam" {
@@ -203,8 +205,8 @@ data "template_file" "helm_values_kube2iam" {
 }
 
 resource "local_file" "helm_values_kube2iam_file" {
-    content  = "${data.template_file.helm_values_kube2iam.rendered}"
-    filename = "${path.cwd}/helm-values-kube2iam.yaml"
+  content  = "${data.template_file.helm_values_kube2iam.rendered}"
+  filename = "${path.cwd}/helm-values-kube2iam.yaml"
 }
 
 data "template_file" "helm_values_kube_lego" {
@@ -217,8 +219,8 @@ data "template_file" "helm_values_kube_lego" {
 }
 
 resource "local_file" "helm_values_kube_lego_file" {
-    content  = "${data.template_file.helm_values_kube_lego.rendered}"
-    filename = "${path.cwd}/helm-values-kube-lego.yaml"
+  content  = "${data.template_file.helm_values_kube_lego.rendered}"
+  filename = "${path.cwd}/helm-values-kube-lego.yaml"
 }
 
 data "template_file" "helm_values_fluentd_cloudwatch" {
@@ -233,6 +235,6 @@ data "template_file" "helm_values_fluentd_cloudwatch" {
 }
 
 resource "local_file" "helm_values_fluentd_cloudwatch_file" {
-    content  = "${data.template_file.helm_values_fluentd_cloudwatch.rendered}"
-    filename = "${path.cwd}/helm-values-fluentd-cloudwatch.yaml"
+  content  = "${data.template_file.helm_values_fluentd_cloudwatch.rendered}"
+  filename = "${path.cwd}/helm-values-fluentd-cloudwatch.yaml"
 }

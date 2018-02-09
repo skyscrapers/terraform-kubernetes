@@ -102,7 +102,9 @@ variable "slack_webhook_url" {
 }
 
 variable "headers" {
-  default = { "X-Request-Start" = "t=$${msec}" }
+  default = {
+    "X-Request-Start" = "t=$${msec}"
+  }
 }
 
 variable "dex_gh_connectors" {
