@@ -86,6 +86,8 @@ This terraform module will add an IAM policy to the k8s cluster nodes roles to a
 * [`fluentd_loggroupname`]: String(optional): Cloudwatch loggroupname for fluentd-cloudwatch. (default: `kubernetes`)
 * [`fluentd_aws_region`]: String(optional): AWS region where we want to store our logs we shipped from Fluentd to Cloudwatch. (default: AWS region name of your Terraform AWS provider)
 * [`fluentd_custom_config`]: String(optional): Extra Fluentd config you want to add to the standard Fluentd config. (default: "")
+* [`elasticsearch_url`]: String(optional): The URL for elasticsearch. If not filled in, you will not be able to deploy Kibana. (default: "")
+* [`kibana_image_tag`]: String(optional): Image tag of the kibana image. (default: "6.0.0")
 
 ### Output
 

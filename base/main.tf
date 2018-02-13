@@ -238,3 +238,19 @@ resource "local_file" "helm_values_fluentd_cloudwatch_file" {
   content  = "${data.template_file.helm_values_fluentd_cloudwatch.rendered}"
   filename = "${path.cwd}/helm-values-fluentd-cloudwatch.yaml"
 }
+
+data "template_file" "helm_values_kibana" {
+  template = "${file("${path.module}/../templates/helm-values-kibana.tpl.yaml")}"
+
+  vars {
+    elasticsearch_url  = "${var.elasticsearch_url}"
+    bastion_cidr       = "188.166.18.33/32,176.58.117.229/32,${var.bastion_cidr}"
+    kibana_domain_name = "kibana.${var.name}"
+    kibana_image_tag   = "${var.kibana_image_tag}"
+  }
+}
+
+resource "local_file" "helm_values_kibana_file" {
+  content  = "${data.template_file.helm_values_kibana.rendered}"
+  filename = "${path.cwd}/helm-values-kibana.yaml"
+}

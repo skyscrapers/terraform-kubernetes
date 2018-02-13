@@ -125,3 +125,13 @@ variable "fluentd_custom_config" {
   description = "Add custom fluentd config"
   default     = ""
 }
+
+variable "elasticsearch_url" {
+  description = "The URL for elasticsearch. If not filled in, you will not be able to deploy Kibana."
+  default     = ""
+}
+
+variable "kibana_image_tag" {
+  description = "Image tag of the kibana image"
+  default     = "6.0.0"
+}
