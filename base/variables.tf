@@ -126,6 +126,11 @@ variable "fluentd_custom_config" {
   default     = ""
 }
 
+variable "fluentd_retention" {
+  description = "How long do we want to keep the Fluentd logs in Cloudwatch logs"
+  default     = "30"
+}
+
 variable "elasticsearch_url" {
   description = "The URL for elasticsearch. If not filled in, you will not be able to deploy Kibana."
   default     = ""

@@ -254,3 +254,13 @@ resource "local_file" "helm_values_kibana_file" {
   content  = "${data.template_file.helm_values_kibana.rendered}"
   filename = "${path.cwd}/helm-values-kibana.yaml"
 }
+
+resource "aws_cloudwatch_log_group" "fluentd" {
+  name              = "${var.fluentd_loggroupname}"
+  retention_in_days = "${var.fluentd_retention}"
+
+  tags {
+    Environment = "${var.environment}"
+    customer    = "${var.customer}"
+  }
+}
