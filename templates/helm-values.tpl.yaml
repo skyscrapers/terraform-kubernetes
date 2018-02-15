@@ -122,31 +122,6 @@ kube-prometheus:
         - key: prometheus
           operator: Exists
     serviceMonitors:
-      - name: alertmanager
-        serviceMonitorSelectorLabels:
-          prometheus: k8s
-        selector:
-          matchExpressions:
-            - key: alertmanager
-              operator: Exists
-        namespaceSelector:
-          matchNames:
-            - monitoring
-        endpoints:
-          - port: http
-            interval: 30s
-      - name: prometheus
-        serviceMonitorSelectorLabels:
-          prometheus: k8s
-        selector:
-          matchLabels:
-            app: prometheus
-        namespaceSelector:
-          matchNames:
-            - monitoring
-        endpoints:
-          - port: http
-            interval: 30s
       - name: nginx-ingress
         serviceMonitorSelectorLabels:
           prometheus: k8s
