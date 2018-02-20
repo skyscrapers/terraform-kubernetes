@@ -8,7 +8,7 @@ variable "cluster_nodes_iam_role_name" {
 
 variable "nginx_controller_image_version" {
   description = ""
-  default     = "0.9.0"
+  default     = "0.10.1"
 }
 
 variable "lego_email" {
