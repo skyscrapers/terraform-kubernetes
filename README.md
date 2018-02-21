@@ -89,6 +89,7 @@ This terraform module will add an IAM policy to the k8s cluster nodes roles to a
 * [`fluentd_retention`]: Int(optional): How long do we want to keep the Fluentd logs in Cloudwatch logs. (default: `30`)
 * [`elasticsearch_url`]: String(optional): The URL for elasticsearch. If not filled in, you will not be able to deploy Kibana. (default: "")
 * [`kibana_image_tag`]: String(optional): Image tag of the kibana image. (default: "6.0.0")
+* [`extra_grafana_datasoures`]: Map(optional): Extra Grafana datasource urls we want to add. Form is a map with name as key and url as value. (default: {})
 
 ### Output
 

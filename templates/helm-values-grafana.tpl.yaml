@@ -1,0 +1,10 @@
+dataSource:  
+  prometheus-datasource.json: |+
+    {
+      "access": "proxy",
+      "basicAuth": false,
+      "name": "prometheus",
+      "type": "prometheus",
+      "url": "http://k8s-monitor-prometheus.infrastructure:9090"
+    }
+  ${custom_datasources}

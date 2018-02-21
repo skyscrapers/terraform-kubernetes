@@ -155,6 +155,7 @@ kube-prometheus:
       resources:
         requests:
           storage: ${grafana_volume_size}
+    ${extra_grafana_datasoures}
 
 opsgenieHeartbeatProxy:
     opsgenie_api_key: ${opsgenie_api_key}

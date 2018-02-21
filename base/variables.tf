@@ -140,3 +140,9 @@ variable "kibana_image_tag" {
   description = "Image tag of the kibana image"
   default     = "6.0.0"
 }
+
+variable "extra_grafana_datasoures" {
+  description = "Extra Grafana datasource urls we want to add. Form is a map with name as key and url as value"
+  type        = "map"
+  default     = {}
+}

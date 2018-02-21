@@ -1,0 +1,8 @@
+${name}-datasource.json: |+
+  {
+    "access": "proxy",
+    "basicAuth": false,
+    "name": "${name}",
+    "type": "prometheus",
+    "url": "${url}"
+  }

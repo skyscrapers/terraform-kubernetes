@@ -116,6 +116,7 @@ locals {
   default_opsgenie_heartbeat_name = "${upper(substr(var.customer,0,1))}${substr(var.customer,1,-1)} ${upper(substr(var.environment,0,1))}${substr(var.environment,1,-1)} Cluster Deadmanswitch"
   opsgenie_heartbeat_name         = "${var.opsgenie_heartbeat_name != "" ? var.opsgenie_heartbeat_name : local.default_opsgenie_heartbeat_name}"
   fluentd_aws_region              = "${var.fluentd_aws_region != "" ? var.fluentd_aws_region : data.aws_region.fluentd_region.name}"
+  extra_grafana_datasoures        = "${length(var.extra_grafana_datasoures) == 0 ? "" : indent(4,join("\n", data.template_file.helm_values_grafana.*.rendered))}"
 }
 
 data "template_file" "helm_values" {
@@ -146,6 +147,7 @@ data "template_file" "helm_values" {
     environment                    = "${var.environment}"
     customer                       = "${var.customer}"
     slack_webhook_url              = "${var.slack_webhook_url}"
+    extra_grafana_datasoures       = "${local.extra_grafana_datasoures}"
   }
 }
 
@@ -262,5 +264,25 @@ resource "aws_cloudwatch_log_group" "fluentd" {
   tags {
     Environment = "${var.environment}"
     customer    = "${var.customer}"
+  }
+}
+
+data "template_file" "helm_values_grafana_custom" {
+  count = "${length(var.extra_grafana_datasoures)}"
+
+  template = "${file("${path.module}/../templates/helm-values-grafana-custom.tpl.yaml")}"
+
+  vars {
+    name = "${element(keys(var.extra_grafana_datasoures), count.index)}"
+    url  = "${element(values(var.extra_grafana_datasoures), count.index)}"
+  }
+}
+
+data "template_file" "helm_values_grafana" {
+  count    = "${length(var.extra_grafana_datasoures) == 0 ? 0 : 1}"
+  template = "${file("${path.module}/../templates/helm-values-grafana.tpl.yaml")}"
+
+  vars {
+    custom_datasources = "${indent(2, join("\n", data.template_file.helm_values_grafana_custom.*.rendered))}"
   }
 }
