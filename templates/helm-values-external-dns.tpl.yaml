@@ -1,5 +1,5 @@
 image:
-  tag: v0.4.7
+  tag: v0.4.8
 podAnnotations:
   iam.amazonaws.com/role: ${external_dns_role_arn}
 extraArgs:
