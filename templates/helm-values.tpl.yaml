@@ -54,7 +54,11 @@ kube-prometheus:
         routes:
         - match:
             severity: warning
-          receiver: slack
+          receiver: slack-runtime
+          routes:
+          - match:
+              group: persistence
+            receiver: slack-persistence
         - match:
             alertname: DeadMansSwitch
           receiver: opsgenieproxy
@@ -70,11 +74,15 @@ kube-prometheus:
           webhook_configs:
             - send_resolved: false
               url: http://k8s-monitor-opsgenie-heartbeat-proxy/proxy
-        - name: slack
+        - name: slack-runtime
           slack_configs:
             - send_resolved: true
               username: ${customer}-${environment}
-
+        - name: slack-persistence
+          slack_configs:
+            - channel: '#circle_persistence'
+              send_resolved: true
+              username: ${customer}-${environment}
     ingress:
       enabled: true
       annotations:
