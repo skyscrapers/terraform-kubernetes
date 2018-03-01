@@ -117,6 +117,7 @@ locals {
   opsgenie_heartbeat_name         = "${var.opsgenie_heartbeat_name != "" ? var.opsgenie_heartbeat_name : local.default_opsgenie_heartbeat_name}"
   fluentd_aws_region              = "${var.fluentd_aws_region != "" ? var.fluentd_aws_region : data.aws_region.fluentd_region.name}"
   extra_grafana_datasoures        = "${length(var.extra_grafana_datasoures) == 0 ? "" : indent(4,join("\n", data.template_file.helm_values_grafana.*.rendered))}"
+  extra_grafana_dashboards        = "${var.extra_grafana_dashboards == "" ? "" : indent(4, format("%s  %s", file("${path.module}/../templates/helm-values-grafana-dashboards.tpl.yaml"), indent(2,var.extra_grafana_dashboards)))}"
 }
 
 data "template_file" "helm_values" {
@@ -148,6 +149,7 @@ data "template_file" "helm_values" {
     customer                       = "${var.customer}"
     slack_webhook_url              = "${var.slack_webhook_url}"
     extra_grafana_datasoures       = "${local.extra_grafana_datasoures}"
+    extra_grafana_dashboards       = "${local.extra_grafana_dashboards}"
   }
 }
 

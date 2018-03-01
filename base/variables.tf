@@ -146,3 +146,8 @@ variable "extra_grafana_datasoures" {
   type        = "map"
   default     = {}
 }
+
+variable "extra_grafana_dashboards" {
+  description = "Extra Grafana dashboards we want to add."
+  default     = ""
+}

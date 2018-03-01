@@ -90,7 +90,7 @@ This terraform module will add an IAM policy to the k8s cluster nodes roles to a
 * [`elasticsearch_url`]: String(optional): The URL for elasticsearch. If not filled in, you will not be able to deploy Kibana. (default: "")
 * [`kibana_image_tag`]: String(optional): Image tag of the kibana image. (default: "6.0.0")
 * [`extra_grafana_datasoures`]: Map(optional): Extra Grafana datasource urls we want to add. Form is a map with name as key and url as value. (default: {})
-
+* [`extra_grafana_dashboards`]: String(optional): Extra Grafana dashboards. From is the map structure of HELM.
 ### Output
 
 * [`external_dns_role_arn`]: String: ARN of the IAM role created for external-dns
