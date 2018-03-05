@@ -25,6 +25,10 @@ logGroupName: ${fluentd_loggroupname}
 rbac:
   create: true
 
+tolerations:
+  - effect: NoSchedule
+    operator: Exists
+
 fluentdConfig: |
   <match fluent.**>
     @type null
