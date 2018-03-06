@@ -150,6 +150,8 @@ data "template_file" "helm_values" {
     slack_webhook_url              = "${var.slack_webhook_url}"
     extra_grafana_datasoures       = "${local.extra_grafana_datasoures}"
     extra_grafana_dashboards       = "${local.extra_grafana_dashboards}"
+    extra_alertmanager_routes      = "${indent(8,var.extra_alertmanager_routes)}"
+    extra_alertmanager_receivers   = "${indent(8,var.extra_alertmanager_receivers)}"
   }
 }
 

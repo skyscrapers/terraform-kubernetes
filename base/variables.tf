@@ -151,3 +151,13 @@ variable "extra_grafana_dashboards" {
   description = "Extra Grafana dashboards we want to add."
   default     = ""
 }
+
+variable "extra_alertmanager_routes" {
+  description = "Extra alertmanager routes."
+  default     = ""
+}
+
+variable "extra_alertmanager_receivers" {
+  description = "Extra alertmanager receivers."
+  default     = ""
+}

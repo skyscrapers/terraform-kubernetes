@@ -62,6 +62,7 @@ kube-prometheus:
         - match:
             alertname: DeadMansSwitch
           receiver: opsgenieproxy
+        ${extra_alertmanager_routes}
           repeat_interval: 1s
           group_interval: 1s
           group_wait: 1s
@@ -83,6 +84,7 @@ kube-prometheus:
             - channel: '#circle_persistence'
               send_resolved: true
               username: ${customer}-${environment}
+        ${extra_alertmanager_receivers}
     ingress:
       enabled: true
       annotations:

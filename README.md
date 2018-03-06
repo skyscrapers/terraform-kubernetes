@@ -91,6 +91,8 @@ This terraform module will add an IAM policy to the k8s cluster nodes roles to a
 * [`kibana_image_tag`]: String(optional): Image tag of the kibana image. (default: "6.0.0")
 * [`extra_grafana_datasoures`]: Map(optional): Extra Grafana datasource urls we want to add. Form is a map with name as key and url as value. (default: {})
 * [`extra_grafana_dashboards`]: String(optional): Extra Grafana dashboards. From is the map structure of HELM.
+* [`extra_alertmanager_routes`]: String(optional): Extra alertmanager routes. Yaml format. (default: "")
+* [`extra_alertmanager_receivers`]: String(optional): Extra alertmanager receivers. Yaml format. (default: "")
 ### Output
 
 * [`external_dns_role_arn`]: String: ARN of the IAM role created for external-dns
@@ -145,6 +147,29 @@ dex_gh_connectors = {
     teamName = "team2"
   }
 }
+```
+
+example of the `extra_alertmanager_routes`:
+```yaml
+extra_alertmanager_routes = <<EOF
+- match:
+    severity: warning
+  receiver: slack-runtime
+  routes:
+  - match:
+      group: persistence
+    receiver: slack-persistence
+EOF
+```
+
+example of the `extra_alertmanager_receivers`:
+```yaml
+extra_alertmanager_receivers = <<EOF
+- name: opsgenieproxy
+  webhook_configs:
+    - send_resolved: false
+      url: http://k8s-monitor-opsgenie-heartbeat-proxy/proxy
+EOF
 ```
 
 ## Usage
