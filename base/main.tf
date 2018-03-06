@@ -116,8 +116,8 @@ locals {
   default_opsgenie_heartbeat_name = "${upper(substr(var.customer,0,1))}${substr(var.customer,1,-1)} ${upper(substr(var.environment,0,1))}${substr(var.environment,1,-1)} Cluster Deadmanswitch"
   opsgenie_heartbeat_name         = "${var.opsgenie_heartbeat_name != "" ? var.opsgenie_heartbeat_name : local.default_opsgenie_heartbeat_name}"
   fluentd_aws_region              = "${var.fluentd_aws_region != "" ? var.fluentd_aws_region : data.aws_region.fluentd_region.name}"
-  extra_grafana_datasoures        = "${length(var.extra_grafana_datasoures) == 0 ? "" : indent(4,join("\n", data.template_file.helm_values_grafana.*.rendered))}"
-  extra_grafana_dashboards        = "${var.extra_grafana_dashboards == "" ? "" : indent(4, format("%s  %s", file("${path.module}/../templates/helm-values-grafana-dashboards.tpl.yaml"), indent(2,var.extra_grafana_dashboards)))}"
+  extra_grafana_datasoures        = "${indent(6,join("\n", data.template_file.helm_values_grafana_custom.*.rendered))}"
+  extra_grafana_dashboards        = "${indent(6,var.extra_grafana_dashboards)}"
 }
 
 data "template_file" "helm_values" {
@@ -277,14 +277,5 @@ data "template_file" "helm_values_grafana_custom" {
   vars {
     name = "${element(keys(var.extra_grafana_datasoures), count.index)}"
     url  = "${element(values(var.extra_grafana_datasoures), count.index)}"
-  }
-}
-
-data "template_file" "helm_values_grafana" {
-  count    = "${length(var.extra_grafana_datasoures) == 0 ? 0 : 1}"
-  template = "${file("${path.module}/../templates/helm-values-grafana.tpl.yaml")}"
-
-  vars {
-    custom_datasources = "${indent(2, join("\n", data.template_file.helm_values_grafana_custom.*.rendered))}"
   }
 }

@@ -146,6 +146,8 @@ kube-prometheus:
   grafana:
     adminUser: "${grafana_admin_user}"
     adminPassword: "${grafana_admin_password}"
+    keepOriginalDashboards: true
+    keepOriginalDatasources: true
     ingress:
       enabled: true
       annotations:
@@ -163,8 +165,10 @@ kube-prometheus:
       resources:
         requests:
           storage: ${grafana_volume_size}
-    ${extra_grafana_datasoures}
-    ${extra_grafana_dashboards}
+    dataSource:
+      ${extra_grafana_datasoures}
+    serverDashboardFiles:
+      ${extra_grafana_dashboards}
 
 opsgenieHeartbeatProxy:
     opsgenie_api_key: ${opsgenie_api_key}
