@@ -12,6 +12,8 @@ controller:
     enabled: true
   stats:
     enabled: true
+  metrics:
+    enabled: true
   config:
     use-proxy-protocol: "true"
   headers:
