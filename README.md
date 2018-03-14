@@ -263,13 +263,42 @@ Setting up Helm and installing the required bootstrap helm packages is described
 
 ### Deploy dashboard
 
-We deploy the dashboard with kubectl as the install through helm gives it a random name and we can't access the dashboard through the proxy
-```
-kubectl create -f https://git.io/kube-dashboard
+We deploy the dashboard with kubectl as the install through helm gives it a random name and we can't access the dashboard through the proxy:
+
+```shell
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
 ```
 
-After this you can access the dashboard through the proxy
+Since the new Dashboard version, you also need to setup [Access Control](https://github.com/kubernetes/dashboard/wiki/Access-control). At the moment we just [grant admin permissions](https://github.com/kubernetes/dashboard/wiki/Access-control#admin-privileges) to the dashboard.
+
+First, create a yaml file `dashboard-rbac.yaml`:
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: kubernetes-dashboard
+  labels:
+    k8s-app: kubernetes-dashboard
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: kubernetes-dashboard
+  namespace: kube-system
 ```
+
+Then apply this to the cluster:
+
+```shell
+kubectl apply -f dashboard-rbac.yaml
+```
+
+After this you can access the dashboard through the proxy:
+
+```shell
 kubectl proxy
 ```
 
