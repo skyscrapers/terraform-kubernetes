@@ -152,6 +152,7 @@ data "template_file" "helm_values" {
     extra_grafana_dashboards       = "${local.extra_grafana_dashboards}"
     extra_alertmanager_routes      = "${indent(8,var.extra_alertmanager_routes)}"
     extra_alertmanager_receivers   = "${indent(8,var.extra_alertmanager_receivers)}"
+    k8s_admins_groups              = "${length(var.k8s_admins_groups) > 0 ? indent(2, format("K8sAdminsGroups:\n%s", join("\n", formatlist("  - %s", var.k8s_admins_groups)))) : ""}"
   }
 }
 

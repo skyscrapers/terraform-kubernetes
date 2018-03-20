@@ -161,3 +161,8 @@ variable "extra_alertmanager_receivers" {
   description = "Extra alertmanager receivers."
   default     = ""
 }
+
+variable "k8s_admins_groups" {
+  description = "Groups that will be granted admin access to the k8s cluster. When using Dex and Kubesignin these will be GitHub teams in the form '<gh_org>:<gh_team>', for example 'skyscrapers:k8s-admins'. Empty by default"
+  default     = []
+}

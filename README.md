@@ -93,6 +93,8 @@ This terraform module will add an IAM policy to the k8s cluster nodes roles to a
 * [`extra_grafana_dashboards`]: String(optional): Extra Grafana dashboards. From is the map structure of HELM.
 * [`extra_alertmanager_routes`]: String(optional): Extra alertmanager routes. Yaml format. (default: "")
 * [`extra_alertmanager_receivers`]: String(optional): Extra alertmanager receivers. Yaml format. (default: "")
+* [`k8s_admins_groups`]: List(optional): Groups that will be granted admin access to the k8s cluster. When using Dex and Kubesignin these will be GitHub teams in the form '<gh_org>:<gh_team>', for example 'skyscrapers:k8s-admins'. (default: [])
+
 ### Output
 
 * [`external_dns_role_arn`]: String: ARN of the IAM role created for external-dns
