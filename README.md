@@ -26,7 +26,7 @@ Creates a full `kops` cluster specification yaml, including the required instanc
  * [`etcd_version`]: String(optional): Which Etcd version do you want to run. Defaults to default version defined in Kops.
  * [`helm_node`]: Boolean(optional): Due to a [bug](https://github.com/kubernetes/helm/issues/3121) in HELM/Kubelet, we want to run the tiller on a seperate node. When you want it set this to "true". The `"` around true are really important. Defaults to `"false"`.
  * [`extra_worker_securitygroups`]: List(optional): List of extra securitygroups that you want to attach to the worker nodes. Defaults to `[]`
-  * [`extra_master_securitygroups`]: List(optional): List of extra securitygroups that you want to attach to the master nodes. Defaults to `[]`
+ * [`extra_master_securitygroups`]: List(optional): List of extra securitygroups that you want to attach to the master nodes. Defaults to `[]`
 
 
 ### Output
@@ -93,7 +93,7 @@ This terraform module will add an IAM policy to the k8s cluster nodes roles to a
 * [`extra_grafana_dashboards`]: String(optional): Extra Grafana dashboards. From is the map structure of HELM.
 * [`extra_alertmanager_routes`]: String(optional): Extra alertmanager routes. Yaml format. (default: "")
 * [`extra_alertmanager_receivers`]: String(optional): Extra alertmanager receivers. Yaml format. (default: "")
-* [`k8s_admins_groups`]: List(optional): Groups that will be granted admin access to the k8s cluster. When using Dex and Kubesignin these will be GitHub teams in the form '<gh_org>:<gh_team>', for example 'skyscrapers:k8s-admins'. (default: [])
+* [`k8s_admins_groups`]: List(optional): Groups that will be granted admin access to the k8s cluster. When using Dex and Kubesignin these will be GitHub teams in the form '<gh_org>:<gh_team>', for example 'skyscrapers:k8s-admins'. (default: []) *Note* that the group "skyscrapers:k8s-admins" will always be appended to this list.
 
 ### Output
 
