@@ -37,7 +37,7 @@ Kubesignin:
   ClientSecret: "${kubesignin_client_secret}"
   RedirectUri: https://${kubesignin_domain_name}/callback
   DomainName: ${kubesignin_domain_name}
-  ${K8sAdminsGroups}
+  ${k8s_admins_groups}
 
 kube-prometheus:
   alertmanager:
