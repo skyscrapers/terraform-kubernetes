@@ -10,6 +10,7 @@ spec:
   machineType: ${instance_type}
   maxSize: ${max}
   minSize: ${min}
+  ${spot_price}
   role: Node
   ${extra_worker_securitygroups}
   subnets:
@@ -30,3 +31,4 @@ ${subnets}
       write_files:
       ${teleport_config}
       ${teleport_service}
+  ${spot_price_workaround}

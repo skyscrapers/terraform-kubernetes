@@ -76,6 +76,7 @@ data template_file "utility-subnet-spec" {
 locals {
   default_master_sg = "${length(var.extra_master_securitygroups) > 0 ? format("additionalSecurityGroups:\n %s",indent(1,join("\n",formatlist(" - %s",var.extra_master_securitygroups)))) : ""}"
   default_worker_sg = "${length(var.extra_worker_securitygroups) > 0 ? format("additionalSecurityGroups:\n %s",indent(1,join("\n",formatlist(" - %s",var.extra_worker_securitygroups)))) : ""}"
+  spot_price        = "${var.spot_price != "" ? format("maxPrice: \"%s\"", var.spot_price) : ""}"
 }
 
 data template_file "master-instancegroup-spec" {
@@ -96,6 +97,11 @@ data template_file "master-instancegroup-spec" {
   }
 }
 
+data template_file "spot-price-workaround" {
+  count    = "${var.spot_price == "" ? 0 : 1}"
+  template = "${file("${path.module}/../templates/kops-spot-price-workaround.tpl.yaml")}"
+}
+
 data template_file "worker-instancegroup-spec" {
   template = "${file("${path.module}/../templates/kops-instancegroup-worker.tpl.yaml")}"
 
@@ -112,6 +118,8 @@ data template_file "worker-instancegroup-spec" {
     teleport_service            = "${indent(6, module.teleport_bootstrap_script_worker.teleport_service_cloudinit)}"
     helm_node                   = "false"
     extra_worker_securitygroups = "${local.default_worker_sg}"
+    spot_price                  = "${local.spot_price}"
+    spot_price_workaround       = "${indent(2, join("", data.template_file.spot-price-workaround.*.rendered))}"
   }
 }
 

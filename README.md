@@ -27,7 +27,7 @@ Creates a full `kops` cluster specification yaml, including the required instanc
  * [`helm_node`]: Boolean(optional): Due to a [bug](https://github.com/kubernetes/helm/issues/3121) in HELM/Kubelet, we want to run the tiller on a seperate node. When you want it set this to "true". The `"` around true are really important. Defaults to `"false"`.
  * [`extra_worker_securitygroups`]: List(optional): List of extra securitygroups that you want to attach to the worker nodes. Defaults to `[]`
  * [`extra_master_securitygroups`]: List(optional): List of extra securitygroups that you want to attach to the master nodes. Defaults to `[]`
-
+ * [`spot_price`]: String(optional): Spot price you want to pay for your worker instances. By default this is empty and we will use on-demand instances. Default to `""`
 
 ### Output
  * None
