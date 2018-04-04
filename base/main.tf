@@ -282,3 +282,17 @@ data "template_file" "helm_values_grafana_custom" {
     url  = "${element(values(var.extra_grafana_datasoures), count.index)}"
   }
 }
+
+data "template_file" "helm_values_kube_spot_termination_notice_handler" {
+  template = "${file("${path.module}/../templates/helm-values-kube-spot-termination-notice-handler.tpl.yaml")}"
+
+  vars {
+    slack_url    = "${var.slack_webhook_url}"
+    cluster_name = "${var.customer}-${var.environment}"
+  }
+}
+
+resource "local_file" "helm_values_kube_spot_termination_notice_handler" {
+  content  = "${data.template_file.helm_values_kube_spot_termination_notice_handler.rendered}"
+  filename = "${path.cwd}/helm-values-kube-spot-termination-notice-handler.yaml"
+}
