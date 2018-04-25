@@ -15,7 +15,10 @@ resource "aws_iam_role" "external_dns_role" {
     {
       "Action": "sts:AssumeRole",
       "Principal": {
-        "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.cluster_nodes_iam_role_name}"
+        "AWS": [
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.cluster_nodes_iam_role_name}",
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.cluster_masters_iam_role_name}"
+        ]
       },
       "Effect": "Allow"
     }
@@ -59,7 +62,10 @@ resource "aws_iam_role" "fluentd_role" {
     {
       "Action": "sts:AssumeRole",
       "Principal": {
-        "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.cluster_nodes_iam_role_name}"
+      "AWS": [
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.cluster_nodes_iam_role_name}",
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.cluster_masters_iam_role_name}"
+        ]
       },
       "Effect": "Allow"
     }
@@ -95,6 +101,26 @@ EOF
 resource "aws_iam_role_policy" "kube2iam_assume_role_policy" {
   name = "${var.name}_kube2iam_assume_role_policy"
   role = "${var.cluster_nodes_iam_role_name}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "sts:AssumeRole"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/kube2iam/*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "kube2iam_assume_role_policy_masters" {
+  name = "${var.name}_kube2iam_assume_role_policy_masters"
+  role = "${var.cluster_masters_iam_role_name}"
 
   policy = <<EOF
 {

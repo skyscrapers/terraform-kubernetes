@@ -3,3 +3,6 @@ image:
 host:
   iptables: true
   interface: cali+
+tolerations:
+  - effect: NoSchedule
+    operator: Exists

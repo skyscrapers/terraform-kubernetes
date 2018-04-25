@@ -65,6 +65,7 @@ This terraform module will add an IAM policy to the k8s cluster nodes roles to a
 
 * [`name`]: String(required): base domain name of the cluster. This domain name will be used to lookup a hosted zone on Route53 and as the base for additional DNS records, e.g. for the API ELB.
 * [`cluster_nodes_iam_role_name`]: String(required): The name of the IAM role of the cluster worker nodes
+* [`cluster_masters_iam_role_name`]: String(required): The name of the IAM role for the cluster master nodes
 * [`nginx_controller_image_version`]: String(optional): The version of the nginx controller docker image
 * [`lego_email`]: String(required): Email address to use for registration with Let's Encrypt
 * [`lego_url`]: String(optional): Let's Encrypt API endpoint. Defaults to `https://acme-staging.api.letsencrypt.org/directory` (staging)

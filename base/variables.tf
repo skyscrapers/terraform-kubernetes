@@ -6,6 +6,10 @@ variable "cluster_nodes_iam_role_name" {
   description = "IAM role name for the k8s cluster worker nodes"
 }
 
+variable "cluster_masters_iam_role_name" {
+  description = "IAM role name for the k8s cluster master nodes"
+}
+
 variable "nginx_controller_image_version" {
   description = ""
   default     = "0.11.0"
