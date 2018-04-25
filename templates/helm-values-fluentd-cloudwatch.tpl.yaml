@@ -1,5 +1,5 @@
 image: fluent/fluentd-kubernetes-daemonset
-imageTag: v0.12-debian-cloudwatch
+imageTag: v0.12-debian-cloudwatch@sha256:6771474b32cc402b63a0facc9de6cd59cf7b5cb01c58a9d2ef7f874f0f490948
 
 ## Specify an imagePullPolicy (Required)
 ## It's recommended to change this to 'Always' if the image tag is 'latest'
