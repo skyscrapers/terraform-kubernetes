@@ -262,7 +262,7 @@ And then re-run `terraform apply`.
 Now that we have the configuration for the different helm packages, we can start deploying them.
 
 Setting up Helm and installing the required bootstrap helm packages is described in the
-[`charts/README`](https://github.com/skyscrapers/charts/blob/master/README.md#bootstrap-base-charts) file.
+[`charts/README`](https://github.com/skyscrapers/charts/blob/master/README.md#helm-setup) file.
 
 ### Deploy dashboard
 
