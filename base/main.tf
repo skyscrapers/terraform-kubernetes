@@ -143,7 +143,7 @@ locals {
   opsgenie_heartbeat_name         = "${var.opsgenie_heartbeat_name != "" ? var.opsgenie_heartbeat_name : local.default_opsgenie_heartbeat_name}"
   fluentd_aws_region              = "${var.fluentd_aws_region != "" ? var.fluentd_aws_region : data.aws_region.fluentd_region.name}"
   extra_grafana_datasoures        = "${indent(6,join("\n", data.template_file.helm_values_grafana_custom.*.rendered))}"
-  extra_grafana_dashboards        = "${indent(6,var.extra_grafana_dashboards)}"
+  extra_grafana_dashboards        = "${indent(6,join("\n", list(var.extra_grafana_dashboards, data.http.k8s-worker-resource-requests-dashboard.body))}"
 }
 
 data "template_file" "helm_values" {
