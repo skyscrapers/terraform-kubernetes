@@ -1,5 +1,5 @@
 image: fluent/fluentd-kubernetes-daemonset
-imageTag: v0.12-debian-cloudwatch@sha256:45d160d73a77367f579c486430be698be1c5afe7213ffa603830363b63caabc2
+imageTag: v0.12-debian-cloudwatch@sha256:54ec725a5a5a0971e14a94b6acb0c75af39d4029579f4d109e33e53fe5a88ed0
 
 ## Specify an imagePullPolicy (Required)
 ## It's recommended to change this to 'Always' if the image tag is 'latest'
@@ -17,7 +17,7 @@ resources:
   requests:
     cpu: 100m
     memory: 200Mi
-    
+
 awsRegion: ${fluentd_aws_region}
 awsRole: ${fluentd_role_arn}
 logGroupName: ${fluentd_loggroupname}
