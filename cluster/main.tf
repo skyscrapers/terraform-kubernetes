@@ -97,17 +97,6 @@ data template_file "master-instancegroup-spec" {
   }
 }
 
-#########################################################
-# This is a workaround because with spot-prices it is possible that it takes longer before an instance has its labels.
-# We run a docker container to check if the tags are there before restarting the kubelet.
-# This issue should be fixed in k8s 1.10
-# https://github.com/kubernetes/kops/issues/3605#issuecomment-360068615
-#########################################################
-data template_file "spot-price-workaround" {
-  count    = "${var.spot_price == "" ? 0 : 1}"
-  template = "${file("${path.module}/../templates/kops-spot-price-workaround.tpl.yaml")}"
-}
-
 data template_file "worker-instancegroup-spec" {
   template = "${file("${path.module}/../templates/kops-instancegroup-worker.tpl.yaml")}"
 
@@ -125,7 +114,6 @@ data template_file "worker-instancegroup-spec" {
     helm_node                   = "false"
     extra_worker_securitygroups = "${local.default_worker_sg}"
     spot_price                  = "${local.spot_price}"
-    spot_price_workaround       = "${indent(2, join("", data.template_file.spot-price-workaround.*.rendered))}"
   }
 }
 

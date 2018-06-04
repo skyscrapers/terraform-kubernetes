@@ -31,4 +31,3 @@ ${subnets}
       write_files:
       ${teleport_config}
       ${teleport_service}
-  ${spot_price_workaround}
