@@ -186,7 +186,7 @@ resource "local_file" "kops_full_cluster-spec_file" {
 }
 
 module "teleport_bootstrap_script_worker" {
-  source      = "github.com/skyscrapers/terraform-teleport//teleport-bootstrap-script?ref=2.2.1"
+  source      = "github.com/skyscrapers/terraform-teleport//teleport-bootstrap-script?ref=3.1.1"
   auth_server = "${var.teleport_server}"
   auth_token  = "${var.teleport_token}"
   function    = "worker"
@@ -195,7 +195,7 @@ module "teleport_bootstrap_script_worker" {
 }
 
 module "teleport_bootstrap_script_master" {
-  source      = "github.com/skyscrapers/terraform-teleport//teleport-bootstrap-script?ref=2.2.1"
+  source      = "github.com/skyscrapers/terraform-teleport//teleport-bootstrap-script?ref=3.1.1"
   auth_server = "${var.teleport_server}"
   auth_token  = "${var.teleport_token}"
   function    = "master"
