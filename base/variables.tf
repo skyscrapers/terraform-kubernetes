@@ -170,3 +170,8 @@ variable "k8s_admins_groups" {
   description = "Groups that will be granted admin access to the k8s cluster. When using Dex and Kubesignin these will be GitHub teams in the form '<gh_org>:<gh_team>', for example 'skyscrapers:k8s-admins'. Empty by default"
   default     = []
 }
+
+variable "customer_slack_hook" {
+  description = "The slack webhook where customer alerts will be sent to"
+  default     = ""
+}

@@ -53,22 +53,37 @@ kube-prometheus:
         group_wait: 30s
         group_interval: 5m
         repeat_interval: 12h
-        receiver: 'opsgenie'
+        receiver: slack-customer
         routes:
-        - match:
-            severity: warning
-          receiver: slack-runtime
+        - match_re:
+            namespace: ^(?:infrastructure|kube-system)$
           routes:
           - match:
-              group: persistence
-            receiver: slack-persistence
+              severity: warning
+            receiver: slack-runtime
+            routes:
+            - match:
+                group: persistence
+              receiver: slack-persistence
+          - match:
+              severity: critical
+            receiver: opsgenie
+        - match:
+            alertname: TargetDown
+          routes:
+          - match:
+             severity: warning
+            receiver: slack-runtime
+          - match:
+              severity: critical
+            receiver: opsgenie
         - match:
             alertname: DeadMansSwitch
           receiver: opsgenieproxy
-        ${extra_alertmanager_routes}
           repeat_interval: 1s
           group_interval: 1s
           group_wait: 1s
+        ${extra_alertmanager_routes}
       receivers:
         - name: opsgenie
           opsgenie_configs:
@@ -87,6 +102,11 @@ kube-prometheus:
             - channel: '#circle_persistence'
               send_resolved: true
               username: ${customer}-${environment}
+        - name: slack-customer
+          slack_configs:
+            - api_url: ${customer_slack_hook}
+              send_resolved: true
+              username: Prometheus-${environment}
         ${extra_alertmanager_receivers}
     ingress:
       enabled: true
