@@ -1,5 +1,5 @@
 terraform {
-  required_version = "> 0.9.4"
+  required_version = ">= 0.11.3"
 }
 
 data "aws_caller_identity" "current" {}
@@ -48,7 +48,6 @@ EOF
 }
 
 data "aws_region" "fluentd_region" {
-  current = true
 }
 
 resource "aws_iam_role" "fluentd_role" {
