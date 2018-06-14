@@ -40,7 +40,6 @@ fluentdConfig: |
     path /var/log/containers/*.log
     pos_file /var/log/fluentd-containers.log.pos
     tag kubernetes.*
-    read_from_head true
     <parse>
       @type json
       time_format %Y-%m-%dT%H:%M:%S.%NZ
@@ -52,7 +51,7 @@ fluentdConfig: |
     @id in_tail_startupscript
     path /var/log/startupscript.log
     pos_file /var/log/fluentd-startupscript.log.pos
-    tag startupscript
+    tag "startupscript.#{Socket.gethostname}"
     <parse>
       @type syslog
     </parse>
@@ -67,8 +66,7 @@ fluentdConfig: |
       persistent true
       path /var/log/fluentd-journald-docker-cursor.json
     </storage>
-    read_from_head true
-    tag docker
+    tag "docker.#{Socket.gethostname}"
   </source>
 
   <source>
@@ -80,8 +78,7 @@ fluentdConfig: |
       persistent true
       path /var/log/fluentd-journald-kubelet-cursor.json
     </storage>
-    read_from_head true
-    tag kubelet
+    tag "kubelet.#{Socket.gethostname}"
   </source>
 
   <source>
@@ -90,7 +87,7 @@ fluentdConfig: |
     multiline_flush_interval 5s
     path /var/log/rescheduler.log
     pos_file /var/log/fluentd-rescheduler.log.pos
-    tag rescheduler
+    tag "rescheduler.#{Socket.gethostname}"
     <parse>
       @type multiline_kubernetes
     </parse>
@@ -102,7 +99,7 @@ fluentdConfig: |
     multiline_flush_interval 5s
     path /var/log/glbc.log
     pos_file /var/log/fluentd-glbc.log.pos
-    tag glbc
+    tag "glbc.#{Socket.gethostname}"
     <parse>
       @type multiline_kubernetes
     </parse>
@@ -114,7 +111,7 @@ fluentdConfig: |
     multiline_flush_interval 5s
     path /var/log/cluster-autoscaler.log
     pos_file /var/log/fluentd-cluster-autoscaler.log.pos
-    tag cluster-autoscaler
+    tag "cluster-autoscaler.#{Socket.gethostname}"
     <parse>
       @type multiline_kubernetes
     </parse>
@@ -129,7 +126,7 @@ fluentdConfig: |
     multiline_flush_interval 5s
     path /var/log/kubernetes/kube-apiserver-audit.log
     pos_file /var/log/kube-apiserver-audit.log.pos
-    tag kube-apiserver-audit
+    tag "kube-apiserver-audit.#{Socket.gethostname}"
     <parse>
       @type multiline
       format_firstline /^\S+\s+AUDIT:/
@@ -143,6 +140,24 @@ fluentdConfig: |
       time_format %Y-%m-%dT%T.%L%Z
     </parse>
   </source>
+
+  # Drop kubeapi trace,debug and info logs
+  <filter kubernetes.var.log.containers.kube-apiserver-**>
+    @type grep
+    <exclude>
+      key log
+      pattern ^[TDI]\d{4}
+    </exclude>
+  </filter>
+
+  # Drop calico trace,debug and info logs
+  <filter kubernetes.var.log.containers.kube-apiserver-**>
+    @type grep
+    <exclude>
+      key log
+      pattern pattern \[(TRACE|DEBUG|INFO)\]
+    </exclude>
+  </filter>
 
   <filter kubernetes.**>
     @type kubernetes_metadata
