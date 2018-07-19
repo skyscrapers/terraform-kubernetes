@@ -3,5 +3,4 @@
   ClientSecret: "${clientSecret}"
   Orgs:
   - name: ${orgName}
-    teams:
-    - ${teamName}
+    ${teams}

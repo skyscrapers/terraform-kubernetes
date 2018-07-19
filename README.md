@@ -142,13 +142,12 @@ dex_gh_connectors = {
     clientId = "base64clientID"
     clientSecret = "base64clientSecret"
     orgName = "org1"
-    teamName = "team1"
+    teams = ["team1,team2"]
   }
   github2 = {
     clientId = "base64clientID"
     clientSecret = "base64clientSecret"
     orgName = "org2"
-    teamName = "team2"
   }
 }
 ```

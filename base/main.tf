@@ -201,7 +201,7 @@ data "template_file" "gh_connectors" {
     clientId     = "${ lookup(var.dex_gh_connectors[element(keys(var.dex_gh_connectors), count.index)], "clientId")}"
     clientSecret = "${ lookup(var.dex_gh_connectors[element(keys(var.dex_gh_connectors), count.index)], "clientSecret")}"
     orgName      = "${ lookup(var.dex_gh_connectors[element(keys(var.dex_gh_connectors), count.index)], "orgName")}"
-    teamName     = "${ lookup(var.dex_gh_connectors[element(keys(var.dex_gh_connectors), count.index)], "teamName")}"
+    teams        = "${contains(keys(var.dex_gh_connectors[element(keys(var.dex_gh_connectors), count.index)]), "teams") ? "teams:\n    " : ""}${indent(4, join("\n", formatlist("- %s", compact(split(",", lookup(var.dex_gh_connectors[element(keys(var.dex_gh_connectors), count.index)], "teams", ""))))))}"
   }
 }
 
