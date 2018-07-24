@@ -76,7 +76,6 @@ This terraform module will add an IAM policy to the k8s cluster nodes roles to a
 * [`opsgenie_api_key`]: String(required): Opsgenie API key from your [prometheus integration](https://docs.opsgenie.com/docs/integrations/prometheus-integration).
 * [`slack_webhook_url`]: String(required): Slack webhook url from you [webhook configuration](https://api.slack.com/incoming-webhooks)
 * [`opsgenie_heartbeat_name`]: String(optional): Opsgenie Heartbeat name. By default we compose this as `<Customer> <Environment> Cluster Deadmanswitch`
-* [`bastion_cidr`]: String(required): Bastion CIDR of your kubernetes cluster.
 * [`alertmanager_volume_size`]: String(optional, default: `20Gi`): Persistent volume size for the AlertManager.
 * [`prometheus_volume_size`]: String(optional, default: `100Gi`): Persistent volume size for Prometheus.
 * [`prometheus_retention`]: String(optional, default: `336h`): Data retention period for Prometheus (default: 2 weeks).
@@ -115,7 +114,6 @@ module "k8s-base" {
   dex_github_org              = "skyscrapers"
   kubesignin_client_secret    = "something"
   opsgenie_api_key            = "somesecretopsgeniekey"
-  bastion_cidr                = "1.2.3.4/32"
   fluentd_custom_config       = <<EOF
 <filter kubernetes.var.log.containers.busybox_**.log>
   type parser

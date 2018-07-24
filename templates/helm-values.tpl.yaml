@@ -39,6 +39,43 @@ Kubesignin:
   DomainName: ${kubesignin_domain_name}
   ${k8s_admins_groups}
 
+proxies:
+  dashboard:
+    replicaCount: 2
+    upstreamURL: "https://k8s-dashboard-kubernetes-dashboard.kube-system.svc.cluster.local"
+    oidc:
+      redirectURL: "${dashboard_domain_name}"
+      groups: ${k8s_admins_groups_oidc_proxy}
+  alertmanager:
+    replicaCount: 2
+    upstreamURL: "http://k8s-monitor-alertmanager:9093"
+    oidc:
+      redirectURL: "${alertmanager_domain_name}"
+      groups: ${k8s_admins_groups_oidc_proxy}
+  grafana:
+    replicaCount: 2
+    upstreamURL: "http://k8s-monitor-grafana"
+    oidc:
+      redirectURL: "${grafana_domain_name}"
+      groups: ${k8s_admins_groups_oidc_proxy}
+    extraArgs:
+      - "--enable-authorization-header=false"
+      - "--headers=X-WEBAUTH-USER=admin"
+  prometheus:
+    replicaCount: 2
+    upstreamURL: "http://k8s-monitor-prometheus:9090"
+    oidc:
+      redirectURL: "${prometheus_domain_name}"
+      groups: ${k8s_admins_groups_oidc_proxy}
+  kibana:
+    replicaCount: 2
+    upstreamURL: "http://kibana:443"
+    oidc:
+      redirectURL: "${kibana_domain_name}"
+      groups: ${k8s_admins_groups_oidc_proxy}
+    extraArgs:
+      - "--enable-authorization-header=false"
+
 kube-prometheus:
   alertmanager:
     image:
@@ -109,16 +146,7 @@ kube-prometheus:
               username: Prometheus-${environment}
         ${extra_alertmanager_receivers}
     ingress:
-      enabled: true
-      annotations:
-        kubernetes.io/ingress.class: nginx
-        kubernetes.io/tls-acme: "true"
-        nginx.ingress.kubernetes.io/whitelist-source-range: "${bastion_cidr}"
-      fqdn: ${alertmanager_domain_name}
-      tls:
-        - secretName: alertmanager-lego-tls
-          hosts:
-            - ${alertmanager_domain_name}
+      enabled: false
     storageSpec:
       volumeClaimTemplate:
         spec:
@@ -133,16 +161,7 @@ kube-prometheus:
     replicaCount: 2
     retention: ${prometheus_retention}
     ingress:
-      enabled: true
-      annotations:
-        kubernetes.io/ingress.class: nginx
-        kubernetes.io/tls-acme: "true"
-        nginx.ingress.kubernetes.io/whitelist-source-range: "${bastion_cidr}"
-      fqdn: ${prometheus_domain_name}
-      tls:
-        - secretName: prometheus-lego-tls
-          hosts:
-            - ${prometheus_domain_name}
+      enabled: false
     storageSpec:
       volumeClaimTemplate:
         spec:
@@ -173,17 +192,11 @@ kube-prometheus:
     adminPassword: "${grafana_admin_password}"
     keepOriginalDashboards: true
     keepOriginalDatasources: true
+    extraVars:
+      - name: GF_AUTH_PROXY_ENABLED
+        value: "true"
     ingress:
-      enabled: true
-      annotations:
-        kubernetes.io/ingress.class: nginx
-        kubernetes.io/tls-acme: "true"
-        nginx.ingress.kubernetes.io/whitelist-source-range: "${bastion_cidr}"
-      fqdn: ${grafana_domain_name}
-      tls:
-        - secretName: grafana-lego-tls
-          hosts:
-            - ${grafana_domain_name}
+      enabled: false
     storageSpec:
       accessMode: ReadWriteOnce
       class: gp2

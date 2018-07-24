@@ -51,10 +51,6 @@ variable "opsgenie_heartbeat_name" {
   default     = ""
 }
 
-variable "bastion_cidr" {
-  description = "Bastion IP of your kubernetes cluster"
-}
-
 variable "alertmanager_volume_size" {
   description = "Persistent volume size for the AlertManager"
   default     = "20Gi"

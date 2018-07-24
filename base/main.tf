@@ -143,6 +143,7 @@ locals {
   fluentd_aws_region              = "${var.fluentd_aws_region != "" ? var.fluentd_aws_region : data.aws_region.fluentd_region.name}"
   extra_grafana_datasoures        = "${indent(6,join("\n", data.template_file.helm_values_grafana_custom.*.rendered))}"
   extra_grafana_dashboards        = "${indent(6,join("\n", list(var.extra_grafana_dashboards, data.http.k8s-worker-resource-requests-dashboard.body)))}"
+  kibana_domain_name              = "kibana.${var.name}"
 }
 
 data "template_file" "helm_values" {
@@ -160,7 +161,7 @@ data "template_file" "helm_values" {
     external_dns_role_arn          = "${aws_iam_role.external_dns_role.arn}"
     opsgenie_api_key               = "${var.opsgenie_api_key}"
     opsgenie_heartbeat_name        = "${local.opsgenie_heartbeat_name}"
-    bastion_cidr                   = "188.166.18.33/32,176.58.117.229/32,${var.bastion_cidr}"
+    dashboard_domain_name          = "kubernetes-dashboard.${var.name}"
     alertmanager_domain_name       = "alertmanager.${var.name}"
     alertmanager_volume_size       = "${var.alertmanager_volume_size}"
     prometheus_domain_name         = "prometheus.${var.name}"
@@ -179,6 +180,8 @@ data "template_file" "helm_values" {
     extra_alertmanager_receivers   = "${indent(8,var.extra_alertmanager_receivers)}"
     customer_slack_hook            = "${var.customer_slack_hook}"
     k8s_admins_groups              = "${indent(2, format("K8sAdminsGroups:\n%s", join("\n", formatlist("  - %s", concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups)))))}"
+    k8s_admins_groups_oidc_proxy    = "${join("|", formatlist("^%s$" , concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups)))}"
+    kibana_domain_name             = "${local.kibana_domain_name}"
   }
 }
 
@@ -277,8 +280,7 @@ data "template_file" "helm_values_kibana" {
 
   vars {
     elasticsearch_url  = "${var.elasticsearch_url}"
-    bastion_cidr       = "188.166.18.33/32,176.58.117.229/32,${var.bastion_cidr}"
-    kibana_domain_name = "kibana.${var.name}"
+    kibana_domain_name = "${local.kibana_domain_name}"
     kibana_image_tag   = "${var.kibana_image_tag}"
   }
 }

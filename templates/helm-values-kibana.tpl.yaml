@@ -9,14 +9,4 @@ env:
   ELASTICSEARCH_URL: ${elasticsearch_url}
 
 ingress:
-  enabled: true
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    kubernetes.io/tls-acme: "true"
-    nginx.ingress.kubernetes.io/whitelist-source-range: "${bastion_cidr}"
-  hosts: 
-  - ${kibana_domain_name}
-  tls:
-    - secretName: kibana-lego-tls
-      hosts:
-      - ${kibana_domain_name}
+  enabled: false
