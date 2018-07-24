@@ -45,19 +45,19 @@ proxies:
     upstreamURL: "https://k8s-dashboard-kubernetes-dashboard.kube-system.svc.cluster.local"
     oidc:
       redirectURL: "${dashboard_domain_name}"
-      groups: ${k8s_admins_groups_oidc_proxy}
+      groups: ${dashboard_groups}
   alertmanager:
     replicaCount: 2
     upstreamURL: "http://k8s-monitor-alertmanager:9093"
     oidc:
       redirectURL: "${alertmanager_domain_name}"
-      groups: ${k8s_admins_groups_oidc_proxy}
+      groups: ${alertmanager_groups}
   grafana:
     replicaCount: 2
     upstreamURL: "http://k8s-monitor-grafana"
     oidc:
       redirectURL: "${grafana_domain_name}"
-      groups: ${k8s_admins_groups_oidc_proxy}
+      groups: ${grafana_groups}
     extraArgs:
       - "--enable-authorization-header=false"
       - "--headers=X-WEBAUTH-USER=admin"
@@ -66,15 +66,16 @@ proxies:
     upstreamURL: "http://k8s-monitor-prometheus:9090"
     oidc:
       redirectURL: "${prometheus_domain_name}"
-      groups: ${k8s_admins_groups_oidc_proxy}
+      groups: ${prometheus_groups}
   kibana:
     replicaCount: 2
     upstreamURL: "http://kibana:443"
     oidc:
       redirectURL: "${kibana_domain_name}"
-      groups: ${k8s_admins_groups_oidc_proxy}
+      groups: ${kibana_groups}
     extraArgs:
       - "--enable-authorization-header=false"
+  ${extra_oidc_proxies}
 
 kube-prometheus:
   alertmanager:

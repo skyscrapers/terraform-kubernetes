@@ -95,6 +95,12 @@ This terraform module will add an IAM policy to the k8s cluster nodes roles to a
 * [`extra_alertmanager_receivers`]: String(optional): Extra alertmanager receivers. Yaml format. (default: "")
 * [`customer_slack_hook`]: String(optional): The slack webhook where customer alerts will be sent to. if not set customer alerts will not be routed. (default: "")
 * [`k8s_admins_groups`]: List(optional): Groups that will be granted admin access to the k8s cluster. When using Dex and Kubesignin these will be GitHub teams in the form '<gh_org>:<gh_team>', for example 'skyscrapers:k8s-admins'. (default: []) *Note* that the group "skyscrapers:k8s-admins" will always be appended to this list.
+* [`dashboard_groups`]: List(optional): Extra groups that will be granted access to the Kubernetes dashboard. When using Dex and Kubesignin these will be GitHub teams in the form `<gh_org>:<gh_team>`, for example `skyscrapers:k8s-admins`. Empty by default. Note: `skyscrapers:k8s-admins` and `var.k8s_admins_groups` are always granted access.
+* [`alertmanager_groups`]: List(optional): Extra groups that will be granted access to the Alertmanager dashboard. When using Dex and Kubesignin these will be GitHub teams in the form `<gh_org>:<gh_team>`, for example `skyscrapers:k8s-admins`. Empty by default. Note: `skyscrapers:k8s-admins` and `var.k8s_admins_groups` are always granted access.
+* [`grafana_groups`]: List(optional): Extra groups that will be granted access to the Grafana dashboard. When using Dex and Kubesignin these will be GitHub teams in the form `<gh_org>:<gh_team>`, for example `skyscrapers:k8s-admins`. Empty by default. Note: `skyscrapers:k8s-admins` and `var.k8s_admins_groups` are always granted access.
+* [`prometheus_groups`]: List(optional): Extra groups that will be granted access to the Prometheus dashboard. When using Dex and Kubesignin these will be GitHub teams in the form `<gh_org>:<gh_team>`, for example `skyscrapers:k8s-admins`. Empty by default. Note: `skyscrapers:k8s-admins` and `var.k8s_admins_groups` are always granted access.
+* [`kibana_groups`]: List(optional): Extra groups that will be granted access to the Kibana dashboard. When using Dex and Kubesignin these will be GitHub teams in the form `<gh_org>:<gh_team>`, for example `skyscrapers:k8s-admins`. Empty by default. Note: `skyscrapers:k8s-admins` and `var.k8s_admins_groups` are always granted access.
+* [`extra_oidc_proxies`]: String(optional): Extra OIDC proxies to setup."
 
 ### Output
 
@@ -170,6 +176,19 @@ extra_alertmanager_receivers = <<EOF
   webhook_configs:
     - send_resolved: false
       url: http://k8s-monitor-opsgenie-heartbeat-proxy/proxy
+EOF
+```
+
+example of the `extra_oidc_proxies`:
+```yaml
+extra_oidc_proxies = <<EOF
+customerPrometheus:
+  replicaCount: 2
+  upstreamURL: "http://client-monitor-prometheus.application-monitoring.svc.cluster.local"
+  oidc:
+    redirectURL: "monitoring.example.com"
+    groups: skyscrapers:k8s-admins
+  # extraArgs: []
 EOF
 ```
 

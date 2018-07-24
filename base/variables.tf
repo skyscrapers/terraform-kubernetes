@@ -163,8 +163,38 @@ variable "extra_alertmanager_receivers" {
 }
 
 variable "k8s_admins_groups" {
-  description = "Groups that will be granted admin access to the k8s cluster. When using Dex and Kubesignin these will be GitHub teams in the form '<gh_org>:<gh_team>', for example 'skyscrapers:k8s-admins'. Empty by default"
+  description = "Groups that will be granted admin access to the k8s cluster. When using Dex and Kubesignin these will be GitHub teams in the form `<gh_org>:<gh_team>`, for example `skyscrapers:k8s-admins`. Empty by default"
   default     = []
+}
+
+variable "dashboard_groups" {
+  description = "Extra groups that will be granted access to the Kubernetes dashboard. When using Dex and Kubesignin these will be GitHub teams in the form `<gh_org>:<gh_team>`, for example `skyscrapers:k8s-admins`. Empty by default. Note: `skyscrapers:k8s-admins` and `var.k8s_admins_groups` are always granted access."
+  default     = []
+}
+
+variable "alertmanager_groups" {
+  description = "Extra groups that will be granted access to the Alertmanager dashboard. When using Dex and Kubesignin these will be GitHub teams in the form `<gh_org>:<gh_team>`, for example `skyscrapers:k8s-admins`. Empty by default. Note: `skyscrapers:k8s-admins` and `var.k8s_admins_groups` are always granted access."
+  default     = []
+}
+
+variable "grafana_groups" {
+  description = "Extra groups that will be granted access to the Grafana dashboard. When using Dex and Kubesignin these will be GitHub teams in the form `<gh_org>:<gh_team>`, for example `skyscrapers:k8s-admins`. Empty by default. Note: `skyscrapers:k8s-admins` and `var.k8s_admins_groups` are always granted access."
+  default     = []
+}
+
+variable "prometheus_groups" {
+  description = "Extra groups that will be granted access to the Prometheus dashboard. When using Dex and Kubesignin these will be GitHub teams in the form `<gh_org>:<gh_team>`, for example `skyscrapers:k8s-admins`. Empty by default. Note: `skyscrapers:k8s-admins` and `var.k8s_admins_groups` are always granted access."
+  default     = []
+}
+
+variable "kibana_groups" {
+  description = "Extra groups that will be granted access to the Kibana dashboard. When using Dex and Kubesignin these will be GitHub teams in the form `<gh_org>:<gh_team>`, for example `skyscrapers:k8s-admins`. Empty by default. Note: `skyscrapers:k8s-admins` and `var.k8s_admins_groups` are always granted access."
+  default     = []
+}
+
+variable "extra_oidc_proxies" {
+  description = "Extra OIDC proxies to setup."
+  default     = ""
 }
 
 variable "customer_slack_hook" {

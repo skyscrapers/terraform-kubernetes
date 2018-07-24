@@ -47,8 +47,7 @@ resource "aws_iam_role_policy" "external_dns_role_policy" {
 EOF
 }
 
-data "aws_region" "fluentd_region" {
-}
+data "aws_region" "fluentd_region" {}
 
 resource "aws_iam_role" "fluentd_role" {
   name = "${var.name}_fluentd_role"
@@ -180,7 +179,12 @@ data "template_file" "helm_values" {
     extra_alertmanager_receivers   = "${indent(8,var.extra_alertmanager_receivers)}"
     customer_slack_hook            = "${var.customer_slack_hook}"
     k8s_admins_groups              = "${indent(2, format("K8sAdminsGroups:\n%s", join("\n", formatlist("  - %s", concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups)))))}"
-    k8s_admins_groups_oidc_proxy    = "${join("|", formatlist("^%s$" , concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups)))}"
+    dashboard_groups               = "${join(",", concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups, var.dashboard_groups))}"
+    alertmanager_groups            = "${join(",", concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups, var.alertmanager_groups))}"
+    grafana_groups                 = "${join(",", concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups, var.grafana_groups))}"
+    prometheus_groups              = "${join(",", concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups, var.prometheus_groups))}"
+    kibana_groups                  = "${join(",", concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups, var.kibana_groups))}"
+    extra_oidc_proxies             = "${indent(2, var.extra_oidc_proxies)}"
     kibana_domain_name             = "${local.kibana_domain_name}"
   }
 }
