@@ -43,18 +43,21 @@ proxies:
   dashboard:
     replicaCount: 2
     upstreamURL: "https://k8s-dashboard-kubernetes-dashboard.kube-system.svc.cluster.local"
+    upstreamTimeout: "60s"
     oidc:
       redirectURL: "${dashboard_domain_name}"
       groups: ${dashboard_groups}
   alertmanager:
     replicaCount: 2
     upstreamURL: "http://k8s-monitor-alertmanager:9093"
+    upstreamTimeout: "60s"
     oidc:
       redirectURL: "${alertmanager_domain_name}"
       groups: ${alertmanager_groups}
   grafana:
     replicaCount: 2
     upstreamURL: "http://k8s-monitor-grafana"
+    upstreamTimeout: "60s"
     oidc:
       redirectURL: "${grafana_domain_name}"
       groups: ${grafana_groups}
@@ -64,12 +67,14 @@ proxies:
   prometheus:
     replicaCount: 2
     upstreamURL: "http://k8s-monitor-prometheus:9090"
+    upstreamTimeout: "60s"
     oidc:
       redirectURL: "${prometheus_domain_name}"
       groups: ${prometheus_groups}
   kibana:
     replicaCount: 2
     upstreamURL: "http://kibana:443"
+    upstreamTimeout: "300s"
     oidc:
       redirectURL: "${kibana_domain_name}"
       groups: ${kibana_groups}

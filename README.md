@@ -182,13 +182,12 @@ EOF
 example of the `extra_oidc_proxies`:
 ```yaml
 extra_oidc_proxies = <<EOF
-customerPrometheus:
+application-monitor-prometheus:
   replicaCount: 2
-  upstreamURL: "http://client-monitor-prometheus.application-monitoring.svc.cluster.local"
+  upstreamURL: "http://client-monitor-prometheus.application-monitoring.svc.cluster.local:9090"
   oidc:
     redirectURL: "monitoring.example.com"
     groups: skyscrapers:k8s-admins
-  # extraArgs: []
 EOF
 ```
 
