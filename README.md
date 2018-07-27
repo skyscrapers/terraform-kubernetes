@@ -273,55 +273,12 @@ $ terraform taint -module=k8s-base null_resource.helm_values_file
 
 And then re-run `terraform apply`.
 
-### Deploy all helm packages
+### Deploy all Helm packages
 
 Now that we have the configuration for the different helm packages, we can start deploying them.
 
 Setting up Helm and installing the required bootstrap helm packages is described in the
-[`charts/README`](https://github.com/skyscrapers/charts/blob/master/README.md#helm-setup) file.
-
-### Deploy dashboard
-
-We deploy the dashboard with kubectl as the install through helm gives it a random name and we can't access the dashboard through the proxy:
-
-```shell
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
-```
-
-Since the new Dashboard version, you also need to setup [Access Control](https://github.com/kubernetes/dashboard/wiki/Access-control). At the moment we just [grant admin permissions](https://github.com/kubernetes/dashboard/wiki/Access-control#admin-privileges) to the dashboard.
-
-First, create a yaml file `dashboard-rbac.yaml`:
-
-```yaml
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: kubernetes-dashboard
-  labels:
-    k8s-app: kubernetes-dashboard
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-- kind: ServiceAccount
-  name: kubernetes-dashboard
-  namespace: kube-system
-```
-
-Then apply this to the cluster:
-
-```shell
-kubectl apply -f dashboard-rbac.yaml
-```
-
-After this you can access the dashboard through the proxy:
-
-```shell
-kubectl proxy
-```
-
-Now you can visit `http://127.0.0.1:8001/ui`
+[`charts/README`](https://github.com/skyscrapers/charts/blob/master/README.md) file.
 
 ### Evolve your cluster
 
@@ -363,3 +320,5 @@ The same applies to the deployed Helm packages. If an update needs to be made, j
 ```
 helm upgrade <release_name> skyscrapers/<helm_chart_name> --values helm-values.yaml
 ```
+
+Please refer to our [Helm charts documentation](https://github.com/skyscrapers/charts/blob/master/README.md) for an overview of the base packages we deploy.
