@@ -85,7 +85,7 @@ proxies:
 kube-prometheus:
   alertmanager:
     image:
-      tag: v0.9.1
+      tag: v0.15.1
     replicaCount: 3
     config:
       global:
@@ -163,7 +163,7 @@ kube-prometheus:
 
   prometheus:
     image:
-      tag: v2.0.0
+      tag: v2.2.1
     replicaCount: 2
     retention: ${prometheus_retention}
     ingress:
