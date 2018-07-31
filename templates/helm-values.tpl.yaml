@@ -85,7 +85,7 @@ proxies:
 kube-prometheus:
   alertmanager:
     image:
-      tag: v0.15.1
+      tag: v0.14.0
     replicaCount: 3
     config:
       global:
