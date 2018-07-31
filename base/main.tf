@@ -328,3 +328,12 @@ resource "local_file" "helm_values_kube_spot_termination_notice_handler" {
   content  = "${data.template_file.helm_values_kube_spot_termination_notice_handler.rendered}"
   filename = "${path.cwd}/helm-values-kube-spot-termination-notice-handler.yaml"
 }
+
+data "template_file" "helm_values_kubernetes_dashboard" {
+  template = "${file("${path.module}/../templates/helm-values-dashboard.tpl.yaml")}"
+}
+
+resource "local_file" "helm_values_kubernetes_dashboard_file" {
+  content  = "${data.template_file.helm_values_kubernetes_dashboard.rendered}"
+  filename = "${path.cwd}/helm-values-dashboard.yaml"
+}
