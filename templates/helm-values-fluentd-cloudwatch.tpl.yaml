@@ -141,7 +141,7 @@ fluentdConfig: |
     </parse>
   </source>
 
-  # Drop kubeapi trace,debug and info logs
+  # Drop kubeapi trace,debug info logs
   <filter kubernetes.var.log.containers.kube-apiserver-**>
     @type grep
     <exclude>
@@ -151,11 +151,11 @@ fluentdConfig: |
   </filter>
 
   # Drop calico trace,debug and info logs
-  <filter kubernetes.var.log.containers.kube-apiserver-**>
+  <filter kubernetes.var.log.containers.calico-node-**>
     @type grep
     <exclude>
       key log
-      pattern pattern \[(TRACE|DEBUG|INFO)\]
+      pattern \[(TRACE|DEBUG|INFO)\]
     </exclude>
   </filter>
 
