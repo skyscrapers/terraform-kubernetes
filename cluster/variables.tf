@@ -86,3 +86,13 @@ variable "spot_price" {
   description = "Spot price you want to pay for your worker instances. By default this is empty and we will use on-demand instances"
   default     = ""
 }
+
+variable "calico_logseverity" {
+  description = "Sets the logSeverityScreen setting for the Calico CNI. Defaults to 'warning'"
+  default     = "warning"
+}
+
+variable "calico_mtu" {
+  description = "Sets the IP-in-IP MTU for the Calico CNI. Defaults to '8981' for usage with AWS jumbo frames"
+  default     = "8981"
+}
