@@ -150,15 +150,6 @@ fluentdConfig: |
     </exclude>
   </filter>
 
-  # Drop calico trace,debug and info logs
-  <filter kubernetes.var.log.containers.kube-apiserver-**>
-    @type grep
-    <exclude>
-      key log
-      pattern pattern \[(TRACE|DEBUG|INFO)\]
-    </exclude>
-  </filter>
-
   <filter kubernetes.**>
     @type kubernetes_metadata
     @id filter_kube_metadata
