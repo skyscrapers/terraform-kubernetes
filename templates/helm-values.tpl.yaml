@@ -103,11 +103,11 @@ kube-prometheus:
           routes:
           - match:
               severity: warning
-            receiver: slack-runtime
+            receiver: slack-engineering
             routes:
             - match:
                 group: persistence
-              receiver: slack-persistence
+              receiver: slack-engineering
           - match:
               severity: critical
             receiver: opsgenie
@@ -116,7 +116,7 @@ kube-prometheus:
           routes:
           - match:
              severity: warning
-            receiver: slack-runtime
+            receiver: slack-engineering
           - match:
               severity: critical
             receiver: opsgenie
@@ -136,14 +136,9 @@ kube-prometheus:
           webhook_configs:
             - send_resolved: false
               url: http://k8s-monitor-opsgenie-heartbeat-proxy/proxy
-        - name: slack-runtime
+        - name: slack-engineering
           slack_configs:
             - send_resolved: true
-              username: ${customer}-${environment}
-        - name: slack-persistence
-          slack_configs:
-            - channel: '#circle_persistence'
-              send_resolved: true
               username: ${customer}-${environment}
         - name: slack-customer
           slack_configs:
