@@ -77,6 +77,10 @@ locals {
   default_master_sg = "${length(var.extra_master_securitygroups) > 0 ? format("additionalSecurityGroups:\n %s",indent(1,join("\n",formatlist(" - %s",var.extra_master_securitygroups)))) : ""}"
   default_worker_sg = "${length(var.extra_worker_securitygroups) > 0 ? format("additionalSecurityGroups:\n %s",indent(1,join("\n",formatlist(" - %s",var.extra_worker_securitygroups)))) : ""}"
   spot_price        = "${var.spot_price != "" ? format("maxPrice: \"%s\"", var.spot_price) : ""}"
+  # Due to a bug in the current linux kernel version, t2 instances can't set an MTU higher than 1500 for their external network interface.
+  # So this will set the same MTU in Calico for t2 instances, so there's no network fragmentation.
+  # For info in this Slack thread: https://skyscrapers.slack.com/archives/C04P0T47V/p1536224149000100
+  calico_mtu        = "${replace(var.worker_instance_type, "/^t2\./", "") == var.worker_instance_type ? var.large_calico_mtu : var.small_calico_mtu}"
 }
 
 data template_file "master-instancegroup-spec" {
@@ -167,7 +171,7 @@ data template_file "cluster-spec" {
     worker_subnets      = "${join("\n",data.template_file.worker-subnet-spec.*.rendered)}"
     utility_subnets     = "${join("\n",data.template_file.utility-subnet-spec.*.rendered)}"
     calico_logseverity  = "${var.calico_logseverity}"
-    calico_mtu          = "${var.calico_mtu}"
+    calico_mtu          = "${local.calico_mtu}"
   }
 }
 

@@ -92,7 +92,12 @@ variable "calico_logseverity" {
   default     = "warning"
 }
 
-variable "calico_mtu" {
-  description = "Sets the IP-in-IP MTU for the Calico CNI. Defaults to '8981' for usage with AWS jumbo frames"
+variable "large_calico_mtu" {
+  description = "This is the IP-in-IP MTU for the Calico CNI for use with AWS jumbo frames. Defaults to '8981'"
   default     = "8981"
+}
+
+variable "small_calico_mtu" {
+  description = "This is the IP-in-IP MTU for the Calico CNI for use with a normal network MTU. Defaults to '1480' for usage with a 1500 network MTU"
+  default     = "1480"
 }

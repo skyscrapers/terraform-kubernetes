@@ -29,7 +29,8 @@ Creates a full `kops` cluster specification yaml, including the required instanc
  * [`extra_master_securitygroups`]: List(optional): List of extra securitygroups that you want to attach to the master nodes. Defaults to `[]`
  * [`spot_price`]: String(optional): Spot price you want to pay for your worker instances. By default this is empty and we will use on-demand instances. Default to `""`
  * [`calico_logseverity`]: String(optional): Sets the logSeverityScreen setting for the Calico CNI. Defaults to `"warning"`
- * [`calico_mtu`]: String(optional): Sets the IP-in-IP MTU for the Calico CNI. Defaults to `"8981"` for usage with AWS jumbo frames"
+ * [`large_calico_mtu`]: String(optional): This is the IP-in-IP MTU for the Calico CNI for use with AWS jumbo frames. Defaults to `'8981'`
+ * [`small_calico_mtu`]: String(optional): This is the IP-in-IP MTU for the Calico CNI for use with a normal network MTU. Defaults to `'1480'` for usage with a 1500 network MTU
 
 ### Output
  * None
