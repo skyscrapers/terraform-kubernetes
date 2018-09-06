@@ -12,7 +12,7 @@ variable "cluster_masters_iam_role_name" {
 
 variable "nginx_controller_image_version" {
   description = ""
-  default     = "0.11.0"
+  default     = "0.19.0"
 }
 
 variable "lego_email" {
@@ -22,10 +22,6 @@ variable "lego_email" {
 variable "lego_url" {
   description = ""
   default     = "https://acme-v01.api.letsencrypt.org/directory"
-}
-
-variable "dex_image_tag" {
-  default = "v2.4.1"
 }
 
 variable "dex_expiry_signingkeys" {
@@ -200,4 +196,9 @@ variable "extra_oidc_proxies" {
 variable "customer_slack_hook" {
   description = "The slack webhook where customer alerts will be sent to"
   default     = ""
+}
+
+variable "nginx_ingress_nameOverride" {
+  description = "Override for the nginx-ingress name"
+  default     = "nginx-ingress"
 }

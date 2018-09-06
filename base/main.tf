@@ -143,49 +143,47 @@ locals {
   extra_grafana_datasoures        = "${indent(6,join("\n", data.template_file.helm_values_grafana_custom.*.rendered))}"
   extra_grafana_dashboards        = "${indent(6,join("\n", list(var.extra_grafana_dashboards, data.http.k8s-worker-resource-requests-dashboard.body, data.http.k8s-calico-dashboard.body)))}"
   kibana_domain_name              = "kibana.${var.name}"
+  nginx_ingress_name              = "${var.nginx_ingress_nameOverride}-"
 }
 
 data "template_file" "helm_values" {
   template = "${file("${path.module}/../templates/helm-values.tpl.yaml")}"
 
   vars {
-    nginx_controller_image_version = "${var.nginx_controller_image_version}"
-    headers                        = "${indent(4, join("\n", data.template_file.kv_mapping.*.rendered))}"
-    dex_image_tag                  = "${var.dex_image_tag}"
-    dex_gh_connectors              = "${indent(6, join("\n", data.template_file.gh_connectors.*.rendered))}"
-    dex_expiry_signingkeys         = "${var.dex_expiry_signingkeys}"
-    dex_expiry_idtokens            = "${var.dex_expiry_idtokens}"
-    kubesignin_client_secret       = "${var.kubesignin_client_secret}"
-    kubesignin_domain_name         = "kubesignin.${var.name}"
-    external_dns_role_arn          = "${aws_iam_role.external_dns_role.arn}"
-    opsgenie_api_key               = "${var.opsgenie_api_key}"
-    opsgenie_heartbeat_name        = "${local.opsgenie_heartbeat_name}"
-    dashboard_domain_name          = "kubernetes-dashboard.${var.name}"
-    alertmanager_domain_name       = "alertmanager.${var.name}"
-    alertmanager_volume_size       = "${var.alertmanager_volume_size}"
-    prometheus_domain_name         = "prometheus.${var.name}"
-    prometheus_volume_size         = "${var.prometheus_volume_size}"
-    prometheus_retention           = "${var.prometheus_retention}"
-    grafana_admin_user             = "${var.grafana_admin_user}"
-    grafana_admin_password         = "${var.grafana_admin_password}"
-    grafana_domain_name            = "grafana.${var.name}"
-    grafana_volume_size            = "${var.grafana_volume_size}"
-    environment                    = "${var.environment}"
-    customer                       = "${var.customer}"
-    slack_webhook_url              = "${var.slack_webhook_url}"
-    extra_grafana_datasoures       = "${local.extra_grafana_datasoures}"
-    extra_grafana_dashboards       = "${local.extra_grafana_dashboards}"
-    extra_alertmanager_routes      = "${indent(8,var.extra_alertmanager_routes)}"
-    extra_alertmanager_receivers   = "${indent(8,var.extra_alertmanager_receivers)}"
-    customer_slack_hook            = "${var.customer_slack_hook}"
-    k8s_admins_groups              = "${indent(2, format("K8sAdminsGroups:\n%s", join("\n", formatlist("  - %s", concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups)))))}"
-    dashboard_groups               = "${join(",", concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups, var.dashboard_groups))}"
-    alertmanager_groups            = "${join(",", concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups, var.alertmanager_groups))}"
-    grafana_groups                 = "${join(",", concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups, var.grafana_groups))}"
-    prometheus_groups              = "${join(",", concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups, var.prometheus_groups))}"
-    kibana_groups                  = "${join(",", concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups, var.kibana_groups))}"
-    extra_oidc_proxies             = "${indent(2, var.extra_oidc_proxies)}"
-    kibana_domain_name             = "${local.kibana_domain_name}"
+    dex_gh_connectors            = "${indent(6, join("\n", data.template_file.gh_connectors.*.rendered))}"
+    dex_expiry_signingkeys       = "${var.dex_expiry_signingkeys}"
+    dex_expiry_idtokens          = "${var.dex_expiry_idtokens}"
+    kubesignin_client_secret     = "${var.kubesignin_client_secret}"
+    kubesignin_domain_name       = "kubesignin.${var.name}"
+    external_dns_role_arn        = "${aws_iam_role.external_dns_role.arn}"
+    opsgenie_api_key             = "${var.opsgenie_api_key}"
+    opsgenie_heartbeat_name      = "${local.opsgenie_heartbeat_name}"
+    dashboard_domain_name        = "kubernetes-dashboard.${var.name}"
+    alertmanager_domain_name     = "alertmanager.${var.name}"
+    alertmanager_volume_size     = "${var.alertmanager_volume_size}"
+    prometheus_domain_name       = "prometheus.${var.name}"
+    prometheus_volume_size       = "${var.prometheus_volume_size}"
+    prometheus_retention         = "${var.prometheus_retention}"
+    grafana_admin_user           = "${var.grafana_admin_user}"
+    grafana_admin_password       = "${var.grafana_admin_password}"
+    grafana_domain_name          = "grafana.${var.name}"
+    grafana_volume_size          = "${var.grafana_volume_size}"
+    environment                  = "${var.environment}"
+    customer                     = "${var.customer}"
+    slack_webhook_url            = "${var.slack_webhook_url}"
+    extra_grafana_datasoures     = "${local.extra_grafana_datasoures}"
+    extra_grafana_dashboards     = "${local.extra_grafana_dashboards}"
+    extra_alertmanager_routes    = "${indent(8,var.extra_alertmanager_routes)}"
+    extra_alertmanager_receivers = "${indent(8,var.extra_alertmanager_receivers)}"
+    customer_slack_hook          = "${var.customer_slack_hook}"
+    k8s_admins_groups            = "${indent(2, format("K8sAdminsGroups:\n%s", join("\n", formatlist("  - %s", concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups)))))}"
+    dashboard_groups             = "${join(",", concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups, var.dashboard_groups))}"
+    alertmanager_groups          = "${join(",", concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups, var.alertmanager_groups))}"
+    grafana_groups               = "${join(",", concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups, var.grafana_groups))}"
+    prometheus_groups            = "${join(",", concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups, var.prometheus_groups))}"
+    kibana_groups                = "${join(",", concat(list("skyscrapers:k8s-admins"), var.k8s_admins_groups, var.kibana_groups))}"
+    extra_oidc_proxies           = "${indent(2, var.extra_oidc_proxies)}"
+    kibana_domain_name           = "${local.kibana_domain_name}"
   }
 }
 
@@ -336,4 +334,19 @@ data "template_file" "helm_values_kubernetes_dashboard" {
 resource "local_file" "helm_values_kubernetes_dashboard_file" {
   content  = "${data.template_file.helm_values_kubernetes_dashboard.rendered}"
   filename = "${path.cwd}/helm-values-dashboard.yaml"
+}
+
+data "template_file" "helm_values_nginx_ingress" {
+  template = "${file("${path.module}/../templates/helm-values-nginx-ingress.tpl.yaml")}"
+
+  vars {
+    headers                        = "${indent(4, join("\n", data.template_file.kv_mapping.*.rendered))}"
+    nameOverride                   = "${local.nginx_ingress_name}"
+    nginx_controller_image_version = "${var.nginx_controller_image_version}"
+  }
+}
+
+resource "local_file" "helm_values_nginx-ingress_file" {
+  content  = "${data.template_file.helm_values_nginx_ingress.rendered}"
+  filename = "${path.cwd}/helm-values-nginx-ingress.yaml"
 }

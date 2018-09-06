@@ -1,0 +1,27 @@
+# enables rbac in multiple charts
+# rbac.create is the standard way to enable rbac
+rbac:
+  create: true
+
+controller:
+  name: "${nameOverride}controller"
+  image:
+    repository: quay.io/kubernetes-ingress-controller/nginx-ingress-controller
+    tag: "${nginx_controller_image_version}"
+  publishService:
+    enabled: true
+  stats:
+    enabled: true
+  metrics:
+    enabled: true
+  config:
+    use-proxy-protocol: "true"
+  headers:
+    ${headers}
+  replicaCount: 3
+  service:
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
+
+defaultBackend:
+  name: "${nameOverride}default-backend"

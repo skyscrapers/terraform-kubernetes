@@ -3,28 +3,8 @@
 rbac:
   create: true
 
-# Nginx-ingress
-controller:
-  image:
-    repository: quay.io/kubernetes-ingress-controller/nginx-ingress-controller
-    tag: "${nginx_controller_image_version}"
-  publishService:
-    enabled: true
-  stats:
-    enabled: true
-  metrics:
-    enabled: true
-  config:
-    use-proxy-protocol: "true"
-  headers:
-    ${headers}
-  replicaCount: 3
-  service:
-    annotations:
-      service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
-
 Dex:
-  ImageTag: ${dex_image_tag}
+  ImageTag: v2.10.0
   Issuer: https://${kubesignin_domain_name}/dex
   Connectors:
     GitHub:

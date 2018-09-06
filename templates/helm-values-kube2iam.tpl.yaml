@@ -1,5 +1,5 @@
 image:
-  tag: 0.8.1
+  tag: 0.10.3
 host:
   iptables: true
   interface: cali+
