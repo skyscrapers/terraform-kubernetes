@@ -40,7 +40,6 @@ ${etcd_members_events}
     calico:
       crossSubnet: true
       logSeverityScreen: ${calico_logseverity}
-      mtu: ${calico_mtu}
       prometheusMetricsEnabled: true
   nonMasqueradeCIDR: 100.64.0.0/10
   sshAccess:

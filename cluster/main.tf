@@ -167,7 +167,6 @@ data template_file "cluster-spec" {
     worker_subnets      = "${join("\n",data.template_file.worker-subnet-spec.*.rendered)}"
     utility_subnets     = "${join("\n",data.template_file.utility-subnet-spec.*.rendered)}"
     calico_logseverity  = "${var.calico_logseverity}"
-    calico_mtu          = "${var.calico_mtu}"
   }
 }
 
