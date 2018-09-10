@@ -19,7 +19,6 @@ ${subnets}
     role: worker
     subnet: app
     access: private
-  ${helm_node == true ? "nodeLabels:\n    function: helm" : ""}
   additionalUserData:
   - name: teleport.sh
     type: text/x-shellscript

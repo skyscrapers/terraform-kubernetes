@@ -11,13 +11,15 @@ spec:
   maxSize: ${max}
   minSize: ${min}
   role: Node
+  ${extra_worker_securitygroups}
   subnets:
 ${subnets}
   cloudLabels:
     role: worker
     subnet: app
     access: private
-  ${helm_node == true ? "nodeLabels:\n    function: helm" : ""}
+  nodeLabels:
+    function: helm
   taints:
   - function=helm:NoSchedule
   additionalUserData:
