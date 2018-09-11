@@ -143,7 +143,7 @@ locals {
   extra_grafana_datasoures        = "${indent(6,join("\n", data.template_file.helm_values_grafana_custom.*.rendered))}"
   extra_grafana_dashboards        = "${indent(6,join("\n", list(var.extra_grafana_dashboards, data.http.k8s-worker-resource-requests-dashboard.body, data.http.k8s-calico-dashboard.body)))}"
   kibana_domain_name              = "kibana.${var.name}"
-  nginx_ingress_name              = "${var.nginx_ingress_nameOverride}-"
+  nginx_ingress_name              = "${var.nginx_ingress_name_fix ? "nginx-ingress-" : ""}"
 }
 
 data "template_file" "helm_values" {

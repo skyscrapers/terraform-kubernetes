@@ -198,7 +198,7 @@ variable "customer_slack_hook" {
   default     = ""
 }
 
-variable "nginx_ingress_nameOverride" {
+variable "nginx_ingress_name_fix" {
   description = "Override for the nginx-ingress name"
-  default     = "nginx-ingress"
+  default     = true
 }
