@@ -2,6 +2,4 @@ image:
   tag: v0.5.6
 podAnnotations:
   iam.amazonaws.com/role: ${external_dns_role_arn}
-extraArgs:
-  registry: txt
-  txt-owner-id: ${txt_owner_id}
+txtOwnerId: ${txt_owner_id}
