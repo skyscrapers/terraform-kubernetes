@@ -27,17 +27,28 @@ data "aws_ami" "kubernetes_ami" {
 # Subnets
 #########################################################
 
+data "aws_nat_gateway" "ngws" {
+  count = "${length(var.nat_gateway_ids)}"
+  id    = "${element(var.nat_gateway_ids, count.index)}"
+}
+
+data "aws_subnet" "ngw_subnets" {
+  count = "${length(var.nat_gateway_ids)}"
+  id    = "${element(data.aws_nat_gateway.ngws.*.subnet_id, count.index)}"
+}
+
 # Private subnets to host the Kubernetes master nodes
 data template_file "master-subnet-spec" {
   count    = "3"
   template = "${file("${path.module}/../templates/kops-cluster-subnet.tpl.yaml")}"
 
   vars {
-    name = "${element(formatlist("master-%s", data.aws_availability_zones.available.names),count.index)}"
-    type = "Private"
-    zone = "${element(data.aws_availability_zones.available.names, count.index)}"
-    id   = ""
-    cidr = "${cidrsubnet(data.aws_vpc.vpc_for_k8s.cidr_block,8,var.master_net_number+count.index)}"
+    name   = "${element(formatlist("master-%s", data.aws_availability_zones.available.names),count.index)}"
+    type   = "Private"
+    zone   = "${element(data.aws_availability_zones.available.names, count.index)}"
+    id     = ""
+    cidr   = "${cidrsubnet(data.aws_vpc.vpc_for_k8s.cidr_block,8,var.master_net_number+count.index)}"
+    egress = "${local.ngws_per_az[element(data.aws_availability_zones.available.names, count.index)]}"
   }
 }
 
@@ -47,11 +58,12 @@ data template_file "worker-subnet-spec" {
   template = "${file("${path.module}/../templates/kops-cluster-subnet.tpl.yaml")}"
 
   vars {
-    name = "${element(formatlist("worker-%s", data.aws_availability_zones.available.names), count.index)}"
-    type = "Private"
-    zone = "${element(data.aws_availability_zones.available.names, count.index)}"
-    id   = ""
-    cidr = "${cidrsubnet(data.aws_vpc.vpc_for_k8s.cidr_block,8,var.worker_net_number+count.index)}"
+    name   = "${element(formatlist("worker-%s", data.aws_availability_zones.available.names), count.index)}"
+    type   = "Private"
+    zone   = "${element(data.aws_availability_zones.available.names, count.index)}"
+    id     = ""
+    cidr   = "${cidrsubnet(data.aws_vpc.vpc_for_k8s.cidr_block,8,var.worker_net_number+count.index)}"
+    egress = "${local.ngws_per_az[element(data.aws_availability_zones.available.names, count.index)]}"
   }
 }
 
@@ -61,11 +73,12 @@ data template_file "utility-subnet-spec" {
   template = "${file("${path.module}/../templates/kops-cluster-subnet.tpl.yaml")}"
 
   vars {
-    name = "${element(formatlist("utility-%s", data.aws_availability_zones.available.names),count.index)}"
-    type = "Utility"
-    zone = "${element(data.aws_availability_zones.available.names, count.index)}"
-    id   = ""
-    cidr = "${cidrsubnet(data.aws_vpc.vpc_for_k8s.cidr_block,8,var.utility_net_number+count.index)}"
+    name   = "${element(formatlist("utility-%s", data.aws_availability_zones.available.names),count.index)}"
+    type   = "Utility"
+    zone   = "${element(data.aws_availability_zones.available.names, count.index)}"
+    id     = ""
+    cidr   = "${cidrsubnet(data.aws_vpc.vpc_for_k8s.cidr_block,8,var.utility_net_number+count.index)}"
+    egress = ""
   }
 }
 
@@ -77,6 +90,7 @@ locals {
   default_master_sg = "${length(var.extra_master_securitygroups) > 0 ? format("additionalSecurityGroups:\n %s",indent(1,join("\n",formatlist(" - %s",var.extra_master_securitygroups)))) : ""}"
   default_worker_sg = "${length(var.extra_worker_securitygroups) > 0 ? format("additionalSecurityGroups:\n %s",indent(1,join("\n",formatlist(" - %s",var.extra_worker_securitygroups)))) : ""}"
   spot_price        = "${var.spot_price != "" ? format("maxPrice: \"%s\"", var.spot_price) : ""}"
+  ngws_per_az       = "${zipmap(data.aws_subnet.ngw_subnets.*.availability_zone, data.aws_nat_gateway.ngws.*.id)}"
 }
 
 data template_file "master-instancegroup-spec" {
