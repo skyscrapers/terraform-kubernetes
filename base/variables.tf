@@ -132,9 +132,14 @@ variable "elasticsearch_url" {
   default     = ""
 }
 
+variable "elasticsearch_requesttimeout" {
+  description = "Time in ms Kibana waits for a query response from Elasticsearch"
+  default     = "120000"
+}
+
 variable "kibana_image_tag" {
   description = "Image tag of the kibana image"
-  default     = "6.0.0"
+  default     = "6.3.1"
 }
 
 variable "extra_grafana_datasoures" {

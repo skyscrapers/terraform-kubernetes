@@ -7,6 +7,7 @@ env:
   # Ref: https://www.elastic.co/guide/en/kibana/current/settings.html
   #
   ELASTICSEARCH_URL: ${elasticsearch_url}
+  ELASTICSEARCH_REQUESTTIMEOUT: ${elasticsearch_requesttimeout}
 
 ingress:
   enabled: false

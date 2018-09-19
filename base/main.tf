@@ -281,9 +281,10 @@ data "template_file" "helm_values_kibana" {
   template = "${file("${path.module}/../templates/helm-values-kibana.tpl.yaml")}"
 
   vars {
-    elasticsearch_url  = "${var.elasticsearch_url}"
-    kibana_domain_name = "${local.kibana_domain_name}"
-    kibana_image_tag   = "${var.kibana_image_tag}"
+    elasticsearch_url            = "${var.elasticsearch_url}"
+    elasticsearch_requesttimeout = "${var.elasticsearch_requesttimeout}"
+    kibana_domain_name           = "${local.kibana_domain_name}"
+    kibana_image_tag             = "${var.kibana_image_tag}"
   }
 }
 
