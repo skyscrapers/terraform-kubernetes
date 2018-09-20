@@ -69,6 +69,7 @@ This terraform module will add an IAM policy to the k8s cluster nodes roles to a
 * [`cluster_nodes_iam_role_name`]: String(required): The name of the IAM role of the cluster worker nodes
 * [`cluster_masters_iam_role_name`]: String(required): The name of the IAM role for the cluster master nodes
 * [`nginx_controller_image_version`]: String(optional): The version of the nginx controller docker image
+* [`nginx_controller_elb_timeout`]: String(optional, default `300`): Idle timeout to set for the AWS load balancer
 * [`lego_email`]: String(required): Email address to use for registration with Let's Encrypt
 * [`lego_url`]: String(optional): Let's Encrypt API endpoint. Defaults to `https://acme-staging.api.letsencrypt.org/directory` (staging)
 * [`dex_gh_connectors`]: Map(required): A map of the required github connectors used by dex. See example below.

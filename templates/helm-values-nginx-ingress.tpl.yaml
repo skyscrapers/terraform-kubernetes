@@ -22,6 +22,7 @@ controller:
   service:
     annotations:
       service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: '*'
+      service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "${nginx_controller_elb_timeout}"
 
 defaultBackend:
   name: "${nameOverride}default-backend"

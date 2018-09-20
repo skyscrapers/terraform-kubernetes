@@ -15,6 +15,11 @@ variable "nginx_controller_image_version" {
   default     = "0.19.0"
 }
 
+variable "nginx_controller_elb_timeout" {
+  description = "Idle timeout to set for the AWS load balancer"
+  default     = "300"
+}
+
 variable "lego_email" {
   description = ""
 }

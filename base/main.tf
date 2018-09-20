@@ -344,6 +344,7 @@ data "template_file" "helm_values_nginx_ingress" {
     headers                        = "${indent(4, join("\n", data.template_file.kv_mapping.*.rendered))}"
     nameOverride                   = "${local.nginx_ingress_name}"
     nginx_controller_image_version = "${var.nginx_controller_image_version}"
+    nginx_controller_elb_timeout   = "${var.nginx_controller_elb_timeout}"
   }
 }
 
