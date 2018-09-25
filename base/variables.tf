@@ -207,8 +207,3 @@ variable "customer_slack_hook" {
   description = "The slack webhook where customer alerts will be sent to"
   default     = ""
 }
-
-variable "nginx_ingress_name_fix" {
-  description = "Override for the nginx-ingress name"
-  default     = true
-}
