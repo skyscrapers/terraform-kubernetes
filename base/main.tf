@@ -2,146 +2,14 @@ terraform {
   required_version = ">= 0.11.3"
 }
 
-data "aws_caller_identity" "current" {}
-
-resource "aws_iam_role" "external_dns_role" {
-  name = "${var.name}_external_dns_role"
-  path = "/kube2iam/"
-
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "AWS": [
-          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.cluster_nodes_iam_role_name}",
-          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.cluster_masters_iam_role_name}"
-        ]
-      },
-      "Effect": "Allow"
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_iam_role_policy" "external_dns_role_policy" {
-  name = "${var.name}_external_dns_policy"
-  role = "${aws_iam_role.external_dns_role.id}"
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "route53:*"
-      ],
-      "Effect": "Allow",
-      "Resource": "*"
-    }
-  ]
-}
-EOF
-}
-
-data "aws_region" "fluentd_region" {}
-
-resource "aws_iam_role" "fluentd_role" {
-  name = "${var.name}_fluentd_role"
-  path = "/kube2iam/"
-
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-      "AWS": [
-          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.cluster_nodes_iam_role_name}",
-          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.cluster_masters_iam_role_name}"
-        ]
-      },
-      "Effect": "Allow"
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_iam_role_policy" "fluentd_role_policy" {
-  name = "${var.name}_fluentd_policy"
-  role = "${aws_iam_role.fluentd_role.id}"
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "logs:*",
-        "s3:GetObject"
-      ],
-      "Resource": [
-        "arn:aws:logs:${local.fluentd_aws_region}:*:*",
-        "arn:aws:s3:::*"
-      ]
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_iam_role_policy" "kube2iam_assume_role_policy" {
-  name = "${var.name}_kube2iam_assume_role_policy"
-  role = "${var.cluster_nodes_iam_role_name}"
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "sts:AssumeRole"
-      ],
-      "Effect": "Allow",
-      "Resource": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/kube2iam/*"
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_iam_role_policy" "kube2iam_assume_role_policy_masters" {
-  name = "${var.name}_kube2iam_assume_role_policy_masters"
-  role = "${var.cluster_masters_iam_role_name}"
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "sts:AssumeRole"
-      ],
-      "Effect": "Allow",
-      "Resource": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/kube2iam/*"
-    }
-  ]
-}
-EOF
-}
+data "aws_region" "current" {}
 
 locals {
   default_opsgenie_heartbeat_name = "${upper(substr(var.customer,0,1))}${substr(var.customer,1,-1)} ${upper(substr(var.environment,0,1))}${substr(var.environment,1,-1)} Cluster Deadmanswitch"
   opsgenie_heartbeat_name         = "${var.opsgenie_heartbeat_name != "" ? var.opsgenie_heartbeat_name : local.default_opsgenie_heartbeat_name}"
-  fluentd_aws_region              = "${var.fluentd_aws_region != "" ? var.fluentd_aws_region : data.aws_region.fluentd_region.name}"
+  fluentd_aws_region              = "${var.fluentd_aws_region != "" ? var.fluentd_aws_region : data.aws_region.current.name}"
   extra_grafana_datasoures        = "${indent(6,join("\n", data.template_file.helm_values_grafana_custom.*.rendered))}"
-  extra_grafana_dashboards        = "${indent(6,join("\n", list(var.extra_grafana_dashboards, data.http.k8s-worker-resource-requests-dashboard.body, data.http.k8s-calico-dashboard.body)))}"
+  extra_grafana_dashboards        = "${indent(6,join("\n", list(var.extra_grafana_dashboards, data.http.k8s-worker-resource-requests-dashboard.body, data.http.k8s-calico-dashboard.body, data.http.k8s-autoscaler-dashboard.body)))}"
   kibana_domain_name              = "kibana.${var.name}"
 }
 
@@ -349,4 +217,19 @@ data "template_file" "helm_values_nginx_ingress" {
 resource "local_file" "helm_values_nginx-ingress_file" {
   content  = "${data.template_file.helm_values_nginx_ingress.rendered}"
   filename = "${path.cwd}/helm-values-nginx-ingress.yaml"
+}
+
+data "template_file" "helm_values_autoscaler" {
+  template = "${file("${path.module}/../templates/helm-values-autoscaler.tpl.yaml")}"
+
+  vars {
+    aws_region          = "${data.aws_region.current.name}"
+    cluster_name        = "${var.name}"
+    autoscaler_role_arn = "${aws_iam_role.autoscaler.arn}"
+  }
+}
+
+resource "local_file" "helm_values_autoscaler_file" {
+  content  = "${data.template_file.helm_values_autoscaler.rendered}"
+  filename = "${path.cwd}/helm-values-autoscaler.yaml"
 }

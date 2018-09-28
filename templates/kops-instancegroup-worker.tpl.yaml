@@ -19,6 +19,8 @@ ${subnets}
     role: worker
     subnet: app
     access: private
+    k8s.io/cluster-autoscaler/enabled: ""
+    kubernetes.io/cluster/${cluster-name}: owned
   additionalUserData:
   - name: teleport.sh
     type: text/x-shellscript
