@@ -143,7 +143,7 @@ data "aws_iam_policy_document" "autoscaler_assume" {
 
     principals {
       type = "AWS"
-      identifiers= ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.cluster_nodes_iam_role_name}"]
+      identifiers= ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.cluster_masters_iam_role_name}"]
     }
   }
 }
