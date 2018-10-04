@@ -126,6 +126,7 @@ kube-prometheus:
               send_resolved: true
               username: Prometheus-${environment}
         ${extra_alertmanager_receivers}
+    externalUrl: "https://${alertmanager_domain_name}"
     ingress:
       enabled: false
     storageSpec:
