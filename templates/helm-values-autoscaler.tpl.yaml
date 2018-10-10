@@ -28,7 +28,7 @@ extraArgs:
   # scale-down-delay: 10m
   # scale-down-non-empty-candidates-count: 5
   # scale-down-unneeded-time: 10m
-  # scale-down-utilization-threshold: 0.5
+  scale-down-utilization-threshold: ${utilization_threshold}
   # skip-nodes-with-local-storage: false
   # skip-nodes-with-system-pods: true
 

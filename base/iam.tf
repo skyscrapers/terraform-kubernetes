@@ -130,7 +130,6 @@ resource "aws_iam_role_policy" "kube2iam_assume_role_policy_masters" {
 EOF
 }
 
-
 ## Cluster-Autoscaler
 
 data "aws_iam_policy_document" "autoscaler_assume" {
@@ -138,12 +137,12 @@ data "aws_iam_policy_document" "autoscaler_assume" {
     effect = "Allow"
 
     actions = [
-      "sts:AssumeRole"
+      "sts:AssumeRole",
     ]
 
     principals {
-      type = "AWS"
-      identifiers= ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.cluster_masters_iam_role_name}"]
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.cluster_masters_iam_role_name}"]
     }
   }
 }

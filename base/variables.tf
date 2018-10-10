@@ -207,3 +207,8 @@ variable "customer_slack_hook" {
   description = "The slack webhook where customer alerts will be sent to"
   default     = ""
 }
+
+variable "utilization_threshold" {
+  description = "Node utilization level, defined as sum of requested resources divided by capacity, below which a node can be considered for scale down"
+  default     = "0.5"
+}
