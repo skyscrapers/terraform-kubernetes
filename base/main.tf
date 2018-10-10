@@ -223,9 +223,10 @@ data "template_file" "helm_values_autoscaler" {
   template = "${file("${path.module}/../templates/helm-values-autoscaler.tpl.yaml")}"
 
   vars {
-    aws_region          = "${data.aws_region.current.name}"
-    cluster_name        = "${var.name}"
-    autoscaler_role_arn = "${aws_iam_role.autoscaler.arn}"
+    aws_region            = "${data.aws_region.current.name}"
+    cluster_name          = "${var.name}"
+    autoscaler_role_arn   = "${aws_iam_role.autoscaler.arn}"
+    utilization_threshold = "${var.utilization_threshold}"
   }
 }
 

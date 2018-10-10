@@ -105,6 +105,7 @@ This terraform module will add an IAM policy to the k8s cluster nodes roles to a
 * [`prometheus_groups`]: List(optional): Extra groups that will be granted access to the Prometheus dashboard. When using Dex and Kubesignin these will be GitHub teams in the form `<gh_org>:<gh_team>`, for example `skyscrapers:k8s-admins`. Empty by default. Note: `skyscrapers:k8s-admins` and `var.k8s_admins_groups` are always granted access.
 * [`kibana_groups`]: List(optional): Extra groups that will be granted access to the Kibana dashboard. When using Dex and Kubesignin these will be GitHub teams in the form `<gh_org>:<gh_team>`, for example `skyscrapers:k8s-admins`. Empty by default. Note: `skyscrapers:k8s-admins` and `var.k8s_admins_groups` are always granted access.
 * [`extra_oidc_proxies`]: String(optional): Extra OIDC proxies to setup."
+* [`utilization_threshold`]: String(optional): Node utilization level, defined as sum of requested resources divided by capacity, below which a node can be considered for scale down. (default 0.5)
 
 ### Output
 
