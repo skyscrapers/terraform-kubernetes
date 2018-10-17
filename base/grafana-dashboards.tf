@@ -9,3 +9,7 @@ data "http" "k8s-calico-dashboard" {
 data "http" "k8s-autoscaler-dashboard" {
   url = "https://raw.githubusercontent.com/skyscrapers/grafana-dashboards/master/k8s-autoscaler-dashboard.yaml"
 }
+
+data "http" "elasticsearch-dashboard" {
+  url = "https://raw.githubusercontent.com/skyscrapers/grafana-dashboards/master/elasticsearch-dashboard.yaml"
+}
