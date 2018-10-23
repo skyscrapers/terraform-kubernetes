@@ -30,6 +30,7 @@ Creates a full `kops` cluster specification yaml, including the required instanc
  * [`spot_price`]: String(optional): Spot price you want to pay for your worker instances. By default this is empty and we will use on-demand instances. Default to `""`
  * [`calico_logseverity`]: String(optional): Sets the logSeverityScreen setting for the Calico CNI. Defaults to `"warning"`
  * [`nat_gateway_ids`]: List(required): List of NAT gateway ids to associate to the route tables created by kops. There must be one NAT gateway for each availability zone in the region.
+ * [`bastion_cidr`]: String(required): CIDR of the bastion host. This will be used to allow SSH access to kubernetes nodes
 
 ### Output
  * None

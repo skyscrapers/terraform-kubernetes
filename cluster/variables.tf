@@ -96,3 +96,7 @@ variable "nat_gateway_ids" {
   description = "List of NAT gateway ids to associate to the route tables created by kops. There must be one NAT gateway for each availability zone in the region."
   type        = "list"
 }
+
+variable "bastion_cidr" {
+  description = "CIDR of the bastion host. This will be used to allow SSH access to kubernetes nodes."
+}
