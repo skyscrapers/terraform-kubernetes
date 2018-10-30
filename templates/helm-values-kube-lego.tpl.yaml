@@ -1,5 +1,0 @@
-image:
-  tag: 0.1.7
-config:
-  LEGO_EMAIL: ${lego_email}
-  LEGO_URL: ${lego_url}

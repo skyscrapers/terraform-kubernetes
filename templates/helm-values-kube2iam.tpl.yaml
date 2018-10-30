@@ -1,8 +1,0 @@
-image:
-  tag: 0.10.4
-host:
-  iptables: true
-  interface: cali+
-tolerations:
-  - effect: NoSchedule
-    operator: Exists
