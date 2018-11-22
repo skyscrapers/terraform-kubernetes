@@ -87,10 +87,11 @@ data template_file "utility-subnet-spec" {
 #########################################################
 
 locals {
-  default_master_sg = "${length(var.extra_master_securitygroups) > 0 ? format("additionalSecurityGroups:\n %s",indent(1,join("\n",formatlist(" - %s",var.extra_master_securitygroups)))) : ""}"
-  default_worker_sg = "${length(var.extra_worker_securitygroups) > 0 ? format("additionalSecurityGroups:\n %s",indent(1,join("\n",formatlist(" - %s",var.extra_worker_securitygroups)))) : ""}"
-  spot_price        = "${var.spot_price != "" ? format("maxPrice: \"%s\"", var.spot_price) : ""}"
-  ngws_per_az       = "${zipmap(data.aws_subnet.ngw_subnets.*.availability_zone, data.aws_nat_gateway.ngws.*.id)}"
+  default_master_sg  = "${length(var.extra_master_securitygroups) > 0 ? format("additionalSecurityGroups:\n %s",indent(1,join("\n",formatlist(" - %s",var.extra_master_securitygroups)))) : ""}"
+  default_worker_sg  = "${length(var.extra_worker_securitygroups) > 0 ? format("additionalSecurityGroups:\n %s",indent(1,join("\n",formatlist(" - %s",var.extra_worker_securitygroups)))) : ""}"
+  spot_price         = "${var.spot_price != "" ? format("maxPrice: \"%s\"", var.spot_price) : ""}"
+  ngws_per_az        = "${zipmap(data.aws_subnet.ngw_subnets.*.availability_zone, data.aws_nat_gateway.ngws.*.id)}"
+  helm_instance_type = "t2.small"
 }
 
 data template_file "master-instancegroup-spec" {
@@ -138,12 +139,12 @@ data template_file "helm-instancegroup-spec" {
     cluster-name                = "${var.name}"
     kubernetes_ami              = "${data.aws_ami.kubernetes_ami.name}"
     subnets                     = "${join("\n", formatlist("  - worker-%s", data.aws_availability_zones.available.names))}"
-    instance_type               = "t2.small"
+    instance_type               = "${local.helm_instance_type}"
     min                         = "1"
     max                         = "1"
-    teleport_bootstrap          = "${indent(6, module.teleport_bootstrap_script_worker.teleport_bootstrap_script)}"
-    teleport_config             = "${indent(6, module.teleport_bootstrap_script_worker.teleport_config_cloudinit)}"
-    teleport_service            = "${indent(6, module.teleport_bootstrap_script_worker.teleport_service_cloudinit)}"
+    teleport_bootstrap          = "${indent(6, module.teleport_bootstrap_script_helm_worker.teleport_bootstrap_script)}"
+    teleport_config             = "${indent(6, module.teleport_bootstrap_script_helm_worker.teleport_config_cloudinit)}"
+    teleport_service            = "${indent(6, module.teleport_bootstrap_script_helm_worker.teleport_service_cloudinit)}"
     extra_worker_securitygroups = "${local.default_worker_sg}"
   }
 }
@@ -201,19 +202,43 @@ resource "local_file" "kops_full_cluster-spec_file" {
 }
 
 module "teleport_bootstrap_script_worker" {
-  source      = "github.com/skyscrapers/terraform-teleport//teleport-bootstrap-script?ref=3.1.1"
+  source      = "github.com/skyscrapers/terraform-teleport//teleport-bootstrap-script?ref=3.3.5"
   auth_server = "${var.teleport_server}"
   auth_token  = "${var.teleport_token}"
   function    = "worker"
   project     = "kubernetes"
   environment = "${var.environment}"
+
+  additional_labels = [
+    "k8s_version: \"${var.k8s_version}\"",
+    "instance_type: \"${var.worker_instance_type}\"",
+  ]
+}
+
+module "teleport_bootstrap_script_helm_worker" {
+  source      = "github.com/skyscrapers/terraform-teleport//teleport-bootstrap-script?ref=3.3.5"
+  auth_server = "${var.teleport_server}"
+  auth_token  = "${var.teleport_token}"
+  function    = "helm_worker"
+  project     = "kubernetes"
+  environment = "${var.environment}"
+
+  additional_labels = [
+    "k8s_version: \"${var.k8s_version}\"",
+    "instance_type: \"${local.helm_instance_type}\"",
+  ]
 }
 
 module "teleport_bootstrap_script_master" {
-  source      = "github.com/skyscrapers/terraform-teleport//teleport-bootstrap-script?ref=3.1.1"
+  source      = "github.com/skyscrapers/terraform-teleport//teleport-bootstrap-script?ref=3.3.5"
   auth_server = "${var.teleport_server}"
   auth_token  = "${var.teleport_token}"
   function    = "master"
   project     = "kubernetes"
   environment = "${var.environment}"
+
+  additional_labels = [
+    "k8s_version: \"${var.k8s_version}\"",
+    "instance_type: \"${var.master_instance_type}\"",
+  ]
 }
