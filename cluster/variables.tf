@@ -100,3 +100,38 @@ variable "nat_gateway_ids" {
 variable "bastion_cidr" {
   description = "CIDR of the bastion host. This will be used to allow SSH access to kubernetes nodes."
 }
+
+variable "kube_reserved_cpu" {
+  description = "CPU reserved for kubernetes system components"
+  default     = "100m"
+}
+
+variable "kube_reserved_memory" {
+  description = "Memory reserved for kubernetes system components"
+  default     = "150Mi"
+}
+
+variable "kube_reserved_es" {
+  description = "Ephemeral storage reserved for kubernetes system components"
+  default     = "1Gi"
+}
+
+variable "system_reserved_cpu" {
+  description = "CPU reserved for non-kubernetes components"
+  default     = "100m"
+}
+
+variable "system_reserved_memory" {
+  description = "Memory reserved for non-kubernetes components"
+  default     = "200Mi"
+}
+
+variable "system_reserved_es" {
+  description = "Ephemeral storage reserved for non-kubernetes components"
+  default     = "1Gi"
+}
+
+variable "kubelet_eviction_hard" {
+  description = "Comma-delimited list of hard eviction expressions."
+  default     = "memory.available<100Mi,nodefs.available<10%,nodefs.inodesFree<5%,imagefs.available<10%,imagefs.inodesFree<5%"
+}

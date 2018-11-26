@@ -4,6 +4,19 @@ kind: Cluster
 metadata:
   name: ${name}
 spec:
+  kubelet:
+    kubeReserved:
+      cpu: ${kube_reserved_cpu}
+      memory: ${kube_reserved_memory}
+      ephemeral-storage: ${kube_reserved_es}
+    kubeReservedCgroup: "/kube-reserved"
+    systemReserved:
+      cpu: ${system_reserved_cpu}
+      memory: ${system_reserved_memory}
+      ephemeral-storage: ${system_reserved_es}
+    systemReservedCgroup: "/system-reserved"
+    enforceNodeAllocatable: "pods"
+    evictionHard: '${kubelet_eviction_hard}'
   api:
     loadBalancer:
       type: ${elb_type}
