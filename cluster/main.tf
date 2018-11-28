@@ -39,7 +39,7 @@ data "aws_subnet" "ngw_subnets" {
 
 # Private subnets to host the Kubernetes master nodes
 data template_file "master-subnet-spec" {
-  count    = "3"
+  count    = "${length(data.aws_availability_zones.available.names)}"
   template = "${file("${path.module}/../templates/kops-cluster-subnet.tpl.yaml")}"
 
   vars {
@@ -54,7 +54,7 @@ data template_file "master-subnet-spec" {
 
 # Private subnets to host the Kubernetes worker nodes
 data template_file "worker-subnet-spec" {
-  count    = "3"
+  count    = "${length(data.aws_availability_zones.available.names)}"
   template = "${file("${path.module}/../templates/kops-cluster-subnet.tpl.yaml")}"
 
   vars {
@@ -69,7 +69,7 @@ data template_file "worker-subnet-spec" {
 
 # Utility subnets are public for ELB creation.
 data template_file "utility-subnet-spec" {
-  count    = "3"
+  count    = "${length(data.aws_availability_zones.available.names)}"
   template = "${file("${path.module}/../templates/kops-cluster-subnet.tpl.yaml")}"
 
   vars {
@@ -112,6 +112,15 @@ data template_file "master-instancegroup-spec" {
   }
 }
 
+data template_file "worker_instancegroup_subnets" {
+  count    = "${var.worker_net_count > 0 ? var.worker_net_count : length(data.aws_availability_zones.available.names)}"
+  template = "$${subnet}"
+
+  vars {
+    subnet = "${element(formatlist("  - worker-%s", data.aws_availability_zones.available.names), count.index)}"
+  }
+}
+
 data template_file "worker-instancegroup-spec" {
   template = "${file("${path.module}/../templates/kops-instancegroup-worker.tpl.yaml")}"
 
@@ -119,9 +128,9 @@ data template_file "worker-instancegroup-spec" {
     name                        = "workers"
     cluster-name                = "${var.name}"
     kubernetes_ami              = "${data.aws_ami.kubernetes_ami.name}"
-    subnets                     = "${join("\n", formatlist("  - worker-%s", data.aws_availability_zones.available.names))}"
+    subnets                     = "${join("\n", data.template_file.worker_instancegroup_subnets.*.rendered)}"
     instance_type               = "${var.worker_instance_type}"
-    min                         = "${length(data.aws_availability_zones.available.names)}"
+    min                         = "${var.min_amount_workers > 0 ? var.min_amount_workers : length(data.aws_availability_zones.available.names)}"
     max                         = "${var.max_amount_workers}"
     teleport_bootstrap          = "${indent(6, module.teleport_bootstrap_script_worker.teleport_bootstrap_script)}"
     teleport_config             = "${indent(6, module.teleport_bootstrap_script_worker.teleport_config_cloudinit)}"
@@ -138,7 +147,7 @@ data template_file "helm-instancegroup-spec" {
     name                        = "helm"
     cluster-name                = "${var.name}"
     kubernetes_ami              = "${data.aws_ami.kubernetes_ami.name}"
-    subnets                     = "${join("\n", formatlist("  - worker-%s", data.aws_availability_zones.available.names))}"
+    subnets                     = "${join("\n", data.template_file.worker_instancegroup_subnets.*.rendered)}"
     instance_type               = "${local.helm_instance_type}"
     min                         = "1"
     max                         = "1"

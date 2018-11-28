@@ -19,12 +19,22 @@ variable "worker_instance_type" {
   default = "t2.medium"
 }
 
+variable "min_amount_workers" {
+  description = "Minimum amount of workers. Will default to the amount of AZs"
+  default     = 0
+}
+
 variable "max_amount_workers" {
-  description = "Maximum amount of workers, minimum will be the amount of AZ"
+  description = "Maximum amount of workers"
 }
 
 variable "worker_net_number" {
   description = "The network number to start with for worker subnet cidr calculation"
+}
+
+variable "worker_net_count" {
+  description = "Amount of workers subnets to create (eg. to deploy single AZ). Defaults to the amount of AZ in the region"
+  default     = 0
 }
 
 variable "master_instance_type" {

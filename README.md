@@ -14,7 +14,8 @@ Creates a full `kops` cluster specification yaml, including the required instanc
 * [`k8s_data_bucket`]: String(required): The S3 bucket that `kops` will use to store it's configuration and state.
 * [`k8s_version`]: String(required): The Kubernetes version to deploy.
 * [`vpc_id`]: String(required): The VPC in which the Kubernetes cluster must be deployed
-* [`max_amount_workers`]: String(required): the amount of worker machines which can be deployed.
+* [`min_amount_workers`]: Int(optional): the minimum amount of workers. Will default to the amount of AZs.
+* [`max_amount_workers`]: Int(required): the amount of worker machines which can be deployed.
 * [`oidc_issuer_url`]: String(required): URL for the [OIDC issuer](https://kubernetes.io/docs/admin/authentication/#openid-connect-tokens).
 * [`teleport_token`]: String(required): Teleport auth token that this node will present to the auth server
 * [`teleport_server`]: String (Required): Teleport auth server that this node will connect to, including the port number
@@ -23,6 +24,7 @@ Creates a full `kops` cluster specification yaml, including the required instanc
 * [`master_instance_type`]: String(optional): The EC2 instance type to use for the master nodes. Defaults to `t2.medium`.
 * [`master_net_number`]: String(required): First number of subnet to start of (ex I want a 10.1,10.2,10.3 subnet I specify 1) for the master subnets.
 * [`utility_net_number`]: String(required): First number of subnet to start of (ex I want a 10.1,10.2,10.3 subnet I specify 1) for utility subnets, e.g for load balancers. These are always public subnets.
+* [`worker_net_count`]: String(optional): Amount of workers subnets to create (eg. to deploy single AZ). Defaults to the amount of AZ in the region.
 * [`elb_type`]: String(optional): Whether to use an Internal or Public ELB in front of the master nodes. Choices are `Public` or `Internal`. Defaults to `Public`.
 * [`etcd_version`]: String(optional): Which Etcd version do you want to run. Defaults to default version defined in Kops.
 * [`helm_node`]: Boolean(optional): Due to a [bug](https://github.com/kubernetes/helm/issues/3121) in HELM/Kubelet, we want to run the tiller on a seperate node. When you want it set this to "true". The `"` around true are really important. Defaults to `"false"`.
