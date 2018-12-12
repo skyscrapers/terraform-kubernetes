@@ -198,6 +198,7 @@ data template_file "cluster-spec" {
     system_reserved_memory = "${var.system_reserved_memory}"
     system_reserved_es     = "${var.system_reserved_es}"
     kubelet_eviction_hard  = "${var.kubelet_eviction_hard}"
+    dns_provider           = "${var.dns_provider}"
   }
 }
 

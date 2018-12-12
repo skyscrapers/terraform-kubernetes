@@ -34,6 +34,7 @@ Creates a full `kops` cluster specification yaml, including the required instanc
 * [`calico_logseverity`]: String(optional): Sets the logSeverityScreen setting for the Calico CNI. Defaults to `"warning"`
 * [`nat_gateway_ids`]: List(required): List of NAT gateway ids to associate to the route tables created by kops. There must be one NAT gateway for each availability zone in the region.
 * [`bastion_cidr`]: String(required): CIDR of the bastion host. This will be used to allow SSH access to kubernetes nodes
+* [`dns_provider`]: String(optional): Sets the DNS provider of the cluster to KubeDNS or CoreDNS. Defaults to KubeDNS
 
 ### Output
 
