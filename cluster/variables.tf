@@ -145,3 +145,8 @@ variable "kubelet_eviction_hard" {
   description = "Comma-delimited list of hard eviction expressions."
   default     = "memory.available<100Mi,nodefs.available<10%,nodefs.inodesFree<5%,imagefs.available<10%,imagefs.inodesFree<5%"
 }
+
+variable "dns_provider" {
+  description = "DNS provider to use for the cluster."
+  default     = "KubeDNS"
+}
