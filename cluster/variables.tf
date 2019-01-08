@@ -75,11 +75,6 @@ variable "environment" {
   default     = ""
 }
 
-variable "helm_node" {
-  description = "Do we want a seperate node to deploy helm"
-  default     = false
-}
-
 variable "extra_worker_securitygroups" {
   description = "List of extra securitygroups that you want to attach to the worker nodes"
   type        = "list"

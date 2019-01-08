@@ -91,7 +91,6 @@ locals {
   default_worker_sg  = "${length(var.extra_worker_securitygroups) > 0 ? format("additionalSecurityGroups:\n %s",indent(1,join("\n",formatlist(" - %s",var.extra_worker_securitygroups)))) : ""}"
   spot_price         = "${var.spot_price != "" ? format("maxPrice: \"%s\"", var.spot_price) : ""}"
   ngws_per_az        = "${zipmap(data.aws_subnet.ngw_subnets.*.availability_zone, data.aws_nat_gateway.ngws.*.id)}"
-  helm_instance_type = "t2.small"
 }
 
 data template_file "master-instancegroup-spec" {
@@ -140,23 +139,6 @@ data template_file "worker-instancegroup-spec" {
   }
 }
 
-data template_file "helm-instancegroup-spec" {
-  template = "${file("${path.module}/../templates/kops-instancegroup-helm.tpl.yaml")}"
-
-  vars {
-    name                        = "helm"
-    cluster-name                = "${var.name}"
-    kubernetes_ami              = "${data.aws_ami.kubernetes_ami.name}"
-    subnets                     = "${join("\n", data.template_file.worker_instancegroup_subnets.*.rendered)}"
-    instance_type               = "${local.helm_instance_type}"
-    min                         = "1"
-    max                         = "1"
-    teleport_bootstrap          = "${indent(6, module.teleport_bootstrap_script_helm_worker.teleport_bootstrap_script)}"
-    teleport_config             = "${indent(6, module.teleport_bootstrap_script_helm_worker.teleport_config_cloudinit)}"
-    teleport_service            = "${indent(6, module.teleport_bootstrap_script_helm_worker.teleport_service_cloudinit)}"
-    extra_worker_securitygroups = "${local.default_worker_sg}"
-  }
-}
 
 #########################################################
 # Full Cluster
@@ -209,7 +191,6 @@ data template_file "kops_full_cluster-spec_file" {
     content_cluster      = "${data.template_file.cluster-spec.rendered}"
     content_master_group = "${join("\n",data.template_file.master-instancegroup-spec.*.rendered)}"
     content_worker_group = "${data.template_file.worker-instancegroup-spec.rendered}"
-    content_helm_node    = "${var.helm_node == true ? data.template_file.helm-instancegroup-spec.rendered : ""}"
   }
 }
 
@@ -232,19 +213,6 @@ module "teleport_bootstrap_script_worker" {
   ]
 }
 
-module "teleport_bootstrap_script_helm_worker" {
-  source      = "github.com/skyscrapers/terraform-teleport//teleport-bootstrap-script?ref=3.3.5"
-  auth_server = "${var.teleport_server}"
-  auth_token  = "${var.teleport_token}"
-  function    = "helm_worker"
-  project     = "kubernetes"
-  environment = "${var.environment}"
-
-  additional_labels = [
-    "k8s_version: \"${var.k8s_version}\"",
-    "instance_type: \"${local.helm_instance_type}\"",
-  ]
-}
 
 module "teleport_bootstrap_script_master" {
   source      = "github.com/skyscrapers/terraform-teleport//teleport-bootstrap-script?ref=3.3.5"
