@@ -1,2 +1,4 @@
     - instanceGroup: ${ig-name}
       name: ${name}
+      encryptedVolume: ${encrypted_volume}
+      ${kms_key}

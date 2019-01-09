@@ -8,32 +8,44 @@ Creates a full `kops` cluster specification yaml, including the required instanc
 
 ### Available variables
 
-* [`name`]: String(required): base domain name of the cluster. This domain name will be used to lookup a hosted zone on Route53 and as the base for additional DNS records, e.g. for the API ELB.
-* [`environment`]: String(required): Environment of the cluster
-* [`customer`]: String(required): Customer name
-* [`k8s_data_bucket`]: String(required): The S3 bucket that `kops` will use to store it's configuration and state.
-* [`k8s_version`]: String(required): The Kubernetes version to deploy.
-* [`vpc_id`]: String(required): The VPC in which the Kubernetes cluster must be deployed
-* [`min_amount_workers`]: Int(optional): the minimum amount of workers. Will default to the amount of AZs.
-* [`max_amount_workers`]: Int(required): the amount of worker machines which can be deployed.
-* [`oidc_issuer_url`]: String(required): URL for the [OIDC issuer](https://kubernetes.io/docs/admin/authentication/#openid-connect-tokens).
-* [`teleport_token`]: String(required): Teleport auth token that this node will present to the auth server
-* [`teleport_server`]: String (Required): Teleport auth server that this node will connect to, including the port number
-* [`environment`]: String (optional): Environment where this node belongs to, will be the third part of the node name. Defaults to ''
-* [`worker_instance_type`]: String(optional): The EC2 instance type to use for the worker nodes. Defaults to `t2.medium`.
-* [`master_instance_type`]: String(optional): The EC2 instance type to use for the master nodes. Defaults to `t2.medium`.
-* [`master_net_number`]: String(required): First number of subnet to start of (ex I want a 10.1,10.2,10.3 subnet I specify 1) for the master subnets.
-* [`utility_net_number`]: String(required): First number of subnet to start of (ex I want a 10.1,10.2,10.3 subnet I specify 1) for utility subnets, e.g for load balancers. These are always public subnets.
-* [`worker_net_count`]: String(optional): Amount of workers subnets to create (eg. to deploy single AZ). Defaults to the amount of AZ in the region.
-* [`elb_type`]: String(optional): Whether to use an Internal or Public ELB in front of the master nodes. Choices are `Public` or `Internal`. Defaults to `Public`.
-* [`etcd_version`]: String(optional): Which Etcd version do you want to run. Defaults to default version defined in Kops.
-* [`extra_worker_securitygroups`]: List(optional): List of extra securitygroups that you want to attach to the worker nodes. Defaults to `[]`
-* [`extra_master_securitygroups`]: List(optional): List of extra securitygroups that you want to attach to the master nodes. Defaults to `[]`
-* [`spot_price`]: String(optional): Spot price you want to pay for your worker instances. By default this is empty and we will use on-demand instances. Default to `""`
-* [`calico_logseverity`]: String(optional): Sets the logSeverityScreen setting for the Calico CNI. Defaults to `"warning"`
-* [`nat_gateway_ids`]: List(required): List of NAT gateway ids to associate to the route tables created by kops. There must be one NAT gateway for each availability zone in the region.
-* [`bastion_cidr`]: String(required): CIDR of the bastion host. This will be used to allow SSH access to kubernetes nodes
-* [`dns_provider`]: String(optional): Sets the DNS provider of the cluster to KubeDNS or CoreDNS. Defaults to KubeDNS
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| bastion\_cidr | CIDR of the bastion host. This will be used to allow SSH access to kubernetes nodes. | string | - | yes |
+| calico\_logseverity | Sets the logSeverityScreen setting for the Calico CNI. Defaults to 'warning' | string | `warning` | no |
+| dns\_provider | DNS provider to use for the cluster. | string | `KubeDNS` | no |
+| elb\_type | Whether to use an Internal or Public ELB in front of the master nodes | string | `Public` | no |
+| environment | Environment where this node belongs to, will be the third part of the node name. Defaults to '' | string | `` | no |
+| etcd\_encrypted\_volumes | Enable etcd volume encryption | string | `false` | no |
+| etcd\_encryption\_kms\_key\_arn | Optional kms key arn to use to encrypt the etcd volumes | string | `` | no |
+| etcd\_version | Which version of etcd do you want? | string | `` | no |
+| extra\_master\_securitygroups | List of extra securitygroups that you want to attach to the master nodes | list | `<list>` | no |
+| extra\_worker\_securitygroups | List of extra securitygroups that you want to attach to the worker nodes | list | `<list>` | no |
+| k8s\_data\_bucket | S3 bucket to store the kops cluster description & state | string | - | yes |
+| k8s\_image\_encryption | Enable k8s image encryption | string | `false` | no |
+| k8s\_version | Kubernetes Version to deploy | string | - | yes |
+| kms\_key\_arn | Optional kms key arn to use to encrypt the root volumes | string | `` | no |
+| kube\_reserved\_cpu | CPU reserved for kubernetes system components | string | `100m` | no |
+| kube\_reserved\_es | Ephemeral storage reserved for kubernetes system components | string | `1Gi` | no |
+| kube\_reserved\_memory | Memory reserved for kubernetes system components | string | `150Mi` | no |
+| kubelet\_eviction\_hard | Comma-delimited list of hard eviction expressions. | string | `memory.available<100Mi,nodefs.available<10%,nodefs.inodesFree<5%,imagefs.available<10%,imagefs.inodesFree<5%` | no |
+| master\_instance\_type | - | string | `t2.medium` | no |
+| master\_net\_number | The network number to start with for master subnet cidr calculation | string | - | yes |
+| max\_amount\_workers | Maximum amount of workers | string | - | yes |
+| min\_amount\_workers | Minimum amount of workers. Will default to the amount of AZs | string | `0` | no |
+| name | Kubernetes Cluster Name | string | - | yes |
+| nat\_gateway\_ids | List of NAT gateway ids to associate to the route tables created by kops. There must be one NAT gateway for each availability zone in the region. | list | - | yes |
+| oidc\_issuer\_url | URL for the OIDC issuer (https://kubernetes.io/docs/admin/authentication/#openid-connect-tokens) | string | - | yes |
+| spot\_price | Spot price you want to pay for your worker instances. By default this is empty and we will use on-demand instances | string | `` | no |
+| system\_reserved\_cpu | CPU reserved for non-kubernetes components | string | `100m` | no |
+| system\_reserved\_es | Ephemeral storage reserved for non-kubernetes components | string | `1Gi` | no |
+| system\_reserved\_memory | Memory reserved for non-kubernetes components | string | `200Mi` | no |
+| teleport\_server | Teleport auth server that this node will connect to, including the port number | string | - | yes |
+| teleport\_token | Teleport auth token that this node will present to the auth server | string | - | yes |
+| utility\_net\_number | The network number to start with for utility subnet cidr calculation | string | - | yes |
+| vpc\_id | Deploy the Kubernetes cluster in this VPC | string | - | yes |
+| worker\_instance\_type | - | string | `t2.medium` | no |
+| worker\_net\_count | Amount of workers subnets to create (eg. to deploy single AZ). Defaults to the amount of AZ in the region | string | `0` | no |
+| worker\_net\_number | The network number to start with for worker subnet cidr calculation | string | - | yes |
 
 ### Output
 

@@ -145,3 +145,23 @@ variable "dns_provider" {
   description = "DNS provider to use for the cluster."
   default     = "KubeDNS"
 }
+
+variable "k8s_image_encryption" {
+  description = "Enable k8s image encryption"
+  default     = false
+}
+
+variable "etcd_encrypted_volumes" {
+  description = "Enable etcd volume encryption"
+  default     = "false"
+}
+
+variable "etcd_encryption_kms_key_arn" {
+  description = "Optional kms key arn to use to encrypt the etcd volumes"
+  default     = ""
+}
+
+variable "kms_key_arn" {
+  description = "Optional kms key arn to use to encrypt the root volumes"
+  default     = ""
+}

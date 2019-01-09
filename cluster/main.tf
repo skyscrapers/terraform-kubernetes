@@ -13,14 +13,34 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
+data "aws_region" "current" {}
+
 data "aws_ami" "kubernetes_ami" {
   most_recent = true
 
   # ebs-kubernetes-baseimage-1.7-201712051032
   # This is a pre build image base on https://github.com/skyscrapers/kubernetes-baseimage
-  name_regex = "^ebs-kubernetes-baseimage-${element(split(".",var.k8s_version),0)}.${element(split(".",var.k8s_version),1)}-*"
+  name_regex = "^ebs-kubernetes-baseimage-${local.k8s_short_version}-*"
 
   owners = ["496014204152"]
+}
+
+resource "aws_ami_copy" "k8s_base_image" {
+  count = "${var.k8s_image_encryption ? 1 : 0}"
+
+  # For now, this resource will replace the copied AMI everytime there's a new source AMI, so there'll always be just one AMI in the target account. Until this is implemented: https://github.com/terraform-providers/terraform-provider-aws/issues/792
+
+  name              = "${data.aws_ami.kubernetes_ami.name}"
+  description       = "Kubernetes base image"
+  source_ami_id     = "${data.aws_ami.kubernetes_ami.id}"
+  source_ami_region = "${data.aws_region.current.name}"
+  encrypted         = true
+  kms_key_id        = "${var.kms_key_arn}"
+  tags = {
+    # Cannot use the tags from the source AMI as it's in a different AWS account
+    project     = "kubernetes-baseimage"
+    k8s_version = "${local.k8s_short_version}"
+  }
 }
 
 #########################################################
@@ -87,10 +107,11 @@ data template_file "utility-subnet-spec" {
 #########################################################
 
 locals {
-  default_master_sg  = "${length(var.extra_master_securitygroups) > 0 ? format("additionalSecurityGroups:\n %s",indent(1,join("\n",formatlist(" - %s",var.extra_master_securitygroups)))) : ""}"
-  default_worker_sg  = "${length(var.extra_worker_securitygroups) > 0 ? format("additionalSecurityGroups:\n %s",indent(1,join("\n",formatlist(" - %s",var.extra_worker_securitygroups)))) : ""}"
-  spot_price         = "${var.spot_price != "" ? format("maxPrice: \"%s\"", var.spot_price) : ""}"
-  ngws_per_az        = "${zipmap(data.aws_subnet.ngw_subnets.*.availability_zone, data.aws_nat_gateway.ngws.*.id)}"
+  default_master_sg = "${length(var.extra_master_securitygroups) > 0 ? format("additionalSecurityGroups:\n %s",indent(1,join("\n",formatlist(" - %s",var.extra_master_securitygroups)))) : ""}"
+  default_worker_sg = "${length(var.extra_worker_securitygroups) > 0 ? format("additionalSecurityGroups:\n %s",indent(1,join("\n",formatlist(" - %s",var.extra_worker_securitygroups)))) : ""}"
+  spot_price        = "${var.spot_price != "" ? format("maxPrice: \"%s\"", var.spot_price) : ""}"
+  ngws_per_az       = "${zipmap(data.aws_subnet.ngw_subnets.*.availability_zone, data.aws_nat_gateway.ngws.*.id)}"
+  k8s_short_version = "${element(split(".",var.k8s_version),0)}.${element(split(".",var.k8s_version),1)}"
 }
 
 data template_file "master-instancegroup-spec" {
@@ -101,7 +122,7 @@ data template_file "master-instancegroup-spec" {
     name                        = "${element(formatlist("master-%s", data.aws_availability_zones.available.names),count.index)}"
     cluster-name                = "${var.name}"
     k8s_data_bucket             = "${var.k8s_data_bucket}"
-    kubernetes_ami              = "${data.aws_ami.kubernetes_ami.name}"
+    kubernetes_ami              = "${element(coalescelist(aws_ami_copy.k8s_base_image.*.name,data.aws_ami.kubernetes_ami.*.name),0)}"
     subnets                     = "${element(formatlist("  - master-%s", data.aws_availability_zones.available.names),count.index)}"
     instance_type               = "${var.master_instance_type}"
     teleport_bootstrap          = "${indent(6, module.teleport_bootstrap_script_master.teleport_bootstrap_script)}"
@@ -126,7 +147,7 @@ data template_file "worker-instancegroup-spec" {
   vars {
     name                        = "workers"
     cluster-name                = "${var.name}"
-    kubernetes_ami              = "${data.aws_ami.kubernetes_ami.name}"
+    kubernetes_ami              = "${element(coalescelist(aws_ami_copy.k8s_base_image.*.name,data.aws_ami.kubernetes_ami.*.name),0)}"
     subnets                     = "${join("\n", data.template_file.worker_instancegroup_subnets.*.rendered)}"
     instance_type               = "${var.worker_instance_type}"
     min                         = "${var.min_amount_workers > 0 ? var.min_amount_workers : length(data.aws_availability_zones.available.names)}"
@@ -139,7 +160,6 @@ data template_file "worker-instancegroup-spec" {
   }
 }
 
-
 #########################################################
 # Full Cluster
 #########################################################
@@ -149,8 +169,10 @@ data template_file "cluster-etcd-member-spec" {
   count    = "3"
 
   vars {
-    name    = "${element(formatlist("master-%s", data.aws_availability_zones.available.names),count.index)}"
-    ig-name = "${element(formatlist("master-%s", data.aws_availability_zones.available.names),count.index)}"
+    name             = "${element(formatlist("master-%s", data.aws_availability_zones.available.names),count.index)}"
+    ig-name          = "${element(formatlist("master-%s", data.aws_availability_zones.available.names),count.index)}"
+    encrypted_volume = "${var.etcd_encrypted_volumes}"
+    kms_key          = "${var.etcd_encryption_kms_key_arn == "" ? "" : "kmsKeyId: ${var.etcd_encryption_kms_key_arn}"}"
   }
 }
 
@@ -212,7 +234,6 @@ module "teleport_bootstrap_script_worker" {
     "instance_type: \"${var.worker_instance_type}\"",
   ]
 }
-
 
 module "teleport_bootstrap_script_master" {
   source      = "github.com/skyscrapers/terraform-teleport//teleport-bootstrap-script?ref=3.3.5"
