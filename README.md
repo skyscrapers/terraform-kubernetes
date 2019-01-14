@@ -12,7 +12,7 @@ Creates a full `kops` cluster specification yaml, including the required instanc
 |------|-------------|:----:|:-----:|:-----:|
 | bastion\_cidr | CIDR of the bastion host. This will be used to allow SSH access to kubernetes nodes. | string | - | yes |
 | calico\_logseverity | Sets the logSeverityScreen setting for the Calico CNI. Defaults to 'warning' | string | `warning` | no |
-| dns\_provider | DNS provider to use for the cluster. | string | `KubeDNS` | no |
+| dns\_provider | DNS provider to use for the cluster. | string | `CoreDNS` | no |
 | elb\_type | Whether to use an Internal or Public ELB in front of the master nodes | string | `Public` | no |
 | environment | Environment where this node belongs to, will be the third part of the node name. Defaults to '' | string | `` | no |
 | etcd\_encrypted\_volumes | Enable etcd volume encryption | string | `false` | no |

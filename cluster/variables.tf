@@ -143,7 +143,7 @@ variable "kubelet_eviction_hard" {
 
 variable "dns_provider" {
   description = "DNS provider to use for the cluster."
-  default     = "KubeDNS"
+  default     = "CoreDNS"
 }
 
 variable "k8s_image_encryption" {
