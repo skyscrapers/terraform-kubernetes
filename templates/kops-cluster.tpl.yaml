@@ -17,6 +17,7 @@ spec:
     systemReservedCgroup: "/system-reserved"
     enforceNodeAllocatable: "pods"
     evictionHard: '${kubelet_eviction_hard}'
+    anonymousAuth: false
   api:
     loadBalancer:
       type: ${elb_type}
