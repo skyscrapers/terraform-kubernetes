@@ -122,7 +122,7 @@ data template_file "master-instancegroup-spec" {
     name                        = "${element(formatlist("master-%s", data.aws_availability_zones.available.names),count.index)}"
     cluster-name                = "${var.name}"
     k8s_data_bucket             = "${var.k8s_data_bucket}"
-    kubernetes_ami              = "${element(coalescelist(aws_ami_copy.k8s_base_image.*.name,data.aws_ami.kubernetes_ami.*.name),0)}"
+    kubernetes_ami              = "${var.k8s_image_encryption ? "" : "496014204152/"}${element(coalescelist(aws_ami_copy.k8s_base_image.*.name,data.aws_ami.kubernetes_ami.*.name),0)}"
     subnets                     = "${element(formatlist("  - master-%s", data.aws_availability_zones.available.names),count.index)}"
     instance_type               = "${var.master_instance_type}"
     teleport_bootstrap          = "${indent(6, module.teleport_bootstrap_script_master.teleport_bootstrap_script)}"
@@ -147,7 +147,7 @@ data template_file "worker-instancegroup-spec" {
   vars {
     name                        = "workers"
     cluster-name                = "${var.name}"
-    kubernetes_ami              = "${element(coalescelist(aws_ami_copy.k8s_base_image.*.name,data.aws_ami.kubernetes_ami.*.name),0)}"
+    kubernetes_ami              = "${var.k8s_image_encryption ? "" : "496014204152/"}${element(coalescelist(aws_ami_copy.k8s_base_image.*.name,data.aws_ami.kubernetes_ami.*.name),0)}"
     subnets                     = "${join("\n", data.template_file.worker_instancegroup_subnets.*.rendered)}"
     instance_type               = "${var.worker_instance_type}"
     min                         = "${var.min_amount_workers > 0 ? var.min_amount_workers : length(data.aws_availability_zones.available.names)}"
