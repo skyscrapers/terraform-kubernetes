@@ -153,7 +153,7 @@ variable "k8s_image_encryption" {
 
 variable "etcd_encrypted_volumes" {
   description = "Enable etcd volume encryption"
-  default     = "false"
+  default     = "true"
 }
 
 variable "etcd_encryption_kms_key_arn" {

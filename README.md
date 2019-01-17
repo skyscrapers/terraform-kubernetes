@@ -15,7 +15,7 @@ Creates a full `kops` cluster specification yaml, including the required instanc
 | dns\_provider | DNS provider to use for the cluster. | string | `CoreDNS` | no |
 | elb\_type | Whether to use an Internal or Public ELB in front of the master nodes | string | `Public` | no |
 | environment | Environment where this node belongs to, will be the third part of the node name. Defaults to '' | string | `` | no |
-| etcd\_encrypted\_volumes | Enable etcd volume encryption | string | `false` | no |
+| etcd\_encrypted\_volumes | Enable etcd volume encryption | string | `true` | no |
 | etcd\_encryption\_kms\_key\_arn | Optional kms key arn to use to encrypt the etcd volumes | string | `` | no |
 | etcd\_version | Which version of etcd do you want? | string | `` | no |
 | extra\_master\_securitygroups | List of extra securitygroups that you want to attach to the master nodes | list | `<list>` | no |
