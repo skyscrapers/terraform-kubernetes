@@ -1,3 +1,6 @@
+**NOTICE: THESE MODULES ARE DEPRECATED AND NO LONGER MAINTAINED**
+
+
 # terraform-kubernetes
 
 Terraform modules to bootstrap a Kubernetes cluster on AWS using [`kops`](https://github.com/kubernetes/kops).
